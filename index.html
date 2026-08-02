@@ -54,17 +54,13 @@
         <a href="#how" class="btn btn-ghost">How It Works →</a>
       </div>
     </div>
-    <div class="hero-scroll">
-      <span>Scroll</span>
-      <div class="scroll-line"></div>
-    </div>
   </section>
   <section class="booking-section">
 
     <div class="booking-card">
 
-        <h2>Book Your Valet</h2>
-        <p>Starting from <strong>$48</strong></p>
+        <h2><center>Book Your Valet</center></h2>
+        <center><p class="starting-price">Starting from $48</p></center>
 
         <form>
 
@@ -75,10 +71,11 @@
             <input type="text" placeholder="Enter destination">
 
             <label>Date</label>
-            <input type="date">
+            <input type="date"> 
 
             <label>Time</label>
-            <input type="time">
+            <select id="bookingTime">
+</select>
 
             <label>Vehicle</label>
             <input type="text" placeholder="Toyota, BMW, Mercedes...">
@@ -92,7 +89,40 @@
     </div>
 
 </section>
+<script>
+const timeSelect = document.getElementById("bookingTime");
 
+for (let hour = 1; hour <= 24; hour++) {
+    const h = hour % 24;
+
+    ["00", "30"].forEach(min => {
+
+        const displayHour = h === 0 ? 12 : (h > 12 ? h - 12 : h);
+        const ampm = h < 12 ? "AM" : "PM";
+
+        const value = String(h).padStart(2, "0") + ":" + min;
+        const text = displayHour + ":" + min + " " + ampm;
+
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = text;
+
+        timeSelect.appendChild(option);
+    });
+}
+
+// Default to current half hour
+const now = new Date();
+
+let hour = now.getHours();
+let minutes = now.getMinutes();
+
+minutes = minutes < 30 ? "00" : "30";
+
+const current = String(hour).padStart(2, "0") + ":" + minutes;
+
+timeSelect.value = current;
+</script>
  
 
 </body>
