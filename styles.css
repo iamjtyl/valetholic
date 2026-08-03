@@ -140,15 +140,13 @@ HERO
 
     margin:auto;
 
-    min-height:100vh;
-
     display:grid;
 
     grid-template-columns:1.15fr .85fr;
 
     gap:80px;
 
-    align-items:center;
+    align-items:start;
 
     padding:120px 70px 60px;
 
@@ -823,5 +821,70 @@ input[type="date"]::-webkit-calendar-picker-indicator{
     cursor: pointer;
 
     opacity: 1;
+
+}
+/* ===========================
+FAQ
+=========================== */
+
+.faq{
+
+    max-width:1200px;
+
+    margin:100px auto;
+
+    padding:0 60px;
+
+}
+
+.faq h2{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:48px;
+
+    margin-bottom:40px;
+
+}
+
+.faq-item{
+
+    background:#141414;
+
+    border:1px solid rgba(212,175,55,.15);
+
+    border-radius:16px;
+
+    padding:25px;
+
+    margin-bottom:20px;
+
+}
+
+.faq-item h3{
+
+    color:#D4AF37;
+
+    margin-bottom:12px;
+
+    font-size:22px;
+
+}
+
+.faq-item p{
+
+    color:#CFCFCF;
+
+    line-height:1.8;
+
+}
+
+.faq-item ul{
+
+    margin-left:20px;
+
+    color:#CFCFCF;
+
+    line-height:2;
 
 }
