@@ -111,68 +111,76 @@ HERO
 
             </h2>
 
-<form>
+            <form>
 
-    <div id="journeyContainer">
+                <label>
 
-        <div class="journey-block">
+                    Pickup
 
-            <h3>Journey 1</h3>
+                </label>
 
-            <label>Pickup Location</label>
+                <input
+                    type="text"
+                    placeholder="Pickup location">
 
-<div id="pickupContainer">
+                <label>
 
-    <input
-        type="text"
-        placeholder="Enter pickup location">
+                    Destination
 
-</div>
-<label>Destination</label>
+                </label>
 
-<div id="destinationContainer">
+                <input
+                    type="text"
+                    placeholder="Destination">
 
-    <input
-        type="text"
-        placeholder="Enter destination">
+                <div class="booking-row">
 
-</div>
+                    <div>
 
-<button
-type="button"
-class="mini-btn"
-onclick="addDestination()">
+                        <label>
 
-+ Add Destination
+                            Date
 
-</button>
+                        </label>
 
-<button
-type="button"
-class="mini-btn"
-onclick="addPickup()">
+                        <input type="date">
 
-+ Add Pickup
+                    </div>
 
-</button></div>
-    <label>Date</label>
-    <input type="date">
+                    <div>
 
-    <label>Time</label>
-    <select id="bookingTime"></select>
+                        <label>
 
-    <label>Vehicle Make & Model</label>
-    <input
-        type="text"
-        placeholder="e.g. Toyota Alphard">
+                            Time
 
-    <button type="submit">
+                        </label>
 
-        CONTINUE →
+                        <select id="bookingTime">
 
-    </button>
+                        </select>
 
-</form>
+                    </div>
+
+                </div>
+
+                <label>
+
+                    Vehicle
+
+                </label>
+
+                <input
+                    type="text"
+                    placeholder="e.g. Toyota Alphard">
+
+                <button type="submit">
+
+                    CONTINUE →
+
+                </button>
+
+            </form>
+
         </div>
 
     </div>
@@ -312,5 +320,5 @@ bookingTime.value=String(hour).padStart(2,"0")+":"+minute;
 
 </script>
 </body>
-<script src="script.js"></script>
+
 </html>
