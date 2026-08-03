@@ -74,12 +74,21 @@ summary.innerHTML = `
 
     </button>
 
-    <button class="gold">
+    <button
+        class="gold"
+        onclick="submitBooking()">
 
-        Confirm Booking
+        Submit Booking Request
 
     </button>
 
 </div>
-
 `;
+
+function submitBooking(){
+
+    // Later we'll save to database here
+
+    window.location.href = "success.html";
+
+}

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -38,7 +39,7 @@ NAVIGATION
 
         <li><a href="#pricing">Pricing</a></li>
 
-        <li><a href="#faq">Become a Driver</a></li>
+        <li><a href="driver.html">Drive With Us</a></li>
 
         <li><a href="#faq">FAQ</a></li>
 
@@ -50,14 +51,15 @@ NAVIGATION
         Book Now
     </a>
 
-   <a
-href="https://wa.me/6587923386?text=Hello%20Valetholic!%20I'd%20like%20to%20request%20a%20valet%20driver.%0A%0APick-up%20Location:%20%0ADestination:%20%0A%0ADate:%20%0ATime:%20"
-target="_blank"
-class="whatsapp-btn">
+    <a
+        href="https://wa.me/6587923386?text=Hello%20Valetholic!%20I'd%20like%20to%20request%20a%20valet%20driver.%0A%0APick-up%20Location:%20%0ADestination:%20%0A%0ADate:%20%0ATime:%20"
+        target="_blank"
+        class="whatsapp-btn">
 
-    WhatsApp
+        <i class="fab fa-whatsapp"></i>
+        <span>WhatsApp</span>
 
-</a>
+    </a>
 
 </div>
 
@@ -413,6 +415,9 @@ let minute=now.getMinutes()<30?"00":"30";
 bookingTime.value=String(hour).padStart(2,"0")+":"+minute;
 
 </script>
-</body>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
 <script src="script.js"></script>
+</body>
 </html>

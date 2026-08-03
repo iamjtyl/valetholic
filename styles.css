@@ -888,3 +888,214 @@ FAQ
     line-height:2;
 
 }
+.nav-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.nav-button,
+.whatsapp-btn {
+    flex: 1;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.25s ease;
+}
+
+.nav-button {
+    background: #D4AF37;
+    color: #000;
+}
+
+.nav-button:hover {
+    background: #c89d22;
+}
+
+.whatsapp-btn{
+
+    background:#25D366;
+
+    color:#fff !important;
+
+    padding:14px 28px;
+
+    border-radius:10px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.whatsapp-btn:hover{
+
+    background:#1EBE5D;
+
+    transform:translateY(-2px);
+
+}
+/* ===========================
+SUCCESS PAGE
+=========================== */
+
+.success-container{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#0A0A0A;
+
+    padding:20px;
+
+}
+
+.success-card{
+
+    width:100%;
+    max-width:540px;
+
+    background:#141414;
+
+    border:1px solid rgba(212,175,55,.25);
+
+    border-radius:24px;
+
+    padding:30px 38px;
+
+    text-align:center;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+
+}
+
+.success-icon{
+
+    width:70px;
+    height:70px;
+
+    background:#D4AF37;
+
+    color:#fff;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin:0 auto 20px;
+
+    font-size:42px;
+
+    font-weight:700;
+
+}
+
+.success-card h1{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:36px;
+
+    margin-bottom:12px;
+
+}
+
+.success-card p{
+
+    color:#BDBDBD;
+
+    font-size:15px;
+    line-height:1.5;
+    margin-bottom:20px;
+
+}
+
+.booking-id{
+
+    background:#1B1B1B;
+
+    border:1px solid rgba(212,175,55,.15);
+
+    border-radius:14px;
+
+    padding:16px;
+
+    margin:24px 0;
+
+    text-align:center;
+
+}
+
+.booking-id small{
+
+    display:block;
+
+    color:#999;
+
+    font-size:13px;
+
+    letter-spacing:3px;
+
+    text-transform:uppercase;
+
+    margin-bottom:10px;
+
+}
+
+.booking-id span{
+
+    display:block;
+
+    color:#D4AF37;
+
+    font-size:24px;
+
+    font-weight:700;
+
+}
+.success-buttons{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+    margin-top:16px;
+
+}
+.driver-benefits{
+
+    margin-top:35px;
+
+}
+
+.driver-benefits p{
+
+    margin-bottom:14px;
+
+    color:#D4AF37;
+
+    font-size:18px;
+
+    font-weight:500;
+
+}
