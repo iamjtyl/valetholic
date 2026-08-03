@@ -119,58 +119,76 @@ HERO
 
             <h3>Journey 1</h3>
 
-            <label>Pickup Location</label>
+<label>Pickup Location</label>
 
 <div id="pickupContainer">
-
     <input
         type="text"
         placeholder="Enter pickup location">
-
 </div>
+
 <label>Destination</label>
 
 <div id="destinationContainer">
-
     <input
         type="text"
         placeholder="Enter destination">
+</div>
+
+<div class="add-buttons">
+
+    <button
+        type="button"
+        class="mini-btn"
+        onclick="addPickup()">
+
+        + Add Pickup
+
+    </button>
+
+    <button
+        type="button"
+        class="mini-btn"
+        onclick="addDestination()">
+
+        + Add Destination
+
+    </button>
 
 </div>
 
-<button
-type="button"
-class="mini-btn"
-onclick="addDestination()">
+<label>Date</label>
+<input type="date">
 
-+ Add Destination
+<label>Time</label>
+<select id="bookingTime"></select>
+
+<label>Vehicle Make & Model</label>
+
+<input
+    type="text"
+    placeholder="e.g. Toyota Alphard">
+
+<label>Remarks <span>(Optional)</span></label>
+
+<textarea
+    rows="5"
+    placeholder="Special instructions...
+
+• Exact pickup point
+• Parking lot number
+• Gate code
+• Waiting location
+• Anything your valet should know"></textarea>
+
+<button
+    type="button"
+    class="continue-btn"
+    onclick="continueBooking()">
+
+    CONTINUE →
 
 </button>
-
-<button
-type="button"
-class="mini-btn"
-onclick="addPickup()">
-
-+ Add Pickup
-
-</button></div>
-    <label>Date</label>
-    <input type="date">
-
-    <label>Time</label>
-    <select id="bookingTime"></select>
-
-    <label>Vehicle Make & Model</label>
-    <input
-        type="text"
-        placeholder="e.g. Toyota Alphard">
-
-    <button type="submit">
-
-        CONTINUE →
-
-    </button>
 
 </form>
         </div>

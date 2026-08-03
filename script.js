@@ -1,27 +1,62 @@
-let journeyCount = 1;
+function addPickup(){
 
-function addJourney() {
+    const input=document.createElement("input");
 
-    journeyCount++;
+    input.type="text";
 
-    const container = document.getElementById("journeyContainer");
+    input.placeholder="Enter another pickup";
 
-    const block = document.createElement("div");
+    document
+        .getElementById("pickupContainer")
+        .appendChild(input);
 
-    block.className = "journey-block";
+}
 
-    block.innerHTML = `
+function addDestination(){
 
-        <h3>Journey ${journeyCount}</h3>
+    const input=document.createElement("input");
 
-        <label>Pickup Location</label>
-        <input type="text" placeholder="Enter pickup location">
+    input.type="text";
 
-        <label>Destination</label>
-        <input type="text" placeholder="Enter destination">
+    input.placeholder="Enter another destination";
 
-    `;
+    document
+        .getElementById("destinationContainer")
+        .appendChild(input);
 
-    container.appendChild(block);
+}
+function continueBooking() {
+
+    const booking = {
+
+        pickups: [],
+
+        destinations: [],
+
+        date: document.querySelector("input[type='date']").value,
+
+        time: document.getElementById("bookingTime").value,
+
+        vehicle: document.querySelector("input[placeholder='e.g. Toyota Alphard']").value,
+
+        remarks: document.querySelector("textarea").value
+
+    };
+
+    document.querySelectorAll("#pickupContainer input").forEach(input => {
+
+        booking.pickups.push(input.value);
+
+    });
+
+    document.querySelectorAll("#destinationContainer input").forEach(input => {
+
+        booking.destinations.push(input.value);
+
+    });
+
+    localStorage.setItem("booking", JSON.stringify(booking));
+
+    window.location.href = "booking.html";
 
 }

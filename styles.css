@@ -791,7 +791,9 @@ REMARKS
 
     resize:vertical;
 
-    min-height:100px;
+   min-height:140px;
+
+    resize:none;
 
     font-family:Inter,sans-serif;
 
@@ -810,5 +812,16 @@ REMARKS
     color:#777;
 
     line-height:1.6;
+
+}
+/* Make calendar icon white */
+
+input[type="date"]::-webkit-calendar-picker-indicator{
+
+    filter: invert(1);
+
+    cursor: pointer;
+
+    opacity: 1;
 
 }
