@@ -17,7 +17,7 @@
 
 </head>
 
-<<body class="driver-page">
+<body class="driver-page">
 
 <nav class="navbar">
 
@@ -86,55 +86,58 @@ of Singapore's premium valet team.
 
             </h2>
 
-            <form id="driverForm">
+           <form id="driverForm">
 
-                <label>Full Name</label>
-                <input type="text" required>
+    <label>Full Name</label>
+    <input type="text" id="name" required>
 
-                <label>Mobile Number</label>
-                <input type="tel" required>
+    <label>Mobile Number</label>
+    <input type="tel" id="mobile" required>
 
-                <label>Date of Birth</label>
-                <input type="date" required>
+    <label>Date of Birth</label>
+    <input type="date" id="date_of_birth" required>
 
-                <label>Driving Experience</label>
+    <label>Driving Experience</label>
 
-                <select required>
+    <select id="driving_experience" required>
 
-                    <option>Less than 1 year</option>
-                    <option>1-3 Years</option>
-                    <option>3-5 Years</option>
-                    <option>5-10 Years</option>
-                    <option>10+ Years</option>
+        <option value="">Select...</option>
+        <option>Less than 1 year</option>
+        <option>1-3 Years</option>
+        <option>3-5 Years</option>
+        <option>5-10 Years</option>
+        <option>10+ Years</option>
 
-                </select>
+    </select>
 
-                <label>Availability</label>
+    <label>Availability</label>
 
-                <select required>
+    <select id="availability" required>
 
-                    <option>Weekdays</option>
-                    <option>Weekends</option>
-                    <option>Day Shift</option>
-                    <option>Night Shift</option>
-                    <option>Anytime</option>
+        <option value="">Select...</option>
+        <option>Weekdays</option>
+        <option>Weekends</option>
+        <option>Day Shift</option>
+        <option>Night Shift</option>
+        <option>Anytime</option>
 
-                </select>
+    </select>
 
-                <button type="submit">
+    <button type="submit">
 
-                    Submit Application
+        Submit Application
 
-                </button>
+    </button>
 
-            </form>
-
+</form>
         </div>
 
     </div>
 
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
 <script src="driver.js"></script>
 </body>
 

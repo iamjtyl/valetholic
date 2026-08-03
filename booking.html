@@ -31,7 +31,25 @@
 </div>
 
 <script src="booking.js"></script>
+const booking = {
 
+    customer_name: document.getElementById("customerName").value,
+
+    mobile: document.getElementById("mobileNumber").value,
+
+    pickups: [],
+
+    destinations: [],
+
+    date: document.querySelector("input[type='date']").value,
+
+    time: document.getElementById("bookingTime").value,
+
+    vehicle: document.querySelector("input[placeholder='e.g. Toyota Alphard']").value,
+
+    remarks: document.querySelector("textarea").value
+
+};
 </body>
 
 </html> 

@@ -85,10 +85,39 @@ summary.innerHTML = `
 </div>
 `;
 
-function submitBooking(){
+async function submitBooking(){
 
-    // Later we'll save to database here
+     alert("SubmitBooking is running!");
+     
+    const booking = JSON.parse(localStorage.getItem("booking"));
 
-    window.location.href = "success.html";
+    const { data, error } = await window.supabaseClient
+        .from("Bookings")
+        .insert([
+            {
+                customer_name: booking.customer_name,
+                mobile: booking.mobile,
+                pickups: booking.pickups,
+                destinations: booking.destinations,
+                booking_date: booking.date,
+                booking_time: booking.time,
+                remarks: booking.remarks
+            }
+        ])
+        .select();
+
+    if(error){
+
+        console.error(error);
+
+        alert("Booking failed.");
+
+        return;
+
+    }
+
+    localStorage.setItem("bookingData",JSON.stringify(data[0]));
+
+    window.location.href="success.html";
 
 }
