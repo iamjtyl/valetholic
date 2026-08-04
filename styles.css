@@ -137,20 +137,34 @@ HERO
 .hero{
     max-width:1400px;
     margin:auto;
-    display:grid;
-    grid-template-columns:1.15fr .85fr;
-    gap:80px;
-    align-items:start;
-    padding:120px 70px 40px;
-}
 
+    display:grid;
+
+    grid-template-columns:1.15fr .85fr;
+
+    gap:80px;
+
+    align-items:center;
+
+    padding:120px 70px 40px;
+
+    transition:grid-template-columns .6s ease;
+}
 
 .hero-left{
 
     max-width:620px;
 
-}
+    margin:auto;
 
+    transition:.6s ease;
+
+}
+.hero.booking-open .hero-left{
+
+    margin:0;
+
+}
 .hero-label{
 
     color:#D4AF37;
@@ -269,12 +283,15 @@ HERO
 /* ====================================
 BOOKING CARD
 ==================================== */
+.hero.booking-open .hero-right{
 
-.hero-right{
-    display:flex;
-    justify-content:flex-end;
+    opacity:1;
+
+    transform:translateX(0);
+
+    pointer-events:auto;
+
 }
-
 .booking-card{
     width:100%;
     max-width:420px;
@@ -550,10 +567,47 @@ LUXURY POLISH
 
 /* Smooth Animation */
 
-.hero-left,
 .hero-right{
 
-    animation:fadeUp .8s ease;
+    display:flex;
+
+    justify-content:flex-end;
+
+    opacity:0;
+
+    transform:translateX(100px);
+
+    transition:opacity .5s ease,
+               transform .6s ease;
+
+    pointer-events:none;
+
+}
+
+.hero-left{
+
+    display:block;
+
+    opacity:1;
+
+    transform:none;
+
+    pointer-events:auto;
+
+}
+.hero.booking-open{
+
+    grid-template-columns:1.15fr .85fr;
+
+}
+
+.hero.booking-open .hero-right{
+
+    opacity:1;
+
+    transform:translateX(0);
+
+    pointer-events:auto;
 
 }
 

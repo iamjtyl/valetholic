@@ -48,17 +48,20 @@ NAVIGATION
 
 <div class="nav-buttons">
 
-    <a href="#booking" class="nav-button">
-        Book Now
-    </a>
+   <a href="javascript:void(0)"
+   class="nav-button"
+   onclick="showBooking()">
+
+    I'm Not Drunk
+
+</a>
 
     <a
-        href="https://wa.me/6587923386?text=Hello%20Valetholic!%20I'd%20like%20to%20request%20a%20valet%20driver.%0A%0APick-up%20Location:%20%0ADestination:%20%0A%0ADate:%20%0ATime:%20"
-        target="_blank"
-        class="whatsapp-btn">
+    href="https://wa.me/6587923386?text=Hello%20Valetholic!%20I've%20been%20drinking%20and%20need%20a%20valet%20driver."
+    class="whatsapp-btn"
+    target="_blank">
 
-        <i class="fab fa-whatsapp"></i>
-        <span>WhatsApp</span>
+        🍻 I've Been Drinking
 
     </a>
 
@@ -69,11 +72,11 @@ NAVIGATION
 HERO
 ========================= -->
 
-<section class="hero">
+<section class="hero" id="hero">
 
     <!-- LEFT -->
 
-    <div class="hero-left">
+    <div class="hero-left" id="heroLeft">
 
         <p class="hero-label">
 
@@ -142,9 +145,9 @@ HERO
 
     <!-- RIGHT -->
 
-    <div class="hero-right">
+    <div class="hero-right" id="heroRight">
 
-        <div class="booking-card" id="booking">
+        <div class="booking-card hidden-booking" id="booking">
 
             <h2>
 
@@ -524,5 +527,6 @@ bookingTime.value=String(hour).padStart(2,"0")+":"+minute;
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
 <script src="script.js"></script>
+<script src="home.js"></script>
 </body>
 </html>
