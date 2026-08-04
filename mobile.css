@@ -1,0 +1,63 @@
+/* ===================================
+MOBILE
+=================================== */
+
+@media (max-width:1000px){
+
+}
+/* ===================================
+MOBILE
+=================================== */
+
+@media (max-width:1000px){
+
+    /* NAVBAR */
+
+    .navbar{
+
+        height:70px;
+
+        padding:0 16px;
+
+    }
+
+    .logo{
+
+        gap:8px;
+
+    }
+
+    .logo img{
+
+        width:34px;
+
+    }
+
+    .logo span{
+
+        font-size:17px;
+
+        letter-spacing:2px;
+
+    }
+
+    .nav-buttons{
+
+        gap:8px;
+
+    }
+
+    .nav-button,
+    .whatsapp-btn{
+
+        height:42px;
+
+        padding:0 14px;
+
+        font-size:13px;
+
+        border-radius:10px;
+
+    }
+
+}
