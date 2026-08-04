@@ -55,7 +55,11 @@
     /* ==========================
        BOOKING CARD
     ========================== */
+    .booking-row{
 
+    grid-template-columns:1fr;
+
+    }
     .booking-card{
         width:100%;
         max-width:100%;
@@ -94,10 +98,5 @@
     .steps{
         grid-template-columns:1fr;
     }
-
-}
-.booking-row{
-
-    grid-template-columns:1fr;
 
 }
