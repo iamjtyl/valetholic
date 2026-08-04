@@ -210,3 +210,23 @@ FAQ
 }
 
 }
+.booking-row{
+
+    width:100%;
+
+}
+
+.booking-row > div{
+
+    width:100%;
+
+}
+
+.booking-row input,
+.booking-row select{
+
+    width:100%;
+
+    display:block;
+
+}
