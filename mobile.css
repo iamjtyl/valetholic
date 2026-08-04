@@ -70,9 +70,24 @@ MOBILE
     box-sizing:border-box;
 
 }
-.booking-card input[type="date"]{
+.booking-card{
 
     width:100%;
-    min-width:0;
+    max-width:100%;
+    margin:0;
+    padding:25px;
+    overflow:hidden;
+    box-sizing:border-box;
+
+}
+.booking-card form{
+
+    width:100%;
+
+}
+.booking-card *{
+
+    max-width:100%;
+    box-sizing:border-box;
 
 }
