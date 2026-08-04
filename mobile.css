@@ -3,7 +3,20 @@
 =================================== */
 
 @media (max-width:1000px){
+input[type="date"]{
 
+    width:100%;
+    max-width:100%;
+    min-width:0;
+
+    display:block;
+
+    appearance:none;
+    -webkit-appearance:none;
+
+    box-sizing:border-box;
+
+}
 /* =========================
 NAVBAR
 ========================= */
@@ -106,7 +119,7 @@ BOOKING CARD
     padding:24px;
 
     margin:0;
-
+    overflow:hidden;
 }
 
 .booking-card h2{
