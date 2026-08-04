@@ -23,26 +23,32 @@ NAVBAR
 
 .navbar{
 
-    padding:14px 18px;
-    height:72px;
+    padding:0 12px;
+
+    height:68px;
 
 }
 
 .logo{
 
-    gap:10px;
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
 
 }
 
 .logo img{
 
-    width:30px;
+    width:28px;
 
 }
 
 .logo span{
 
-    font-size:17px;
+    font-size:15px;
+
     letter-spacing:1px;
 
 }
@@ -56,17 +62,28 @@ NAVBAR
 .nav-buttons{
 
     display:flex;
-    gap:8px;
+
+    align-items:center;
+
+    gap:6px;
+
+    margin-top:0;
+
+    margin-left:auto;
 
 }
 
 .nav-button,
 .whatsapp-btn{
 
-    height:42px;
-    padding:0 14px;
-    font-size:13px;
+    height:38px;
+
+    padding:0 10px;
+
+    font-size:12px;
+
     border-radius:10px;
+
     white-space:nowrap;
 
 }
