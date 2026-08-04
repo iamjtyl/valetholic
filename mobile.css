@@ -29,15 +29,15 @@ MOBILE
 
     .logo img{
 
-        width:34px;
+        width:30px;
 
     }
 
     .logo span{
 
-        font-size:17px;
+        font-size:16px;
 
-        letter-spacing:2px;
+        letter-spacing:0.5px;
 
     }
 
@@ -50,11 +50,11 @@ MOBILE
     .nav-button,
     .whatsapp-btn{
 
-        height:42px;
+        height:40px;
 
-        padding:0 14px;
+        padding:0 12px;
 
-        font-size:13px;
+        font-size:12px;
 
         border-radius:10px;
 
