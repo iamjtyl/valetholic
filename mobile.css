@@ -61,16 +61,18 @@ MOBILE
     }
 
 }
-.table-card{
+.booking-card input,
+.booking-card select,
+.booking-card textarea{
 
-    overflow-x:auto;
-
-    -webkit-overflow-scrolling:touch;
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
 
 }
+.booking-card input[type="date"]{
 
-table{
-
-    min-width:900px;
+    width:100%;
+    min-width:0;
 
 }
