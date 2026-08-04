@@ -1,0 +1,217 @@
+/* =========================
+BOOKING MODAL
+========================= */
+
+.modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.75);
+
+    z-index:9999;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.modal-content{
+
+    width:700px;
+
+    max-width:90%;
+
+    background:#171717;
+
+    border:1px solid rgba(212,175,55,.25);
+
+    border-radius:20px;
+
+    padding:35px;
+
+    color:white;
+
+    box-shadow:0 20px 50px rgba(0,0,0,.6);
+
+}
+
+.modal-content h2{
+
+    margin-bottom:30px;
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:42px;
+
+    color:#D4AF37;
+
+}
+
+.close-modal{
+
+    float:right;
+
+    font-size:32px;
+
+    cursor:pointer;
+
+    color:#999;
+
+}
+
+.close-modal:hover{
+
+    color:white;
+
+}
+.modal-buttons{
+
+margin-top:30px;
+
+display:flex;
+
+justify-content:center;
+
+}
+
+.complete-btn{
+
+background:#D4AF37;
+
+color:#111;
+
+border:none;
+
+padding:15px 40px;
+
+border-radius:10px;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.complete-btn:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 10px 25px rgba(212,175,55,.35);
+
+}
+.admin-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    font-size:16px;
+
+}
+
+.admin-actions span{
+
+    color:#555;
+
+}
+
+.website-link,
+.logout-link{
+
+    color:#cfcfcf;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.website-link:hover,
+.logout-link:hover{
+
+    color:#D4AF37;
+
+}
+.table-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+#searchBooking{
+
+    width:320px;
+
+    padding:12px 16px;
+
+    background:#232323;
+
+    border:1px solid #333;
+
+    border-radius:10px;
+
+    color:white;
+
+    font-size:15px;
+
+}
+
+#searchBooking:focus{
+
+    outline:none;
+
+    border-color:#D4AF37;
+
+}
+.table-controls{
+
+    display:flex;
+
+    gap:12px;
+
+    align-items:center;
+
+}
+
+#statusFilter{
+
+    padding:12px 16px;
+
+    background:#232323;
+
+    color:white;
+
+    border:1px solid #333;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+}
+
+#statusFilter:focus{
+
+    outline:none;
+
+    border-color:#D4AF37;
+
+}

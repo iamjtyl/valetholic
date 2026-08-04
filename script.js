@@ -1,3 +1,4 @@
+console.log("I AM EDITING THE CORRECT SCRIPT");
 function addPickup(){
 
     const input=document.createElement("input");
@@ -14,11 +15,11 @@ function addPickup(){
 
 function addDestination(){
 
-    const input=document.createElement("input");
+    const input = document.createElement("input");
 
-    input.type="text";
+    input.type = "text";
 
-    input.placeholder="Enter another destination";
+    input.placeholder = "Enter another destination";
 
     document
         .getElementById("destinationContainer")
@@ -27,59 +28,35 @@ function addDestination(){
 }
 async function continueBooking() {
 
-    const booking = {
+    try {
 
-        customer_name: document.getElementById("customerName").value,
+        const booking = {
+            customer_name: document.getElementById("customerName")?.value,
+            mobile: document.getElementById("mobileNumber")?.value,
+            pickups: [],
+            destinations: [],
+            date: document.getElementById("bookingDate")?.value,
+            time: document.getElementById("bookingTime")?.value,
+            vehicle: document.querySelector("input[placeholder='e.g. Toyota Alphard']")?.value,
+            remarks: document.querySelector("textarea")?.value
+        };
 
-        mobile: document.getElementById("mobileNumber").value,
+        document.querySelectorAll("#pickupContainer input").forEach(input => {
+            booking.pickups.push(input.value);
+        });
 
-        pickups: [],
+        document.querySelectorAll("#destinationContainer input").forEach(input => {
+            booking.destinations.push(input.value);
+        });
 
-        destinations: [],
+        console.log("Booking:", booking);
 
-        date: document.querySelector("input[type='date']").value,
+        localStorage.setItem("booking", JSON.stringify(booking));
 
-        time: document.getElementById("bookingTime").value,
+        window.location.href = "booking.html";
 
-        vehicle: document.querySelector("input[placeholder='e.g. Toyota Alphard']").value,
-
-        remarks: document.querySelector("textarea").value
-
-    };
-
-    document.querySelectorAll("#pickupContainer input").forEach(input => {
-        booking.pickups.push(input.value);
-    });
-
-    document.querySelectorAll("#destinationContainer input").forEach(input => {
-        booking.destinations.push(input.value);
-    });
-
-   const { data, error } = await window.supabaseClient
-    .from("Bookings")
-    .insert([
-        {
-            ...
-        }
-                   customer_name: booking.customer_name,
-                mobile: booking.mobile,
-                pickups: booking.pickups,
-                destinations: booking.destinations,
-                booking_date: booking.date,
-                booking_time: booking.time,
-                remarks: booking.remarks
-            }
-        ])
-        .select();
-
-    if (error) {
-        console.error(error);
-        alert("Booking failed. Please try again.");
-        return;
+    } catch (e) {
+        console.error(e);
+        alert(e.stack);
     }
-
-    localStorage.setItem("booking", JSON.stringify(booking));
-    localStorage.setItem("bookingData", JSON.stringify(data[0]));
-
-    window.location.href = "booking.html";
 }
