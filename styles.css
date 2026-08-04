@@ -641,52 +641,6 @@ input[type="date"]{
 }
 
 /* Responsive */
-
-@media(max-width:1000px){
-
-.hero{
-
-grid-template-columns:1fr;
-
-padding:120px 30px 50px;
-
-gap:50px;
-
-}
-
-.hero-right{
-
-display:flex;
-
-justify-content:center;
-
-}
-
-.booking-card{
-
-max-width:100%;
-
-}
-
-.steps{
-
-grid-template-columns:1fr;
-
-}
-
-.navbar{
-
-padding:0 25px;
-
-}
-
-.navbar ul{
-
-display:none;
-
-}
-
-}
 .journey-block{
 
     border-bottom:1px solid rgba(255,255,255,.08);
