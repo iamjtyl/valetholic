@@ -3,142 +3,294 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Drive With Valetholic</title>
+    <title>Earn With Valetholic</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet" href="driver.css">
 
 </head>
 
-<body class="driver-page">
+<body>
+
+<!-- =========================
+NAVIGATION
+========================= -->
 
 <nav class="navbar">
 
     <div class="logo">
 
-        <img src="images/logo.png" alt="Valetholic Logo">
+        <a href="index.html">
+
+            <img src="images/logo.png" alt="Valetholic Logo">
+
+        </a>
 
         <span>VALETHOLIC</span>
 
     </div>
 
-<a href="index.html" class="back-home">
+    <ul>
 
-    ← Back to Home
+        <li><a href="#opportunity">Opportunities</a></li>
 
-</a>
+        <li><a href="#requirements">Requirements</a></li>
 
-</nav>
+        <li><a href="#process">How It Works</a></li>
 
-<section class="hero">
+    </ul>
 
-    <div class="hero-left">
+    <div class="nav-buttons">
 
-        <p class="hero-label">
+        <a href="index.html" class="nav-button">
 
-            Join Our Team
+            Back to Homepage
 
-        </p>
+        </a>
 
-       <h1 class="hero-title">
+        <a href="driver-portal.html" class="whatsapp-btn">
 
-    Become A<br>
-    Valetholic<br>
-    <span>Driver.</span>
+            Driver Portal
 
-</h1>
-
-<p class="hero-description">
-
-Earn extra income by driving customers and
-their vehicles home safely.
-
-Choose your own availability and become part
-of Singapore's premium valet team.
-
-</p>
-<div class="driver-benefits">
-
-    <p>✔ Flexible working hours</p>
-
-    <p>✔ Weekly payouts</p>
-
-    <p>✔ Drive when you're available</p>
-
-</div>
+        </a>
 
     </div>
 
-    <div class="hero-right">
+</nav>
 
-        <div class="booking-card">
+<!-- =========================
+HERO
+========================= -->
 
-            <h2>
+<section class="driver-hero">
 
-                Driver Application
+    <div class="hero-content">
 
-            </h2>
+        <p class="hero-label">
 
-           <form id="driverForm">
+            Join Singapore's Premium Valet Team
 
-    <label>Full Name</label>
-    <input type="text" id="name" required>
+        </p>
 
-    <label>Mobile Number</label>
-    <input type="tel" id="mobile" required>
+        <h1>
 
-    <label>Date of Birth</label>
-    <input type="date" id="date_of_birth" required>
+            Earn With <span>Valetholic</span>
 
-    <label>Driving Experience</label>
+        </h1>
 
-    <select id="driving_experience" required>
+        <p class="hero-description">
 
-        <option value="">Select...</option>
-        <option>Less than 1 year</option>
-        <option>1-3 Years</option>
-        <option>3-5 Years</option>
-        <option>5-10 Years</option>
-        <option>10+ Years</option>
+            Whether you're looking for a flexible side hustle,
+            full-time driving opportunities or simply want to earn
+            through referrals, there's a place for you here.
 
-    </select>
+        </section>
 
-    <label>Availability</label>
+<!-- =========================
+CHOOSE YOUR OPPORTUNITY
+========================= -->
 
-    <select id="availability" required>
+<section class="opportunity" id="opportunity">
 
-        <option value="">Select...</option>
-        <option>Weekdays</option>
-        <option>Weekends</option>
-        <option>Day Shift</option>
-        <option>Night Shift</option>
-        <option>Anytime</option>
+    <div class="section-title">
 
-    </select>
+        <p class="section-label">
 
-    <button type="submit">
+            EARN WITH US
 
-        Submit Application
+        </p>
 
-    </button>
+        <h2>
 
-</form>
+            Choose Your Opportunity
+
+        </h2>
+
+        <p>
+
+            Whether you're looking to drive,
+            support our operations,
+            or simply refer customers,
+            there's a place for you at Valetholic.
+
+        </p>
+
+    </div>
+
+    <div class="opportunity-grid">
+
+        <!-- Valet Driver -->
+
+        <div class="opportunity-card">
+
+            <div class="opportunity-icon">
+
+                🚗
+
+            </div>
+
+            <h3>
+
+                Valet Driver
+
+            </h3>
+
+            <p>
+
+                Drive customers' vehicles safely
+                to their destinations.
+
+            </p>
+
+            <ul>
+
+                <li>✔ No vehicle required</li>
+
+                <li>✔ Class 3 / 3A Licence</li>
+
+                <li>✔ Flexible working hours</li>
+
+                <li>✔ Daily payout</li>
+
+            </ul>
+
+            <a href="https://wa.me/6587923386?text=Hi%20Valetholic!%20I'd%20like%20to%20apply%20as%20a%20Valet%20Driver."
+            class="gold-btn">
+
+                I'm Ready to Join
+
+            </a>
+
+        </div>
+
+        <!-- Support Driver -->
+
+        <div class="opportunity-card">
+
+            <div class="opportunity-icon">
+
+                🚙
+
+            </div>
+
+            <h3>
+
+                Support Driver
+
+            </h3>
+
+            <p>
+
+                Use your own vehicle to transport
+                our valet drivers between jobs.
+
+            </p>
+
+            <ul>
+
+                <li>✔ Own vehicle required</li>
+
+                <li>✔ Class 3 / 3A Licence</li>
+
+                <li>✔ Flexible working hours</li>
+
+                <li>✔ Daily payout</li>
+
+            </ul>
+
+            <a href="https://wa.me/6587923386?text=Hi%20Valetholic!%20I'd%20like%20to%20apply%20as%20a%20Support%20Driver."
+            class="gold-btn">
+
+                I'm Ready to Join
+
+            </a>
+
+        </div>
+
+        <!-- Referral -->
+
+        <div class="opportunity-card">
+
+            <div class="opportunity-icon">
+
+                🤝
+
+            </div>
+
+            <h3>
+
+                Referral Partner
+
+            </h3>
+
+            <p>
+
+                Refer customers and earn commission
+                for every completed booking.
+
+            </p>
+
+            <div class="commission">
+
+                Earn <span>$15</span><br>
+
+                Per Successful Referral
+
+            </div>
+
+            <ul>
+
+                <li>✔ No driving required</li>
+
+                <li>✔ Unlimited referrals</li>
+
+                <li>✔ Daily payout</li>
+
+            </ul>
+
+            <a href="https://wa.me/6587923386?text=Hi%20Valetholic!%20I'd%20like%20to%20become%20a%20Referral%20Partner."
+            class="gold-btn">
+
+                I'm Ready to Join
+
+            </a>
+
         </div>
 
     </div>
 
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script src="driver.js"></script>
+<!-- =========================
+FOOTER
+========================= -->
+
+<footer>
+
+    <h2>
+
+        VALETHOLIC
+
+    </h2>
+
+    <p>
+
+        Singapore's Premium Valet Service
+
+    </p>
+
+</footer>
+
 </body>
 
 </html>

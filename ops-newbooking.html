@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>New Booking</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="ops.css">
+
+</head>
+
+<body>
+
+<div class="ops-container">
+
+<header class="ops-header">
+
+    <div>
+
+        <h1>FRESH BIRD</h1>
+
+
+    </div>
+
+    <button class="logout-btn">
+
+        Cancel
+
+    </button>
+
+</header>
+
+<div class="form-card">
+
+    <!-- CUSTOMER -->
+
+    <div class="form-section">
+
+        <h2>👤 Customer Information</h2>
+
+        <div class="input-group">
+
+            <label>Customer Name</label>
+            <input type="text" placeholder="Enter customer name">
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Mobile Number</label>
+            <input type="tel" placeholder="+65">
+
+        </div>
+
+    </div>
+
+    <!-- VEHICLE -->
+
+    <div class="form-section">
+
+        <h2>🚘 Vehicle Information</h2>
+
+        <div class="input-group">
+
+            <label>Vehicle Plate</label>
+            <input type="text" placeholder="SXX1234A">
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Vehicle Model</label>
+            <input type="text" placeholder="BMW 520i">
+
+        </div>
+
+    </div>
+
+    <!-- JOURNEY -->
+
+    <div class="form-section">
+
+        <h2>📍 Journey Information</h2>
+
+        <div class="input-group">
+
+            <label>Pickup Location</label>
+            <input type="text" placeholder="Enter pickup location">
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Destination</label>
+            <input type="text" placeholder="Enter destination">
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Pickup Time</label>
+            <input type="datetime-local">
+
+        </div>
+
+    </div>
+
+    <!-- REMARKS -->
+
+    <div class="form-section">
+
+        <h2>📝 Remarks</h2>
+
+        <div class="input-group">
+
+            <textarea rows="5"
+                      placeholder="Internal remarks..."></textarea>
+
+        </div>
+
+    </div>
+
+    <button class="gold-btn">
+
+        CREATE BOOKING
+
+    </button>
+
+</div>
+</div>
+
+</div>
+
+<script src="ops.js"></script>
+
+</body>
+
+</html>

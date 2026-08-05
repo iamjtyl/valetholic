@@ -1,7 +1,18 @@
 function showBooking(){
 
-    document
-        .getElementById("hero")
-        .classList.add("booking-open");
+    const hero = document.getElementById("hero");
+
+    hero.classList.add("booking-open");
+
+    setTimeout(() => {
+
+        hero.scrollIntoView({
+
+            behavior:"smooth",
+            block:"start"
+
+        });
+
+    }, 500);
 
 }

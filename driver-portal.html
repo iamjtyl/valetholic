@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Valetholic Driver Hub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="driver-portal.css">
+    <script>
+console.log("Supabase library:", window.supabase);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+console.log("After loading:", window.supabase);
+</script>
+
+    <script src="supabase.js"></script>
+
+</head>
+
+<body>
+
+<div class="portal-container">
+
+<div class="portal-card">
+
+    <div class="logo">
+
+        <img src="images/logo.png" alt="Valetholic Logo">
+
+        <h1>VALETHOLIC</h1>
+
+        <p>I'm ready to earn big bucks</p><br>
+       
+
+    </div>
+
+    <div class="switch">
+
+        <button class="switch-btn active" id="loginTab">
+
+            Login
+
+        </button>
+
+        <button class="switch-btn" id="registerTab">
+
+            Register
+
+        </button>
+
+    </div>
+
+    <!-- LOGIN -->
+
+    <div id="loginForm">
+
+        <div class="input-group">
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                placeholder="Enter your email">
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                placeholder="Enter your password">
+
+        </div>
+
+        <div class="login-options">
+
+            <label>
+
+                <input type="checkbox">
+
+                Remember Me
+
+            </label>
+
+            <a href="#">
+
+                Forgot Password?
+
+            </a>
+
+        </div>
+
+        <button class="gold-btn">
+
+            LOGIN
+
+        </button>
+
+    </div>
+
+    <!-- REGISTER -->
+
+    <div id="registerForm" style="display:none;">
+
+        <div class="input-group">
+
+            <label>Full Name</label>
+
+            <input id="regName" type="text" placeholder="Your full name">
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Mobile Number</label>
+
+            <input id="regMobile" type="tel" placeholder="+65">
+
+        </div>
+
+         <div class="input-group">
+
+            <label>Email Address</label>
+
+            <input id="regEmail" type="email" placeholder="Email address">
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Licence Type</label>
+
+            <select id="regLicence">
+
+                <option>Class 3</option>
+                <option>Class 3A</option>
+
+            </select>
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Own Vehicle?</label>
+
+            <select id="regVehicle">
+
+                <option>No</option>
+                <option>Yes</option>
+
+            </select>
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Password</label>
+
+            <input id="regPassword" type="password" placeholder="Create password">
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Confirm Password</label>
+
+            <input id="regConfirmPassword" type="password" placeholder="Confirm password">
+
+        </div>
+
+        <button id="registerBtn" class="gold-btn">
+
+            CREATE ACCOUNT
+
+        </button>
+
+    </div>
+</div>
+</div>
+
+<script src="driver-portal.js"></script>
+
+</body>
+
+</html>
