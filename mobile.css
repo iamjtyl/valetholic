@@ -49,6 +49,8 @@ NAVBAR
 
     gap:10px;
 
+    order:1;
+
 }
 
 .logo img{
@@ -67,7 +69,25 @@ NAVBAR
 
 .navbar ul{
 
-    display:none;
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:28px;
+
+    list-style:none;
+
+    margin:0;
+
+    padding:0;
+
+    order:3;
+
+}
 
 }
 
@@ -78,6 +98,8 @@ NAVBAR
     display:flex;
 
     gap:10px;
+
+    order:2;
 
 }
 
@@ -275,7 +297,7 @@ FAQ
         display:flex;
         flex-direction:column;
         align-items:center;
-        gap:18px;
+        gap:10px;
 
     }
 
