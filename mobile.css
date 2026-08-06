@@ -23,33 +23,45 @@ NAVBAR
 
 .navbar{
 
-    padding:0 12px;
+    display:flex;
+    flex-wrap:wrap;
 
-    height:68px;
+    align-items:center;
+    justify-content:center;
+
+    gap:14px;
+
+    padding:14px 18px;
+
+    height:auto;
 
 }
 
 .logo{
 
+    width:100%;
+
     display:flex;
+
+    justify-content:center;
 
     align-items:center;
 
-    gap:8px;
+    gap:10px;
 
 }
 
 .logo img{
 
-    width:28px;
+    width:34px;
 
 }
 
 .logo span{
 
-    font-size:15px;
+    font-size:18px;
 
-    letter-spacing:1px;
+    letter-spacing:2px;
 
 }
 
@@ -61,33 +73,28 @@ NAVBAR
 
 .nav-buttons{
 
+    width:100%;
+
     display:flex;
 
-    align-items:center;
-
-    gap:6px;
-
-    margin-top:0;
-
-    margin-left:auto;
+    gap:10px;
 
 }
 
 .nav-button,
 .whatsapp-btn{
 
-    height:38px;
+    flex:1;
 
-    padding:0 10px;
+    height:48px;
 
-    font-size:12px;
+    font-size:15px;
 
-    border-radius:10px;
+    border-radius:14px;
 
-    white-space:nowrap;
+    padding:0;
 
 }
-
 /* =========================
 HERO
 ========================= */

@@ -1556,3 +1556,109 @@ footer p{
     color:var(--muted);
 
 }
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+/* ===========================
+   SUCCESS PAGE
+=========================== */
+
+.success-container{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px 20px;
+    background:#0f0f0f;
+}
+
+.success-card{
+    width:100%;
+    max-width:650px;
+    background:#1b1b1b;
+    border:1px solid rgba(212,175,55,.2);
+    border-radius:24px;
+    padding:50px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.success-icon{
+    width:90px;
+    height:90px;
+    margin:0 auto 25px;
+    border-radius:50%;
+    background:#27c35a;
+    color:#fff;
+    font-size:46px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.success-card h1{
+    color:#fff;
+    margin-bottom:20px;
+    font-size:38px;
+}
+
+.success-card p{
+    color:#cfcfcf;
+    line-height:1.8;
+    margin-bottom:30px;
+}
+
+.booking-id{
+    background:#252525;
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:30px;
+}
+
+.booking-id small{
+    display:block;
+    color:#999;
+    margin-bottom:6px;
+}
+
+.booking-id span{
+    color:#d4af37;
+    font-size:24px;
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+.success-buttons{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.whatsapp-btn,
+.nav-button{
+    display:block;
+    text-decoration:none;
+    padding:18px;
+    border-radius:14px;
+    font-weight:700;
+    transition:.25s;
+}
+
+.whatsapp-btn{
+    background:#25D366;
+    color:#fff;
+}
+
+.whatsapp-btn:hover{
+    background:#1ebe5b;
+}
+
+.nav-button{
+    background:#d4af37;
+    color:#111;
+}
+
+.nav-button:hover{
+    background:#c39f2e;
+}

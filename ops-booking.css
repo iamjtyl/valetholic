@@ -1,0 +1,126 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:'Inter',sans-serif;
+    background:#f6f7fb;
+    color:#222;
+
+}
+
+.ops-container{
+
+    max-width:900px;
+    margin:40px auto;
+    padding:25px;
+
+}
+
+.ops-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+
+}
+
+.ops-header h1{
+
+    font-size:36px;
+
+}
+
+.logout-btn{
+
+    background:#111;
+    color:#fff;
+    border:none;
+    padding:12px 22px;
+    border-radius:12px;
+    cursor:pointer;
+
+}
+
+.booking-section{
+
+    background:#fff;
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+.booking-section h2{
+
+    margin-bottom:18px;
+    color:#D4AF37;
+
+}
+
+.booking-section p{
+
+    margin-bottom:10px;
+    line-height:1.7;
+
+}
+
+.booking-section select{
+
+    width:100%;
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:12px;
+    font-size:15px;
+
+}
+
+.gold-btn{
+
+    width:100%;
+    margin-top:15px;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:#D4AF37;
+    color:#111;
+    font-weight:700;
+    cursor:pointer;
+
+}
+/* ===========================
+   BOOKING HEADER
+=========================== */
+
+#bookingReference{
+
+    font-size:42px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    margin-bottom:8px;
+
+}
+
+#bookingStatus{
+
+    display:inline-block;
+
+    padding:8px 16px;
+
+    background:#FEF3C7;
+
+    color:#92400E;
+
+    border-radius:999px;
+
+    font-weight:700;
+
+}

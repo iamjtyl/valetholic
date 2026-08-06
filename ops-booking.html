@@ -20,8 +20,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
 
-    <link rel="stylesheet"
-          href="ops.css">
+    <link rel="stylesheet" href="ops-booking.css">
 
 </head>
 
@@ -33,13 +32,22 @@
 
         <div>
 
-            <h1>BOOKING</h1>
+    <h1 id="bookingReference">
 
-            <p>#250001</p>
+        VH-0000
 
-        </div>
+    </h1>
 
-        <button class="logout-btn">
+    <p id="bookingStatus">
+
+        Pending Assignment
+
+    </p>
+
+</div>
+
+        <button class="logout-btn"
+    onclick="window.location.href='ops-dashboard.html'">
 
             Back
 
@@ -53,9 +61,13 @@
 
         <h2>Customer</h2>
 
-        <p><strong>Name:</strong> Customer Name</p>
+        <p><strong>Name:</strong>
+        <span id="customerName"></span>
+        </p>
 
-        <p><strong>Mobile:</strong> +65 XXXXXXXX</p>
+        <p><strong>Mobile:</strong>
+        <span id="customerMobile"></span>
+        </p>
 
     </section>
 
@@ -65,11 +77,17 @@
 
         <h2>Journey</h2>
 
-        <p><strong>Pickup:</strong> Marina Bay Sands</p>
+        <p><strong>Pickup:</strong>
+        <span id="pickup"></span>
+        </p>
 
-        <p><strong>Destination:</strong> Tampines</p>
+        <p><strong>Destination:</strong>
+        <span id="destination"></span>
+        </p>
 
-        <p><strong>Time:</strong> 10:30 PM</p>
+        <p><strong>Time:</strong>
+        <span id="bookingTime"></span>
+        </p>
 
     </section>
 
@@ -79,9 +97,13 @@
 
         <h2>Vehicle</h2>
 
-        <p><strong>Model:</strong> BMW 520i</p>
+        <p><strong>Model:</strong>
+        <span id="vehicleModel"></span>
+        </p>
 
-        <p><strong>Plate:</strong> SXX1234A</p>
+        <p><strong>Plate:</strong>
+        <span id="vehiclePlate"></span>
+        </p>
 
     </section>
 
@@ -91,13 +113,18 @@
 
         <h2>Driver</h2>
 
-        <select>
+        <select id="driverSelect">
 
-            <option>Select Driver</option>
+    <option>Loading drivers...</option>
 
-            <option>Driver 1</option>
+</select>
+    <button
+    class="gold-btn"
+    id="assignBtn">
 
-            <option>Driver 2</option>
+    ASSIGN DRIVER
+
+    </button>
 
         </select>
 
@@ -145,7 +172,9 @@
 
 </div>
 
-<script src="ops.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="ops-booking.js"></script>
 
 </body>
 

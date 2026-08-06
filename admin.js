@@ -116,13 +116,12 @@ bookings
            <td>
 
     <button
-        class="view-btn"
-        onclick="openBooking('${b.id}')">
+    class="view-btn"
+    onclick="viewBooking('${b.id}')">
 
-        Checked ✓
+    OPEN
 
-    </button>
-
+</button>
 </td>
 
         </tr>
@@ -135,62 +134,10 @@ bookings
 loadDashboard();
 
 
-// =====================================
-// OPEN BOOKING
-// =====================================
+function viewBooking(id){
 
-async function openBooking(id){
-    currentBookingId = id;
-
-    const { data, error } = await window.supabaseClient
-        .from("Bookings")
-        .select("*")
-        .eq("id", id)
-        .single();
-
-    if(error){
-
-    console.error(error);
-
-    alert(error.message);
-
-    return;
-
-}
-
-alert("Booking marked as Completed!");
-
-    document.getElementById("modalBody").innerHTML = `
-
-        <p><strong>Reference:</strong> VH-${data.reference_no}</p>
-
-        <p><strong>Customer:</strong> ${data.customer_name}</p>
-
-        <p><strong>Mobile:</strong> ${data.mobile}</p>
-
-        <p><strong>Pickup:</strong><br>${JSON.parse(data.pickups).join("<br>")}</p>
-
-        <p><strong>Destination:</strong><br>${JSON.parse(data.destinations).join("<br>")}</p>
-
-        <p><strong>Date:</strong> ${data.booking_date}</p>
-
-        <p><strong>Status:</strong> ${data.status}</p>
-
-        <p><strong>Remarks:</strong> ${data.remarks || "-"}</p>
-    <div class="modal-buttons">
-
-    <button
-        class="complete-btn"
-        onclick="markCompleted()">
-
-        ✓ Mark Completed
-
-    </button>
-
-</div>
-    `;
-
-    document.getElementById("bookingModal").style.display = "flex";
+    window.location.href =
+        `ops-booking.html?id=${id}`;
 
 }
 

@@ -29,15 +29,13 @@
 
 <div class="ops-container">
 
-    <!-- HEADER -->
-
     <header class="ops-header">
 
         <div>
 
             <h1>VALETHOLIC</h1>
 
-            <p>Slaver</p>
+            <p>Operations Centre</p>
 
         </div>
 
@@ -49,145 +47,78 @@
 
     </header>
 
-    <!-- NAVIGATION -->
-
-    <nav class="ops-nav">
-
-        <a href="#" class="active">Dashboard</a>
-
-        <a href="#">Bookings</a>
-
-        <a href="#">Drivers</a>
-
-        <a href="#">Customers</a>
-
-        <a href="#">Settings</a>
-
-    </nav>
-
-    <!-- OVERVIEW -->
-
     <section class="overview">
 
-       <div class="stat-card pending">
+        <div class="stat-card pending">
 
-    <small>Pending Assignment</small>
+            <small>Pending Jobs</small>
 
-    <span>3</span>
-
-</div>
-
-<div class="stat-card onduty">
-
-    <small>Drivers On Duty</small>
-
-    <span>6</span>
-
-</div>
-
-<div class="stat-card active">
-
-    <small>Active Jobs</small>
-
-    <span>4</span>
-
-</div>
-
-<div class="stat-card complete">
-
-    <small>Completed Today</small>
-
-    <span>18</span>
-
-</div>
-    <!-- DISPATCH QUEUE -->
-
-    <section class="queue">
-
-        <h2>
-
-            Dispatch Queue
-
-        </h2>
-
-        <div class="booking-card">
-
-            <div>
-
-                <strong>
-
-                    Booking #25001
-
-                </strong>
-<p>
-
-Eric Tan
-
-</p>
-
-<span class="badge pending">
-
-Pending Assignment
-
-</span>
-<span class="badge active">
-
-Customer On Board
-
-</span>
-
-                <p>
-
-                    Marina Bay Sands → Tampines
-
-                </p>
-
-            </div>
-
-            <button class="gold-btn">
-
-                OPEN
-
-            </button>
+            <span id="pendingCount">0</span>
 
         </div>
 
-        <div class="booking-card">
+        <div class="stat-card onduty">
 
-            <div>
+            <small>Drivers On Duty</small>
 
-                <strong>
+            <span id="dutyCount">0</span>
 
-                    Booking #25002
+        </div>
 
-                </strong>
+        <div class="stat-card active">
 
-                <p>
+            <small>Active Jobs</small>
 
-                    Jacqueline Lim
+            <span id="activeCount">0</span>
 
-                </p>
+        </div>
 
-                <p>
+        <div class="stat-card complete">
 
-                    Orchard → Changi
+            <small>Completed Today</small>
 
-                </p>
-
-            </div>
-
-            <button class="gold-btn">
-
-                OPEN
-
-            </button>
+            <span id="completeCount">0</span>
 
         </div>
 
     </section>
 
+    <div class="dashboard-grid">
+
+        <section class="dispatch-panel">
+
+            <h2>
+
+                Dispatch Queue
+
+            </h2>
+
+            <div id="dispatchList">
+
+            </div>
+
+        </section>
+
+        <section class="drivers-panel">
+
+            <h2>
+
+                Drivers
+
+            </h2>
+
+            <div id="driverList">
+
+            </div>
+
+        </section>
+
+    </div>
+
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
 <script src="ops.js"></script>
 
 </body>

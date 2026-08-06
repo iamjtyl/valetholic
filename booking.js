@@ -184,6 +184,7 @@ if (error) {
 
     localStorage.setItem("bookingData",JSON.stringify(data[0]));
 
-    window.location.href="success.html";
+    window.location.href =
+`   success.html?ref=${reference}`;
 
 }

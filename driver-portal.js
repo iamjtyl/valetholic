@@ -1,13 +1,40 @@
-alert("CLICK HANDLER VERSION");
-alert("driver-portal.js loaded");
-
 document.addEventListener("DOMContentLoaded", () => {
 
-    const btn = document.getElementById("registerBtn");
+    // Tabs
+    const loginTab = document.getElementById("loginTab");
+    const registerTab = document.getElementById("registerTab");
 
-    console.log(btn);
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
 
-    btn.addEventListener("click", registerDriver);
+    loginTab.addEventListener("click", () => {
+
+        loginForm.style.display = "block";
+        registerForm.style.display = "none";
+
+        loginTab.classList.add("active");
+        registerTab.classList.remove("active");
+
+    });
+
+    registerTab.addEventListener("click", () => {
+
+        loginForm.style.display = "none";
+        registerForm.style.display = "block";
+
+        registerTab.classList.add("active");
+        loginTab.classList.remove("active");
+
+    });
+
+    // Register Button
+    document
+        .getElementById("registerBtn")
+        .addEventListener("click", registerDriver);
+
+    document
+    .getElementById("loginBtn")
+    .addEventListener("click", loginDriver);
 
 });
 
@@ -19,21 +46,78 @@ async function registerDriver() {
 
     const confirmPassword = document.getElementById("regConfirmPassword").value;
 
-    if (password !== confirmPassword) {
-
-        alert("Passwords do not match.");
-
+    if (!email || !password) {
+        alert("Please enter an email and password.");
         return;
-
     }
 
-    const { data, error } = await window.supabaseClient.auth.signUp({
+    if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+    }
 
-        email: email,
+    const { data, error } =
+        await window.supabaseClient.auth.signUp({
 
-        password: password
+            email,
+            password
 
-    });
+        });
+
+    if (error) {
+        alert(error.message);
+        console.error(error);
+        return;
+    }
+
+    const user = data.user;
+
+const { error: profileError } =
+await window.supabaseClient
+.from("Drivers")
+.insert({
+
+    auth_id: user.id,
+
+    name: document.getElementById("regName").value,
+
+    mobile: document.getElementById("regMobile").value,
+
+    email: email,
+
+    license: document.getElementById("regLicence").value,
+
+    own_vehicle:
+        document.getElementById("regVehicle").value === "Yes"
+
+});
+
+if(profileError){
+
+    console.error(profileError);
+
+    alert(profileError.message);
+
+    return;
+
+}
+
+alert("Driver account created successfully!");
+
+}
+async function loginDriver() {
+
+    const email = document.getElementById("loginEmail").value.trim();
+
+    const password = document.getElementById("loginPassword").value;
+
+    const { data, error } =
+        await window.supabaseClient.auth.signInWithPassword({
+
+            email,
+            password
+
+        });
 
     if (error) {
 
@@ -45,8 +129,6 @@ async function registerDriver() {
 
     }
 
-    alert("Driver account created successfully!");
-
-    console.log(data);
+    window.location.href = "dashboard.html";
 
 }
