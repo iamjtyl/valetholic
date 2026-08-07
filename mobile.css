@@ -3,37 +3,33 @@
 =================================== */
 
 @media (max-width:1000px){
+
+/* DATE */
+
 input[type="date"]{
 
     width:100%;
     max-width:100%;
-    min-width:0;
-
-    display:block;
-
     appearance:none;
     -webkit-appearance:none;
-
     box-sizing:border-box;
 
 }
-/* =========================
-NAVBAR
-========================= */
+
+/* NAVBAR */
 
 .navbar{
 
     display:flex;
     flex-wrap:wrap;
-
-    align-items:center;
     justify-content:center;
-
-    gap:14px;
-
-    padding:14px 18px;
+    align-items:center;
 
     height:auto;
+
+    padding:16px 20px;
+
+    gap:12px;
 
 }
 
@@ -42,9 +38,7 @@ NAVBAR
     width:100%;
 
     display:flex;
-
     justify-content:center;
-
     align-items:center;
 
     gap:10px;
@@ -55,39 +49,14 @@ NAVBAR
 
 .logo img{
 
-    width:34px;
+    width:36px;
 
 }
 
 .logo span{
 
     font-size:18px;
-
     letter-spacing:2px;
-
-}
-
-.navbar ul{
-
-    width:100%;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:28px;
-
-    list-style:none;
-
-    margin:0;
-
-    padding:0;
-
-    order:3;
-
-}
 
 }
 
@@ -95,9 +64,11 @@ NAVBAR
 
     width:100%;
 
-    display:flex;
+    display:grid;
 
-    gap:10px;
+    grid-template-columns:1fr 1fr;
+
+    gap:12px;
 
     order:2;
 
@@ -109,35 +80,54 @@ NAVBAR
     display:flex;
 
     justify-content:center;
-
     align-items:center;
 
-    text-align:center;
+    height:52px;
 
-    height:54px;
-
-    padding:0 14px;
+    padding:0 12px;
 
     font-size:15px;
-
-    font-weight:600;
-
-    line-height:1.2;
 
     white-space:nowrap;
 
 }
-/* =========================
-HERO
-========================= */
+
+.navbar ul{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:24px;
+
+    list-style:none;
+
+    margin:0;
+
+    padding:0;
+
+    order:3;
+
+}
+
+.navbar ul li a{
+
+    font-size:15px;
+
+}
+
+/* HERO */
 
 .hero{
 
     display:flex;
     flex-direction:column;
+
     gap:40px;
 
-    padding:95px 18px 40px;
+    padding:110px 20px 40px;
 
 }
 
@@ -145,55 +135,50 @@ HERO
 
     width:100%;
     max-width:100%;
-    padding-right:0;
+
+    padding:0;
 
 }
 
 .hero-right{
 
     width:100%;
+
     display:flex;
+
     justify-content:center;
 
 }
 
 .hero-title{
 
-    font-size:52px;
+    font-size:50px;
+
     line-height:1.08;
 
 }
 
-/* =========================
-BOOKING CARD
-========================= */
+.hero-description{
+
+    max-width:100%;
+
+}
+
+/* BOOKING */
 
 .booking-card{
 
     width:100%;
+
     max-width:100%;
 
     padding:24px;
 
-    margin:0;
-    overflow:hidden;
 }
 
 .booking-card h2{
 
-    font-size:42px;
-
-}
-
-.booking-card form{
-
-    width:100%;
-
-}
-
-.booking-card label{
-
-    font-size:15px;
+    font-size:36px;
 
 }
 
@@ -202,54 +187,38 @@ BOOKING CARD
 .booking-card textarea{
 
     width:100%;
-    height:50px;
 
     font-size:16px;
 
 }
 
-.booking-card textarea{
+.booking-row{
 
-    min-height:140px;
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
 
 }
 
-/* =========================
-BUTTONS
-========================= */
+/* BUTTONS */
 
 .add-buttons{
+
+    display:flex;
+
+    flex-direction:column;
 
     gap:10px;
 
 }
 
-.mini-btn{
-
-    height:50px;
-    font-size:15px;
-
-}
-
-/* =========================
-DATE & TIME
-========================= */
-
-.booking-row{
-
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-
-}
-
-/* =========================
-HOW IT WORKS
-========================= */
+/* HOW */
 
 .how{
 
-    padding:0 18px;
+    padding:0 20px;
 
 }
 
@@ -259,85 +228,65 @@ HOW IT WORKS
 
 }
 
-/* =========================
-WHAT WE DO
-========================= */
+/* SERVICES */
 
 .services{
 
-    padding:0 18px;
+    padding:0 20px;
 
 }
 
-/* =========================
-FAQ
-========================= */
+.service-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+/* FAQ */
 
 .faq{
 
-    padding:0 18px;
+    padding:0 20px;
 
 }
 
 }
-.booking-row{
 
-    width:100%;
+/* SMALL PHONES */
 
-}
-
-.booking-row > div{
-
-    width:100%;
-
-}
-
-.booking-row input,
-.booking-row select{
-
-    width:100%;
-
-    display:block;
-
-}
 @media (max-width:768px){
 
-    .navbar{
+.hero-title{
 
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        gap:10px;
-
-    }
-
-   .nav-buttons{
-
-    width:100%;
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:12px;
+    font-size:42px;
 
 }
 
-    .nav-buttons a{
+.logo span{
 
-        flex:1;
+    font-size:16px;
 
-    }
+}
 
-    .nav-links{
+.navbar ul{
 
-        width:100%;
-        display:flex;
-        justify-content:center;
-        gap:28px;
-        margin-top:8px;
-        flex-wrap:wrap;
+    gap:16px;
 
-    }
+    flex-wrap:wrap;
+
+}
+
+.navbar ul li a{
+
+    font-size:14px;
+
+}
+
+.nav-button,
+.whatsapp-btn{
+
+    font-size:14px;
+
+}
 
 }
