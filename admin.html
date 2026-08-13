@@ -3,165 +3,623 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>Valetholic Admin</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+    <title>Valetholic Admin</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="admin.css">
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
 
 </head>
 
+
 <body class="admin-page">
+
+
+<!-- =========================
+     NAVIGATION
+========================== -->
 
 <nav class="navbar">
 
-<div class="logo">
 
-<img src="images/logo.png">
+    <div class="logo">
 
-<span>VALETHOLIC ADMIN</span>
+        <img
+            src="images/logo.png"
+            alt="Valetholic Logo"
+        >
 
-</div>
-<div class="admin-actions">
-
-    <a href="index.html" class="website-link">
-
-        🌐 Website
-
-    </a>
-
-    <span>|</span>
-
-    <a href="#" class="logout-link" onclick="logout()">
-
-        🚪 Logout
-
-    </a>
-
-</div>
-</nav>
-
-<section class="admin-container">
-
-<h1>Dashboard</h1>
-
-<div class="stats">
-
-<div class="stat-card">
-
-<h2 id="totalBookings">0</h2>
-
-<p>Total Bookings</p>
-
-</div>
-
-<div class="stat-card">
-
-<h2 id="pendingBookings">0</h2>
-
-<p>Pending</p>
-
-</div>
-
-<div class="stat-card">
-
-<h2 id="completedBookings">0</h2>
-
-<p>Completed</p>
-
-</div>
-
-<div class="stat-card">
-
-<h2 id="todayBookings">0</h2>
-
-<p>Today's Bookings</p>
-
-</div>
-
-</div>
-
-<div class="table-card">
-
-<div class="table-header">
-
-    <h2>Latest Bookings</h2>
-
-    <div class="table-controls">
-
-        <select
-            id="statusFilter"
-            onchange="loadDashboard()">
-
-            <option value="All">All</option>
-            <option value="Pending">Pending</option>
-            <option value="Completed">Completed</option>
-
-        </select>
-
-        <input
-            type="text"
-            id="searchBooking"
-            placeholder="🔍 Search..."
-            onkeyup="loadDashboard()">
+        <span>
+            VALETHOLIC ADMIN
+        </span>
 
     </div>
 
-</div>
 
-<table>
+    <div class="admin-actions">
 
-<thead>
-<tr>
-    <th>Reference</th>
-    <th>Customer</th>
-    <th>Mobile</th>
-    <th>Pickup</th>
-    <th>Destination</th>
-    <th>Date</th>
-    <th>Status</th>
-    <th>Action</th>
-</tr>
-</thead>
 
-<tbody id="bookingTable">
+        <a
+            href="index.html"
+            class="website-link"
+        >
+            🌐 Website
+        </a>
 
-</tbody>
 
-</table>
+        <span>|</span>
 
-</div>
 
-</section>
+        <a
+            href="admin-booking.html"
+            class="ops-btn"
+        >
+            📋 Bookings
+        </a>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script src="admin.js"></script>
+
+        <span>|</span>
+
+
+        <a
+            href="ops-dashboard.html"
+            class="ops-btn"
+        >
+            OPS Portal
+        </a>
+
+
+        <span>|</span>
+
+
+        <a
+            href="#"
+            class="logout-link"
+            onclick="logout()"
+        >
+            🚪 Logout
+        </a>
+
+
+    </div>
+
+</nav>
+
+
+
 <!-- =========================
-BOOKING DETAILS MODAL
-========================= -->
+     ADMIN DASHBOARD
+========================== -->
 
-<div id="bookingModal" class="modal">
+<section
+    class="admin-container"
+    style="
+        padding-top: 120px;
+    "
+>
 
-    <div class="modal-content">
 
-        <span class="close-modal">&times;</span>
+    <h1>
+        Dashboard
+    </h1>
 
-        <h2>Booking Details</h2>
 
-        <div id="modalBody">
+
+    <!-- =========================
+         STATISTICS
+    ========================== -->
+
+    <div class="stats">
+
+
+        <div class="stat-card">
+
+            <h2 id="totalBookings">
+                0
+            </h2>
+
+            <p>
+                Total Bookings
+            </p>
 
         </div>
 
+
+
+        <div class="stat-card">
+
+            <h2 id="pendingBookings">
+                0
+            </h2>
+
+            <p>
+                Pending
+            </p>
+
+        </div>
+
+
+
+        <div class="stat-card">
+
+            <h2 id="completedBookings">
+                0
+            </h2>
+
+            <p>
+                Completed
+            </p>
+
+        </div>
+
+
+
+        <div class="stat-card">
+
+            <h2 id="todayBookings">
+                0
+            </h2>
+
+            <p>
+                Today's Bookings
+            </p>
+
+        </div>
+
+
+
+        <!-- =========================
+             DRIVER COUNT
+        ========================== -->
+
+        <div class="stat-card driver-stat">
+
+            <h2 id="pendingDrivers">
+                0
+            </h2>
+
+            <p>
+                Drivers
+            </p>
+
+        </div>
+
+
     </div>
 
+
+
+    <!-- =========================
+         ADMIN MANAGEMENT
+    ========================== -->
+
+    <div
+        class="table-card"
+        id="adminManagement"
+        style="display: none;"
+    >
+
+
+        <div
+    class="table-header"
+    style="
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 25px;
+    "
+>
+
+
+            <h2>
+                Admin Management
+            </h2>
+
+
+            <button
+                type="button"
+                class="add-admin-btn"
+                onclick="openAddAdmin()"
+            >
+
+                + ADD ADMIN
+
+            </button>
+
+
+        </div>
+
+
+
+        <table>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Username
+                    </th>
+
+                    <th>
+                        Role
+                    </th>
+
+                    <th>
+                        Permissions
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="adminTable">
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         DRIVER APPLICATIONS
+    ========================== -->
+
+    <div
+        class="table-card driver-applications"
+    >
+
+
+        <div class="table-header">
+
+            <h2>
+                Drivers
+            </h2>
+
+        </div>
+
+
+
+        <table>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Mobile
+                    </th>
+
+                    <th>
+                        Licence
+                    </th>
+
+                    <th>
+                        Own Vehicle
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+
+            <tbody id="driverTable">
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+
+</section>
+
+
+
+<!-- =========================
+     ADD ADMIN MODAL
+========================== -->
+
+<div
+    id="addAdminModal"
+    class="modal"
+>
+
+
+    <div
+        class="modal-content admin-modal"
+    >
+
+
+        <span
+            class="close-admin-modal"
+            onclick="closeAddAdmin()"
+        >
+            &times;
+        </span>
+
+
+
+        <h2>
+            Add Admin
+        </h2>
+
+
+
+        <div class="admin-form">
+
+
+            <!-- NAME -->
+
+            <label>
+                Name
+            </label>
+
+
+            <input
+                type="text"
+                id="newAdminName"
+                placeholder="Enter name"
+            >
+
+
+
+            <!-- USERNAME -->
+
+            <label>
+                Username
+            </label>
+
+
+            <input
+                type="text"
+                id="newAdminUsername"
+                placeholder="Enter username"
+            >
+
+
+
+            <!-- PASSWORD -->
+
+            <label>
+                Password
+            </label>
+
+
+            <input
+                type="password"
+                id="newAdminPassword"
+                placeholder="Enter password"
+            >
+
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <label>
+                Confirm Password
+            </label>
+
+
+            <input
+                type="password"
+                id="newAdminConfirmPassword"
+                placeholder="Confirm password"
+            >
+
+
+
+            <!-- ROLE -->
+
+            <label>
+                Role
+            </label>
+
+
+            <select id="newAdminRole">
+
+                <option value="ADMIN">
+                    ADMIN
+                </option>
+
+                <option value="SEMI-MASTER">
+                    SEMI-MASTER ADMIN
+                </option>
+
+            </select>
+
+
+
+            <!-- PERMISSIONS -->
+
+            <h3>
+                Permissions
+            </h3>
+
+
+
+            <label class="permission-item">
+
+                <input
+                    type="checkbox"
+                    id="permViewBookings"
+                >
+
+                View Bookings
+
+            </label>
+
+
+
+            <label class="permission-item">
+
+                <input
+                    type="checkbox"
+                    id="permManageBookings"
+                >
+
+                Manage Bookings
+
+            </label>
+
+
+
+            <label class="permission-item">
+
+                <input
+                    type="checkbox"
+                    id="permApproveDrivers"
+                >
+
+                Approve Drivers
+
+            </label>
+
+
+
+            <label class="permission-item">
+
+                <input
+                    type="checkbox"
+                    id="permViewDrivers"
+                >
+
+                View Drivers
+
+            </label>
+
+
+
+            <label class="permission-item">
+
+                <input
+                    type="checkbox"
+                    id="permViewGPS"
+                >
+
+                View GPS
+
+            </label>
+
+
+
+            <label class="permission-item">
+
+                <input
+                    type="checkbox"
+                    id="permManageAdmins"
+                >
+
+                Manage Admins
+
+            </label>
+
+
+
+            <label class="permission-item">
+
+                <input
+                    type="checkbox"
+                    id="permSystemSettings"
+                >
+
+                System Settings
+
+            </label>
+
+
+
+            <!-- CREATE -->
+
+            <button
+                type="button"
+                class="gold-btn"
+                onclick="createAdmin()"
+            >
+                CREATE ADMIN
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
 </div>
+
+
+
+<!-- =========================
+     SUPABASE
+========================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+<script src="admin.js"></script>
+
+
 </body>
 
 </html>

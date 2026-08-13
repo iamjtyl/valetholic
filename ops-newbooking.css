@@ -1,0 +1,575 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+:root {
+
+    --black: #0b0b0b;
+    --panel: #151515;
+    --panel-2: #1b1b1b;
+
+    --gold: #d4af37;
+    --gold-light: #e4c85a;
+
+    --text: #ffffff;
+    --muted: #a6a6a6;
+
+    --border: rgba(212,175,55,.22);
+
+}
+
+
+body {
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #1b1b1b 0%,
+            #0b0b0b 45%,
+            #050505 100%
+        );
+
+    color: var(--text);
+
+    min-height: 100vh;
+
+}
+
+
+.page {
+
+    width: 100%;
+
+    max-width: 1050px;
+
+    margin: 0 auto;
+
+    padding: 50px 24px 80px;
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        flex-start;
+
+    gap: 30px;
+
+    margin-bottom: 35px;
+
+}
+
+
+.eyebrow {
+
+    color: var(--gold);
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 4px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.page-header h1 {
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 52px;
+
+    line-height: 1;
+
+    margin-bottom: 10px;
+
+}
+
+
+.subtitle {
+
+    color: var(--muted);
+
+    font-size: 15px;
+
+}
+
+
+.back-btn {
+
+    background: transparent;
+
+    border: 1px solid var(--gold);
+
+    color: var(--gold);
+
+    padding: 12px 22px;
+
+    border-radius: 999px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.back-btn:hover {
+
+    background: var(--gold);
+
+    color: #000;
+
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.booking-card {
+
+    background:
+        linear-gradient(
+            145deg,
+            #171717,
+            #101010
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 24px;
+
+    padding: 35px;
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.45);
+
+}
+
+
+/* =========================
+   SECTION
+========================= */
+
+.form-section {
+
+    padding: 30px 0;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.07);
+
+}
+
+
+.form-section:first-child {
+
+    padding-top: 0;
+
+}
+
+
+.form-section:last-of-type {
+
+    border-bottom: none;
+
+}
+
+
+.section-heading {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 24px;
+
+}
+
+
+.section-icon {
+
+    width: 44px;
+
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        rgba(212,175,55,.10);
+
+    border:
+        1px solid
+        rgba(212,175,55,.25);
+
+    border-radius: 12px;
+
+    font-size: 21px;
+
+}
+
+
+.section-heading h2 {
+
+    font-size: 20px;
+
+    margin-bottom: 4px;
+
+}
+
+
+.section-heading p {
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+
+}
+
+
+/* =========================
+   FIELD
+========================= */
+
+.field {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 20px;
+
+}
+
+
+.field:last-child {
+
+    margin-bottom: 0;
+
+}
+
+
+.field label {
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #d8d8d8;
+
+}
+
+
+.optional {
+
+    color: #777;
+
+    font-weight: 400;
+
+}
+
+
+.field input,
+.field textarea {
+
+    width: 100%;
+
+    background: #0e0e0e;
+
+    border:
+        1px solid #333;
+
+    border-radius: 12px;
+
+    color: white;
+
+    padding:
+        14px 15px;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: .2s;
+
+}
+
+
+.field input {
+
+    height: 50px;
+
+}
+
+
+.field textarea {
+
+    resize: vertical;
+
+    min-height: 130px;
+
+}
+
+
+.field input::placeholder,
+.field textarea::placeholder {
+
+    color: #666;
+
+}
+
+
+.field input:focus,
+.field textarea:focus {
+
+    border-color:
+        var(--gold);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(212,175,55,.08);
+
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.form-actions {
+
+    display: flex;
+
+    justify-content:
+        flex-end;
+
+    gap: 12px;
+
+    padding-top: 30px;
+
+}
+
+
+.cancel-btn {
+
+    background: transparent;
+
+    border:
+        1px solid #444;
+
+    color: #ccc;
+
+    padding: 14px 25px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+}
+
+
+.cancel-btn:hover {
+
+    border-color: #777;
+
+}
+
+
+.create-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold),
+            var(--gold-light)
+        );
+
+    border: none;
+
+    color: #080808;
+
+    padding: 14px 28px;
+
+    border-radius: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: .5px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 25px
+        rgba(212,175,55,.18);
+
+    transition: .2s;
+
+}
+
+
+.create-btn:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 14px 30px
+        rgba(212,175,55,.25);
+
+}
+
+
+.create-btn:disabled {
+
+    opacity: .6;
+
+    cursor: wait;
+
+    transform: none;
+
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+.form-message {
+
+    text-align: right;
+
+    margin-top: 15px;
+
+    min-height: 20px;
+
+    color: #aaa;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .page {
+
+        padding:
+            30px 16px 60px;
+
+    }
+
+
+    .page-header {
+
+        flex-direction: column;
+
+    }
+
+
+    .page-header h1 {
+
+        font-size: 42px;
+
+    }
+
+
+    .back-btn {
+
+        align-self: flex-start;
+
+    }
+
+
+    .booking-card {
+
+        padding: 24px 18px;
+
+        border-radius: 18px;
+
+    }
+
+
+    .form-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 0;
+
+    }
+
+
+    .form-actions {
+
+        flex-direction: column-reverse;
+
+    }
+
+
+    .cancel-btn,
+    .create-btn {
+
+        width: 100%;
+
+    }
+
+}

@@ -232,3 +232,60 @@ body{
 }
 
 }
+/* ================================
+   DRIVER JOB QUEUE
+================================ */
+
+.job-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.job-list .job-card {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.job-list .job-card + .job-card {
+    margin-top: 0;
+}
+/* ================================
+   DRIVER JOB QUEUE
+================================ */
+
+.job-list {
+    width: 100%;
+    display: flex !important;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.job-list .job-card {
+    display: block !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.job-list .job-card + .job-card {
+    margin-top: 0;
+}
+
+@keyframes bookingToastIn {
+
+    from {
+        opacity: 0;
+        transform:
+            translateX(-50%)
+            translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+
+}

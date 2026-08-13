@@ -29,6 +29,7 @@ img{
     display:block;
 }
 
+
 /* =========================
 NAVBAR
 ========================= */
@@ -103,9 +104,11 @@ NAVBAR
 
 }
 
+
 /* =========================
 BUTTONS
 ========================= */
+
 .gold-btn{
 
     display:inline-flex;
@@ -124,11 +127,12 @@ BUTTONS
     transition:.3s;
 
 }
+
 .opportunity-card .gold-btn{
 
-    margin-top: auto;
-    width: 100%;
-    text-align: center;
+    margin-top:auto;
+    width:100%;
+    text-align:center;
 
 }
 
@@ -167,6 +171,11 @@ BUTTONS
 
 }
 
+
+/* =========================
+NAV BUTTON
+========================= */
+
 .nav-button{
 
     display:inline-flex;
@@ -191,6 +200,28 @@ BUTTONS
     color:#000;
 
 }
+
+
+/* =========================
+ADMIN PORTAL
+========================= */
+
+.admin-btn {
+    background: #D4AF37;
+    color: #000;
+    border-color: #D4AF37;
+}
+
+.admin-btn:hover {
+    background: #D4AF37;
+    color: #000;
+    border-color: #D4AF37;
+}
+
+
+/* =========================
+DRIVER PORTAL
+========================= */
 
 .whatsapp-btn{
 
@@ -218,6 +249,7 @@ BUTTONS
 
 }
 
+
 /* =========================
 HERO
 ========================= */
@@ -235,12 +267,14 @@ HERO
     padding:110px 8% 20px;
 
 }
+
 .hero-content{
 
     max-width:900px;
     margin:auto;
 
 }
+
 .hero-label{
 
     color:#D4AF37;
@@ -251,7 +285,7 @@ HERO
 
     margin-bottom:18px;
 
-    font-size:.9rem;
+    font-size:1rem;
 
 }
 
@@ -286,6 +320,7 @@ HERO
     line-height:1.8;
 
 }
+
 .hero-buttons{
 
     display:flex;
@@ -297,6 +332,8 @@ HERO
     flex-wrap:wrap;
 
 }
+
+
 /* =========================
 HERO CARD
 ========================= */
@@ -355,26 +392,30 @@ HERO CARD
 
 }
 
+
 /* =========================
 TABLET
 ========================= */
 
 @media(max-width:992px){
 
-.driver-hero{
+    .driver-hero{
 
-    grid-template-columns:1fr;
+        grid-template-columns:1fr;
 
-    text-align:center;
+        text-align:center;
+
+    }
+
+    .hero-description{
+
+        margin:auto auto 35px;
+
+    }
 
 }
 
-.hero-description{
 
-    margin:auto auto 35px;
-
-}
-}
 /* =========================
 COMMON SECTION
 ========================= */
@@ -403,7 +444,7 @@ section{
 
     text-transform:uppercase;
 
-    font-size:.9rem;
+    font-size:1rem;
 
     margin-bottom:12px;
 
@@ -424,6 +465,7 @@ section{
     color:#bdbdbd;
 
 }
+
 
 /* =========================
 OPPORTUNITIES
@@ -507,11 +549,13 @@ OPPORTUNITIES
     color:#d6d6d6;
 
 }
+
 .opportunity{
 
-    padding: 20px 8% 90px;
+    padding:20px 8% 90px;
 
 }
+
 .commission{
 
     background:#181818;
@@ -541,6 +585,7 @@ OPPORTUNITIES
     margin:8px 0;
 
 }
+
 
 /* =========================
 REQUIREMENTS
@@ -601,6 +646,7 @@ REQUIREMENTS
     color:#cfcfcf;
 
 }
+
 
 /* =========================
 PROCESS
@@ -678,6 +724,7 @@ PROCESS
 
 }
 
+
 /* =========================
 CTA
 ========================= */
@@ -720,6 +767,7 @@ CTA
 
 }
 
+
 /* =========================
 FOOTER
 ========================= */
@@ -752,97 +800,136 @@ footer p{
 
 }
 
+
 /* =========================
 MOBILE
 ========================= */
 
 @media(max-width:768px){
 
-.navbar{
+    .navbar{
 
-    flex-direction:column;
+        flex-direction:column;
 
-    gap:20px;
+        gap:20px;
 
-    padding:20px;
+        padding:20px;
+
+    }
+
+    .navbar ul{
+
+        flex-direction:column;
+
+        gap:15px;
+
+        text-align:center;
+
+    }
+
+    .nav-buttons{
+
+        width:100%;
+
+        flex-direction:column;
+
+    }
+
+    .nav-button,
+    .whatsapp-btn,
+    .gold-btn,
+    .outline-btn{
+
+        width:100%;
+
+        justify-content:center;
+
+    }
+
+    .driver-hero h1{
+
+        font-size:48px;
+
+    }
+
+    .section-title h2{
+
+        font-size:38px;
+
+    }
+
+    .opportunity-grid,
+    .requirements-grid,
+    .process-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .hero-card{
+
+        margin-top:20px;
+
+    }
+
+    .hero-highlights{
+
+        flex-direction:column;
+
+        align-items:center;
+
+    }
+
+    .highlight{
+
+        width:100%;
+
+        justify-content:center;
+
+    }
+
+    .driver-cta h2{
+
+        font-size:40px;
+
+    }
 
 }
 
-.navbar ul{
 
-    flex-direction:column;
+/* =========================
+OPS BUTTON
+========================= */
 
-    gap:15px;
+.ops-btn {
 
-    text-align:center;
-
-}
-
-.nav-buttons{
-
-    width:100%;
-
-    flex-direction:column;
-
-}
-
-.nav-button,
-.whatsapp-btn,
-.gold-btn,
-.outline-btn{
-
-    width:100%;
-
-    justify-content:center;
-
-}
-
-.driver-hero h1{
-
-    font-size:48px;
-
-}
-
-.section-title h2{
-
-    font-size:38px;
-
-}
-
-.opportunity-grid,
-.requirements-grid,
-.process-grid{
-
-    grid-template-columns:1fr;
-
-}
-
-.hero-card{
-
-    margin-top:20px;
-
-}
-
-.hero-highlights{
-
-    flex-direction:column;
-
+    display:inline-flex;
     align-items:center;
-
-}
-
-.highlight{
-
-    width:100%;
-
     justify-content:center;
 
+    height:48px;
+    padding:0 22px;
+
+    border-radius:25px;
+
+    border:1px solid #d4af37;
+
+    background:transparent;
+
+    color:#ffffff;
+
+    text-decoration:none;
+
+    font-size:14px;
+    font-weight:600;
+
+    transition:.2s ease;
+
 }
 
-.driver-cta h2{
+.ops-btn:hover {
 
-    font-size:40px;
-
-}
+    background:#d4af37;
+    color:#000000;
 
 }

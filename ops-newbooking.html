@@ -5,149 +5,389 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>New Booking</title>
+    <title>Fresh Booking | Valetholic OPS</title>
 
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
-          rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
+        rel="stylesheet"
+    >
 
-    <link rel="stylesheet"
-          href="ops.css">
+    <link
+        rel="stylesheet"
+        href="ops-newbooking.css"
+    >
 
 </head>
 
+
 <body>
 
-<div class="ops-container">
-
-<header class="ops-header">
-
-    <div>
-
-        <h1>FRESH BIRD</h1>
+<div class="page">
 
 
-    </div>
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-    <button class="logout-btn">
+    <header class="page-header">
 
-        Cancel
+        <div>
 
-    </button>
+            <p class="eyebrow">
+                VALETHOLIC OPS
+            </p>
 
-</header>
+            <h1>
+                Fresh Booking
+            </h1>
 
-<div class="form-card">
-
-    <!-- CUSTOMER -->
-
-    <div class="form-section">
-
-        <h2>👤 Customer Information</h2>
-
-        <div class="input-group">
-
-            <label>Customer Name</label>
-            <input type="text" placeholder="Enter customer name">
+            <p class="subtitle">
+                Create a booking directly from the Operations Centre.
+            </p>
 
         </div>
 
-        <div class="input-group">
 
-            <label>Mobile Number</label>
-            <input type="tel" placeholder="+65">
+        <button
+            type="button"
+            class="back-btn"
+            onclick="history.back()"
+        >
+            ← Back
+        </button>
+
+    </header>
+
+
+    <!-- =========================
+         FORM
+    ========================== -->
+
+    <main class="booking-card">
+
+        <form id="newBookingForm">
+
+
+            <!-- CUSTOMER -->
+
+            <section class="form-section">
+
+                <div class="section-heading">
+
+                    <span class="section-icon">
+                        👤
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Customer Information
+                        </h2>
+
+                        <p>
+                            Who are we driving for?
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label for="customerName">
+                            Customer Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="customerName"
+                            placeholder="e.g. Mr Tan"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="mobile">
+                            Mobile Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="mobile"
+                            placeholder="+65 9123 4567"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- VEHICLE -->
+
+            <section class="form-section">
+
+                <div class="section-heading">
+
+                    <span class="section-icon">
+                        🚘
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Vehicle Information
+                        </h2>
+
+                        <p>
+                            The customer's vehicle.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label for="vehiclePlate">
+                            Vehicle Plate
+                        </label>
+
+                        <input
+                            type="text"
+                            id="vehiclePlate"
+                            placeholder="e.g. SXX1234A"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="vehicleModel">
+                            Vehicle Make & Model
+                        </label>
+
+                        <input
+                            type="text"
+                            id="vehicleModel"
+                            placeholder="e.g. Mercedes S450"
+                        >
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- JOURNEY -->
+
+            <section class="form-section">
+
+                <div class="section-heading">
+
+                    <span class="section-icon">
+                        📍
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Journey Information
+                        </h2>
+
+                        <p>
+                            Where are we picking up and going?
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label for="pickup">
+                        Pickup Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="pickup"
+                        placeholder="e.g. Marina Bay Sands"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label for="destination">
+                        Destination
+                    </label>
+
+                    <input
+                        type="text"
+                        id="destination"
+                        placeholder="e.g. Changi Airport"
+                        required
+                    >
+
+                <div class="form-grid">
+
+        <div class="field">
+
+        <label for="bookingDate">
+            Pickup Date
+        </label>
+
+        <input
+            type="date"
+            id="bookingDate"
+        >
 
         </div>
 
-    </div>
 
-    <!-- VEHICLE -->
+        <div class="field">
 
-    <div class="form-section">
+        <label for="bookingTime">
+            Pickup Time
+        </label>
 
-        <h2>🚘 Vehicle Information</h2>
-
-        <div class="input-group">
-
-            <label>Vehicle Plate</label>
-            <input type="text" placeholder="SXX1234A">
-
-        </div>
-
-        <div class="input-group">
-
-            <label>Vehicle Model</label>
-            <input type="text" placeholder="BMW 520i">
+        <input
+            type="time"
+            id="bookingTime"
+        >
 
         </div>
 
-    </div>
-
-    <!-- JOURNEY -->
-
-    <div class="form-section">
-
-        <h2>📍 Journey Information</h2>
-
-        <div class="input-group">
-
-            <label>Pickup Location</label>
-            <input type="text" placeholder="Enter pickup location">
-
         </div>
 
-        <div class="input-group">
 
-            <label>Destination</label>
-            <input type="text" placeholder="Enter destination">
+           </section>
 
-        </div>
 
-        <div class="input-group">
+            <!-- REMARKS -->
 
-            <label>Pickup Time</label>
-            <input type="datetime-local">
+            <section class="form-section">
 
-        </div>
+                <div class="section-heading">
 
-    </div>
+                    <span class="section-icon">
+                        📝
+                    </span>
 
-    <!-- REMARKS -->
+                    <div>
 
-    <div class="form-section">
+                        <h2>
+                            Remarks
+                        </h2>
 
-        <h2>📝 Remarks</h2>
+                        <p>
+                            Internal notes for the booking.
+                        </p>
 
-        <div class="input-group">
+                    </div>
 
-            <textarea rows="5"
-                      placeholder="Internal remarks..."></textarea>
+                </div>
 
-        </div>
 
-    </div>
+                <div class="field">
 
-    <button class="gold-btn">
+                    <label for="remarks">
+                        Remarks
+                        <span class="optional">
+                            Optional
+                        </span>
+                    </label>
 
-        CREATE BOOKING
+                    <textarea
+                        id="remarks"
+                        rows="5"
+                        placeholder="Pickup instructions, parking information, special requests..."
+                    ></textarea>
 
-    </button>
+                </div>
+
+            </section>
+
+
+            <!-- ACTIONS -->
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="history.back()"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="create-btn"
+                    id="createBookingBtn"
+                >
+                    CREATE BOOKING
+                </button>
+
+            </div>
+
+
+            <p
+                id="formMessage"
+                class="form-message"
+            ></p>
+
+
+        </form>
+
+    </main>
+
 
 </div>
-</div>
 
-</div>
 
-<script src="ops.js"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+<script src="supabase.js"></script>
+
+<script src="ops-newbooking.js"></script>
+
 
 </body>
 

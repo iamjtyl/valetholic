@@ -9,6 +9,7 @@
           content="width=device-width, initial-scale=1.0">
 
     <title>Valetholic OPS</title>
+    <link rel="stylesheet"href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
     <link rel="preconnect"
           href="https://fonts.googleapis.com">
@@ -49,76 +50,83 @@
 
     <section class="overview">
 
-        <div class="stat-card pending">
+    <div class="stat-card pending">
 
-            <small>Pending Jobs</small>
+        <small>Pending Jobs</small>
 
-            <span id="pendingCount">0</span>
-
-        </div>
-
-        <div class="stat-card onduty">
-
-            <small>Drivers On Duty</small>
-
-            <span id="dutyCount">0</span>
-
-        </div>
-
-        <div class="stat-card active">
-
-            <small>Active Jobs</small>
-
-            <span id="activeCount">0</span>
-
-        </div>
-
-        <div class="stat-card complete">
-
-            <small>Completed Today</small>
-
-            <span id="completeCount">0</span>
-
-        </div>
-
-    </section>
-
-    <div class="dashboard-grid">
-
-        <section class="dispatch-panel">
-
-            <h2>
-
-                Dispatch Queue
-
-            </h2>
-
-            <div id="dispatchList">
-
-            </div>
-
-        </section>
-
-        <section class="drivers-panel">
-
-            <h2>
-
-                Drivers
-
-            </h2>
-
-            <div id="driverList">
-
-            </div>
-
-        </section>
+        <span id="pendingCount">0</span>
 
     </div>
 
+    <div class="stat-card onduty">
+
+        <small>Drivers On Duty</small>
+
+        <span id="dutyCount">0</span>
+
+    </div>
+
+    <div class="stat-card active">
+
+        <small>Active Jobs</small>
+
+        <span id="activeCount">0</span>
+
+    </div>
+
+    <div class="stat-card complete">
+
+        <small>Completed Today</small>
+
+        <span id="completeCount">0</span>
+
+    </div>
+
+</section>
+
+<section class="map-panel">
+
+    <h2>🛰️ Live Driver Map</h2>
+
+    <div id="driverMap"></div>
+
+</section>
+
+<div class="dashboard-grid">
+
+    <section class="dispatch-panel">
+
+        <h2>
+
+            Dispatch Queue
+
+        </h2>
+
+        <div id="dispatchList"></div>
+
+    </section>
+
+    <section class="drivers-panel">
+
+        <h2>
+
+            Drivers
+
+        </h2>
+
+        <div id="driverList"></div>
+
+    </section>
+
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script src="supabase.js"></script>
+
 <script src="ops.js"></script>
 
 </body>

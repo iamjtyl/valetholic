@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Valetholic Admin | Bookings</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
+
+</head>
+
+
+<body class="admin-page">
+
+
+<!-- =====================================
+     NAVBAR
+====================================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <img
+            src="images/logo.png"
+            alt="Valetholic"
+        >
+
+        <span>
+            VALETHOLIC ADMIN
+        </span>
+
+    </div>
+
+
+    <div class="admin-actions">
+
+        <a
+            href="index.html"
+            class="website-link"
+        >
+            🌐 Website
+        </a>
+
+
+        <span>|</span>
+
+
+        <a
+            href="ops-dashboard.html"
+            class="ops-btn"
+        >
+            OPS Portal
+        </a>
+
+
+        <span>|</span>
+
+        <a
+            href="ops-newbooking.html"
+            class="ops-btn"
+        >
+            New Booking
+        </a>
+
+
+        <span>|</span>
+
+
+        <a
+            href="#"
+            class="logout-link"
+            onclick="logout()"
+        >
+            🚪 Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================
+     MAIN
+====================================== -->
+
+<section
+    class="admin-container"
+    style="
+        padding-top: 120px;
+    "
+>
+
+
+    <div class="table-card">
+
+
+        <!-- HEADER -->
+
+        <div class="table-header">
+
+            <div>
+
+                <h1>
+                    Bookings
+                </h1>
+
+                <p
+                    style="
+                        margin-top: 6px;
+                        opacity: 0.7;
+                    "
+                >
+                    View and manage all Valetholic bookings.
+                </p>
+
+            </div>
+
+
+            <!-- CONTROLS -->
+
+            <div class="table-controls">
+
+
+                <select
+                    id="statusFilter"
+                    onchange="loadBookings()"
+                >
+
+                    <option value="All">
+                        All
+                    </option>
+
+                    <option value="Pending">
+                        Pending
+                    </option>
+
+                    <option value="On Job">
+                        On Job
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                    <option value="Cancelled">
+                        Cancelled
+                    </option>
+
+                </select>
+
+
+                <input
+                    type="text"
+                    id="searchBooking"
+                    placeholder="🔍 Search..."
+                    onkeyup="loadBookings()"
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================
+             BOOKING TABLE
+        ====================================== -->
+
+        <div
+            style="
+                overflow-x: auto;
+                width: 100%;
+            "
+        >
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Reference
+                        </th>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Mobile
+                        </th>
+
+                        <th>
+                            Pickup
+                        </th>
+
+                        <th>
+                            Destination
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                         <th>
+                            Driver
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="bookingTable"
+                >
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            style="text-align:center;"
+                        >
+                            Loading bookings...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================
+     SUPABASE
+====================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+
+
+<script>
+
+// =====================================
+// LOGIN CHECK
+// =====================================
+
+if (
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    ) !== "true"
+) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+// =====================================
+// LOAD BOOKINGS
+// =====================================
+
+async function loadBookings() {
+
+    const table =
+        document.getElementById(
+            "bookingTable"
+        );
+
+
+    if (!table) {
+
+        return;
+
+    }
+
+
+    const keyword =
+        (
+            document.getElementById(
+                "searchBooking"
+            )?.value || ""
+        )
+            .toLowerCase()
+            .trim();
+
+
+    const statusFilter =
+        document.getElementById(
+            "statusFilter"
+        )?.value || "All";
+
+
+    try {
+
+        // =================================
+        // GET BOOKINGS
+        // =================================
+
+        const {
+            data: bookings,
+            error
+        } =
+            await window.supabaseClient
+                .from("Bookings")
+                .select("*")
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+            // =================================
+// LOAD DRIVERS
+// =================================
+
+const {
+    data: drivers,
+    error: driverError
+} = await window.supabaseClient
+    .from("Drivers")
+    .select("id, auth_id, name")
+
+
+if (driverError) {
+
+    console.error(
+        "Driver loading error:",
+        driverError
+    );
+
+}
+
+        if (error) {
+
+            console.error(
+                "Booking loading error:",
+                error
+            );
+
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="8"
+                        style="text-align:center;"
+                    >
+
+                        Unable to load bookings.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        console.log(
+            "BOOKINGS LOADED:",
+            bookings
+        );
+
+
+        // =================================
+        // FILTER
+        // =================================
+
+        const filteredBookings =
+            (bookings || []).filter(
+                booking => {
+
+
+                    const customer =
+                        (
+                            booking.customer_name ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const mobile =
+                        (
+                            booking.mobile ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const reference =
+                        (
+                            "VH-" +
+                            (
+                                booking.reference_no ||
+                                ""
+                            )
+                        )
+                            .toLowerCase();
+
+
+                    const matchSearch =
+
+                        customer.includes(
+                            keyword
+                        )
+
+                        ||
+
+                        mobile.includes(
+                            keyword
+                        )
+
+                        ||
+
+                        reference.includes(
+                            keyword
+                        );
+
+
+                    const matchStatus =
+
+                        statusFilter ===
+                            "All"
+
+                        ||
+
+                        booking.status ===
+                            statusFilter;
+
+
+                    return (
+                        matchSearch &&
+                        matchStatus
+                    );
+
+                }
+            );
+
+
+        // =================================
+        // CLEAR TABLE
+        // =================================
+
+        table.innerHTML = "";
+
+
+        // =================================
+        // NOTHING FOUND
+        // =================================
+
+        if (
+            filteredBookings.length ===
+            0
+        ) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="8"
+                        style="text-align:center;"
+                    >
+
+                        No bookings found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        // =================================
+        // RENDER BOOKINGS
+        // =================================
+
+        filteredBookings.forEach(
+            booking => {
+
+
+                let pickup =
+                    "-";
+
+
+                let destination =
+                    "-";
+
+
+                // -----------------------------
+                // PICKUP
+                // -----------------------------
+
+                try {
+
+                    if (
+                        Array.isArray(
+                            booking.pickups
+                        )
+                    ) {
+
+                        pickup =
+                            booking.pickups.join(
+                                "<br>"
+                            );
+
+                    }
+
+                    else if (
+                        booking.pickups
+                    ) {
+
+                        const parsed =
+                            JSON.parse(
+                                booking.pickups
+                            );
+
+                        pickup =
+                            Array.isArray(parsed)
+                                ? parsed.join("<br>")
+                                : parsed;
+
+                    }
+
+                } catch {
+
+                    pickup =
+                        booking.pickups ||
+                        "-";
+
+                }
+
+
+                // -----------------------------
+                // DESTINATION
+                // -----------------------------
+
+                try {
+
+                    if (
+                        Array.isArray(
+                            booking.destinations
+                        )
+                    ) {
+
+                        destination =
+                            booking.destinations.join(
+                                "<br>"
+                            );
+
+                    }
+
+                    else if (
+                        booking.destinations
+                    ) {
+
+                        const parsed =
+                            JSON.parse(
+                                booking.destinations
+                            );
+
+                        destination =
+                            Array.isArray(parsed)
+                                ? parsed.join("<br>")
+                                : parsed;
+
+                    }
+
+                } catch {
+
+                    destination =
+                        booking.destinations ||
+                        "-";
+
+                }
+
+
+                // =================================
+                // ROW
+                // =================================
+
+                table.innerHTML += `
+
+                    <tr>
+
+                        <td>
+                            VH-${
+                                booking.reference_no ||
+                                "----"
+                            }
+                        </td>
+
+
+                        <td>
+                            ${
+                                booking.customer_name ||
+                                "-"
+                            }
+                        </td>
+
+
+                        <td>
+                            ${
+                                booking.mobile ||
+                                "-"
+                            }
+                        </td>
+
+
+                        <td>
+                            ${pickup}
+                        </td>
+
+
+                        <td>
+                            ${destination}
+                        </td>
+
+
+                        <td>
+                            ${
+                                booking.booking_date ||
+                                "-"
+                            }
+                        </td>
+
+
+                        <td>
+                            ${
+                                booking.status ||
+                                "-"
+                            }
+                        </td>
+                        
+                        <td>
+    ${
+        (() => {
+
+            const driver =
+                (drivers || []).find(
+                    d =>
+                        d.auth_id ===
+                        booking.driver_id
+                );
+
+            return driver
+                ? driver.name
+                : "Unassigned";
+
+        })()
+    }
+</td>
+
+                        <td>
+
+                            <button
+                                class="view-btn"
+                                onclick="
+                                    viewBooking(
+                                        '${booking.id}'
+                                    )
+                                "
+                            >
+                                OPEN
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        );
+
+
+        console.log(
+            "BOOKING TABLE RENDERED:",
+            filteredBookings.length
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Unexpected booking error:",
+            error
+        );
+
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="8"
+                    style="text-align:center;"
+                >
+
+                    Unable to load bookings.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+// =====================================
+// OPEN BOOKING
+// =====================================
+
+function viewBooking(
+    id
+) {
+
+    window.location.href =
+        `ops-booking.html?id=${id}`;
+
+}
+
+
+// =====================================
+// LOGOUT
+// =====================================
+
+function logout() {
+
+    sessionStorage.removeItem(
+        "adminLoggedIn"
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+// =====================================
+// START
+// =====================================
+
+loadBookings();
+
+</script>
+
+
+</body>
+
+</html>

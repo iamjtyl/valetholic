@@ -139,7 +139,7 @@ HERO
    class="gold-btn"
    onclick="showBooking()">
 
-    I'M NOT DRUNK
+    Book Now
 
 </a>
 
@@ -174,7 +174,7 @@ HERO
 <div id="pickupContainer">
     <input
         type="text"
-        placeholder="Enter pickup location">
+        placeholder="Enter pickup location" required>
 </div>
 
 <label>Destination</label>
@@ -182,7 +182,7 @@ HERO
 <div id="destinationContainer">
     <input
         type="text"
-        placeholder="Enter destination">
+        placeholder="Enter destination" required>
 </div>
 
 <div class="add-buttons">
@@ -208,16 +208,20 @@ HERO
 </div>
 
 <label>Date</label>
-<input type="date" id="bookingDate">
+<input type="date" id="bookingDate" required>
 
 <label>Time</label>
-<select id="bookingTime"></select>
+<select id="bookingTime" required></select>
 
-    <label>Vehicle Make & Model</label>
+    <label for="vehicleModel">
+    Vehicle Make & Model
+</label>
 
-    <input
-        type="text"
-        placeholder="e.g. Toyota Alphard">
+<input
+    type="text"
+    id="vehicleModel"
+    placeholder="e.g. Toyota Alphard"
+    required>
 
     <label>Remarks <span>(Optional)</span></label>
 

@@ -5,176 +5,371 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>Booking Details</title>
+    <title>Valetholic | Booking</title>
 
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+        crossorigin
+    >
 
-    <link rel="stylesheet" href="ops-booking.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="ops-booking.css"
+    >
 
 </head>
 
+
 <body>
 
+
 <div class="ops-container">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
 
     <header class="ops-header">
 
         <div>
 
-    <h1 id="bookingReference">
+            <h1>
+                BOOKING
+            </h1>
 
-        VH-0000
+            <p id="bookingReference">
+                Loading...
+            </p>
 
-    </h1>
+        </div>
 
-    <p id="bookingStatus">
 
-        Pending Assignment
-
-    </p>
-
-</div>
-
-        <button class="logout-btn"
-    onclick="window.location.href='ops-dashboard.html'">
-
-            Back
-
+        <button
+            class="logout-btn"
+            type="button"
+            onclick="history.back()"
+        >
+            ← Back
         </button>
 
     </header>
 
-    <!-- CUSTOMER -->
+
+
+    <!-- =========================
+         CUSTOMER
+    ========================== -->
 
     <section class="booking-section">
 
-        <h2>Customer</h2>
+        <h2>
+            Customer
+        </h2>
 
-        <p><strong>Name:</strong>
-        <span id="customerName"></span>
+
+        <p>
+
+            <strong>
+                Name:
+            </strong>
+
+            <span id="customerName">
+                -
+            </span>
+
         </p>
 
-        <p><strong>Mobile:</strong>
-        <span id="customerMobile"></span>
+
+        <p>
+
+            <strong>
+                Mobile:
+            </strong>
+
+            <span id="customerMobile">
+                -
+            </span>
+
         </p>
 
     </section>
 
-    <!-- TRIP -->
+
+
+    <!-- =========================
+         JOURNEY
+    ========================== -->
 
     <section class="booking-section">
 
-        <h2>Journey</h2>
+        <h2>
+            Journey
+        </h2>
 
-        <p><strong>Pickup:</strong>
-        <span id="pickup"></span>
+
+        <p>
+
+            <strong>
+                Pickup:
+            </strong>
+
+            <span id="pickup">
+                -
+            </span>
+
         </p>
 
-        <p><strong>Destination:</strong>
-        <span id="destination"></span>
+
+        <p>
+
+            <strong>
+                Destination:
+            </strong>
+
+            <span id="destination">
+                -
+            </span>
+
         </p>
 
-        <p><strong>Time:</strong>
-        <span id="bookingTime"></span>
+
+        <p>
+
+            <strong>
+                Date:
+            </strong>
+
+            <span id="bookingDate">
+                -
+            </span>
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                Time:
+            </strong>
+
+            <span id="bookingTime">
+                -
+            </span>
+
         </p>
 
     </section>
 
-    <!-- VEHICLE -->
+
+
+    <!-- =========================
+         VEHICLE
+    ========================== -->
 
     <section class="booking-section">
 
-        <h2>Vehicle</h2>
+        <h2>
+            Vehicle
+        </h2>
 
-        <p><strong>Model:</strong>
-        <span id="vehicleModel"></span>
+
+        <p>
+
+            <strong>
+                Model:
+            </strong>
+
+            <span id="vehicleModel">
+                -
+            </span>
+
         </p>
 
-        <p><strong>Plate:</strong>
-        <span id="vehiclePlate"></span>
+
+        <p>
+
+            <strong>
+                Plate:
+            </strong>
+
+            <span id="vehiclePlate">
+                -
+            </span>
+
         </p>
 
     </section>
 
-    <!-- DRIVER -->
+
+
+    <!-- =========================
+         DRIVER
+    ========================== -->
 
     <section class="booking-section">
 
-        <h2>Driver</h2>
+        <h2>
+            Driver
+        </h2>
 
-        <select id="driverSelect">
 
-    <option>Loading drivers...</option>
+        <select
+            id="driverSelect"
+        >
 
-</select>
-    <button
-    class="gold-btn"
-    id="assignBtn">
+            <option value="">
+                Select driver
+            </option>
 
-    ASSIGN DRIVER
+        </select>
 
-    </button>
+
+        <button
+            type="button"
+            class="gold-btn"
+            id="assignBtn"
+        >
+            ASSIGN DRIVER
+        </button>
+
+
+        <p
+            id="driverMessage"
+            style="
+                margin-top:10px;
+                opacity:.75;
+            "
+        ></p>
+
+    </section>
+
+
+
+    <!-- =========================
+         STATUS
+    ========================== -->
+
+    <section class="booking-section">
+
+        <h2>
+            Status
+        </h2>
+
+
+        <select
+            id="statusSelect"
+        >
+
+            <option value="Pending">
+                Pending
+            </option>
+
+            <option value="ON JOB">
+                ON JOB
+            </option>
+
+            <option value="ON THE WAY">
+                ON THE WAY
+            </option>
+
+            <option value="PICKED UP">
+                PICKED UP
+            </option>
+
+            <option value="COMPLETED">
+                COMPLETED
+            </option>
+
+            <option value="CANCELLED">
+                CANCELLED
+            </option>
 
         </select>
 
     </section>
 
-    <!-- STATUS -->
+
+
+    <!-- =========================
+         REMARKS
+    ========================== -->
 
     <section class="booking-section">
 
-        <h2>Status</h2>
+        <h2>
+            Remarks
+        </h2>
 
-        <select>
-
-            <option>Pending Assignment</option>
-
-            <option>Assigned</option>
-
-            <option>Travelling</option>
-
-            <option>Customer On Board</option>
-
-            <option>Completed</option>
-
-        </select>
-
-    </section>
-
-    <!-- REMARKS -->
-
-    <section class="booking-section">
-
-        <h2>Remarks</h2>
 
         <textarea
+            id="remarks"
             rows="5"
-            placeholder="Internal notes..."></textarea>
+            placeholder="Internal notes..."
+        ></textarea>
 
     </section>
 
-    <button class="gold-btn">
+
+
+    <!-- =========================
+         SAVE
+    ========================== -->
+
+    <button
+        type="button"
+        class="gold-btn"
+        id="saveBtn"
+    >
 
         SAVE CHANGES
 
     </button>
 
+
+    <p
+        id="saveMessage"
+        style="
+            margin-top:15px;
+            text-align:center;
+        "
+    ></p>
+
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<!-- =========================
+     SUPABASE
+========================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
 <script src="supabase.js"></script>
+
 <script src="ops-booking.js"></script>
+
 
 </body>
 

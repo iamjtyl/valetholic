@@ -1662,3 +1662,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .nav-button:hover{
     background:#c39f2e;
 }
+.navbar ul li a {
+    font-size: 20px;
+}
+.admin-btn:hover {
+    background: #d4af37;
+    color: #000;
+}

@@ -4,32 +4,62 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>Valetholic Driver Dashboard</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
 
-<link rel="stylesheet" href="dashboard.css">
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+<link
+    rel="stylesheet"
+    href="dashboard.css"
+>
 
 </head>
 
+
 <body>
+
 
 <div class="dashboard">
 
+
+    <!-- =========================
+         DRIVER STATUS
+    ========================== -->
+
     <div class="status-card">
 
-        <div id="statusIcon" class="status-icon">
+        <div
+            id="statusIcon"
+            class="status-icon"
+        >
             ⚪
         </div>
+
 
         <h1 id="statusTitle">
             OFF DUTY
         </h1>
+
 
         <p id="statusMessage">
 
@@ -42,115 +72,40 @@
 
         </p>
 
+
         <button
             id="dutyBtn"
-            class="gold-btn">
-
+            class="gold-btn"
+        >
             GO ON DUTY
-
         </button>
 
     </div>
 
-    <div id="jobCard" class="job-card">
 
-        <h2>Current Dispatch</h2>
 
-        <div class="job-section">
+    <!-- =========================
+         JOB QUEUE
+    ========================== -->
 
-            <small>Pickup</small>
+    <div
+        id="jobList"
+        class="job-list"
+    ></div>
 
-            <p id="pickupAddress">
-
-                📍 Marina Bay Sands
-
-            </p>
-
-            <div class="nav-buttons">
-
-                <button
-                id="pickupGoogle"
-                class="google-btn">
-
-    Google Maps
-
-    </button>
-
-               <button
-                id="pickupWaze"
-                class="waze-btn">
-
-                Waze
-
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="job-section">
-
-            <small>Destination</small>
-
-            <p id="destinationAddress">
-
-                📍 Changi Airport
-
-            </p>
-
-            <div class="nav-buttons">
-
-                <button
-                id="destinationGoogle"
-                class="google-btn">
-
-                Google Maps
-
-                </button>
-
-                <button
-                id="destinationWaze"
-                class="waze-btn">
-
-                    Waze
-
-                    </button>
-
-            </div>
-
-        </div>
-
-        <div class="job-section">
-
-            <small>Customer</small>
-
-            <p>
-
-                Mr Tan
-
-            </p>
-
-        </div>
-
-        <div class="job-section">
-
-            <small>Vehicle</small>
-
-            <p>
-
-                Mercedes S450
-
-            </p>
-
-        </div>
-
-    </div>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
 <script src="supabase.js"></script>
+
 <script src="dashboard.js"></script>
+
 
 </body>
 

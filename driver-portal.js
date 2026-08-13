@@ -1,134 +1,310 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Tabs
-    const loginTab = document.getElementById("loginTab");
-    const registerTab = document.getElementById("registerTab");
+    // =========================================
+    // TABS
+    // =========================================
 
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
+    const loginTab =
+        document.getElementById("loginTab");
+
+    const registerTab =
+        document.getElementById("registerTab");
+
+    const loginForm =
+        document.getElementById("loginForm");
+
+    const registerForm =
+        document.getElementById("registerForm");
+
 
     loginTab.addEventListener("click", () => {
 
         loginForm.style.display = "block";
+
         registerForm.style.display = "none";
 
         loginTab.classList.add("active");
+
         registerTab.classList.remove("active");
 
     });
 
+
     registerTab.addEventListener("click", () => {
 
         loginForm.style.display = "none";
+
         registerForm.style.display = "block";
 
         registerTab.classList.add("active");
+
         loginTab.classList.remove("active");
 
     });
 
-    // Register Button
+
+    // =========================================
+    // REGISTER BUTTON
+    // =========================================
+
     document
         .getElementById("registerBtn")
-        .addEventListener("click", registerDriver);
+        .addEventListener(
+            "click",
+            registerDriver
+        );
+
+
+    // =========================================
+    // LOGIN BUTTON
+    // =========================================
 
     document
-    .getElementById("loginBtn")
-    .addEventListener("click", loginDriver);
+        .getElementById("loginBtn")
+        .addEventListener(
+            "click",
+            loginDriver
+        );
 
 });
+
+
+// =========================================
+// REGISTER DRIVER
+// =========================================
 
 async function registerDriver() {
 
-    const email = document.getElementById("regEmail").value.trim();
+    const email =
+        document
+            .getElementById("regEmail")
+            .value
+            .trim();
 
-    const password = document.getElementById("regPassword").value;
 
-    const confirmPassword = document.getElementById("regConfirmPassword").value;
+    const password =
+        document
+            .getElementById("regPassword")
+            .value;
+
+
+    const confirmPassword =
+        document
+            .getElementById("regConfirmPassword")
+            .value;
+
+
+    // =========================================
+    // BASIC VALIDATION
+    // =========================================
 
     if (!email || !password) {
-        alert("Please enter an email and password.");
+
+        alert(
+            "Please enter an email and password."
+        );
+
         return;
+
     }
+
 
     if (password !== confirmPassword) {
-        alert("Passwords do not match.");
+
+        alert(
+            "Passwords do not match."
+        );
+
         return;
+
     }
 
-    const { data, error } =
+
+    // =========================================
+    // CREATE SUPABASE AUTH ACCOUNT
+    // =========================================
+
+    const {
+        data,
+        error
+    } =
         await window.supabaseClient.auth.signUp({
 
             email,
+
             password
 
         });
 
+
     if (error) {
-        alert(error.message);
-        console.error(error);
+
+        alert(
+            error.message
+        );
+
+        console.error(
+            error
+        );
+
         return;
+
     }
 
-    const user = data.user;
 
-const { error: profileError } =
-await window.supabaseClient
-.from("Drivers")
-.insert({
+    const user =
+        data.user;
 
-    auth_id: user.id,
 
-    name: document.getElementById("regName").value,
+    // =========================================
+    // CREATE DRIVER PROFILE
+    // =========================================
 
-    mobile: document.getElementById("regMobile").value,
+    const {
+        error: profileError
+    } =
+        await window.supabaseClient
+        .from("Drivers")
+        .insert({
 
-    email: email,
+            auth_id:
+                user.id,
 
-    license: document.getElementById("regLicence").value,
+            name:
+                document
+                    .getElementById("regName")
+                    .value
+                    .trim(),
 
-    own_vehicle:
-        document.getElementById("regVehicle").value === "Yes"
+            mobile:
+                document
+                    .getElementById("regMobile")
+                    .value
+                    .trim(),
 
-});
+            email:
+                email,
 
-if(profileError){
+            license:
+                document
+                    .getElementById("regLicence")
+                    .value
+                    .trim(),
 
-    console.error(profileError);
+            own_vehicle:
+                document
+                    .getElementById("regVehicle")
+                    .value === "Yes",
 
-    alert(profileError.message);
+            // =================================
+            // APPROVAL SYSTEM
+            // =================================
 
-    return;
+            approved:
+                false,
+
+            approval_status:
+            "PENDING",
+
+            status:
+                "OFF DUTY"
+
+            
+        });
+
+
+    // =========================================
+    // PROFILE ERROR
+    // =========================================
+
+    if (profileError) {
+
+        console.error(
+            profileError
+        );
+
+        alert(
+            profileError.message
+        );
+
+        return;
+
+    }
+
+
+    // =========================================
+    // SUCCESS
+    // =========================================
+
+   alert(
+    "Registration successful!\n\n" +
+    "Your driver application has been submitted " +
+    "and is now waiting for Admin approval."
+    );
+
+    window.location.href =
+    "dashboard.html";
 
 }
 
-alert("Driver account created successfully!");
 
-}
+// =========================================
+// LOGIN DRIVER
+// =========================================
+
 async function loginDriver() {
 
-    const email = document.getElementById("loginEmail").value.trim();
+    const email =
+        document
+            .getElementById("loginEmail")
+            .value
+            .trim();
 
-    const password = document.getElementById("loginPassword").value;
 
-    const { data, error } =
-        await window.supabaseClient.auth.signInWithPassword({
+    const password =
+        document
+            .getElementById("loginPassword")
+            .value;
+
+
+    // =========================================
+    // LOGIN
+    // =========================================
+
+    const {
+        data,
+        error
+    } =
+        await window.supabaseClient.auth
+        .signInWithPassword({
 
             email,
+
             password
 
         });
 
+
     if (error) {
 
-        alert(error.message);
+        alert(
+            error.message
+        );
 
-        console.error(error);
+        console.error(
+            error
+        );
 
         return;
 
     }
 
-    window.location.href = "dashboard.html";
+
+    // =========================================
+    // CURRENTLY GO TO DASHBOARD
+    // =========================================
+
+    window.location.href =
+        "dashboard.html";
 
 }
