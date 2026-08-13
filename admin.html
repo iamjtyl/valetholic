@@ -201,7 +201,7 @@
 
         <div class="stat-card driver-stat">
 
-            <h2 id="pendingDrivers">
+            <h2 id="driverCount">
                 0
             </h2>
 
@@ -315,57 +315,74 @@
         <div class="table-header">
 
             <h2>
-                Drivers
+                Pending Drivers
             </h2>
 
         </div>
 
 
-
         <table>
-
 
             <thead>
 
                 <tr>
 
-                    <th>
-                        Name
-                    </th>
-
-                    <th>
-                        Mobile
-                    </th>
-
-                    <th>
-                        Licence
-                    </th>
-
-                    <th>
-                        Own Vehicle
-                    </th>
-
-                    <th>
-                        Status
-                    </th>
-
-                    <th>
-                        Action
-                    </th>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Licence</th>
+                    <th>Own Vehicle</th>
+                    <th>Status</th>
+                    <th>Action</th>
 
                 </tr>
 
             </thead>
 
-
-
             <tbody id="driverTable">
-
             </tbody>
-
 
         </table>
 
+
+    </div>
+
+
+    <!-- =========================
+         APPROVED DRIVERS
+    ========================== -->
+
+    <div
+        class="table-card driver-management"
+        id="driverManagement"
+    >
+
+        <div class="table-header">
+
+            <h2>
+                Approved Drivers
+            </h2>
+
+        </div>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Status</th>
+                    <th>Approval</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="approvedDriverTable">
+            </tbody>
+
+        </table>
 
     </div>
 

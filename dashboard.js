@@ -192,7 +192,6 @@ async function loadDriver() {
 }
 
 
-
 // =====================================
 // PENDING APPROVAL
 // =====================================
@@ -225,7 +224,6 @@ function showPendingApproval() {
 }
 
 
-
 // =====================================
 // REJECTED
 // =====================================
@@ -256,14 +254,16 @@ function showRejectedApplication() {
 }
 
 
-
 // =====================================
 // LOAD ACTIVE BOOKINGS
 // =====================================
+
 async function loadActiveBookings() {
 
     if (!currentDriver) {
+
         return;
+
     }
 
 
@@ -403,6 +403,8 @@ async function loadActiveBookings() {
     renderBookings();
 
 }
+
+
 // =====================================
 // SORT BOOKINGS
 // =====================================
@@ -448,7 +450,6 @@ function sortBookings(
     );
 
 }
-
 
 
 // =====================================
@@ -502,7 +503,6 @@ function getBookingDateTime(
 }
 
 
-
 // =====================================
 // RENDER ALL BOOKINGS
 // =====================================
@@ -553,7 +553,6 @@ function renderBookings() {
 }
 
 
-
 // =====================================
 // CREATE BOOKING CARD
 // =====================================
@@ -577,7 +576,6 @@ function createBookingCard(
         booking.id;
 
 
-
     // =================================
     // LOCATIONS
     // =================================
@@ -592,7 +590,6 @@ function createBookingCard(
         getLocation(
             booking.destinations
         );
-
 
 
     // =================================
@@ -642,7 +639,6 @@ function createBookingCard(
     }
 
 
-
     // =================================
     // BOOKING TIME
     // =================================
@@ -671,7 +667,6 @@ function createBookingCard(
     }
 
 
-
     // =================================
     // QUEUE LABEL
     // =================================
@@ -688,7 +683,6 @@ function createBookingCard(
             `Next Job #${index}`;
 
     }
-
 
 
     // =================================
@@ -751,7 +745,6 @@ function createBookingCard(
         </div>
 
 
-
         <div class="job-section">
 
             <small>
@@ -783,7 +776,6 @@ function createBookingCard(
         </div>
 
 
-
         <div class="job-section">
 
             <small>
@@ -798,7 +790,6 @@ function createBookingCard(
             </p>
 
         </div>
-
 
 
         <div class="job-section">
@@ -816,16 +807,14 @@ function createBookingCard(
         </div>
 
 
-
-       <button
-    class="gold-btn status-job-btn"
-    data-action="status"
->
-    ${booking.status === "ON JOB" ? "COMPLETE JOB" : "START JOB"}
-</button>
+        <button
+            class="gold-btn status-job-btn"
+            data-action="status"
+        >
+            ${getStatusButtonText(booking.status)}
+        </button>
 
     `;
-
 
 
     // =================================
@@ -896,7 +885,6 @@ function createBookingCard(
         );
 
 
-
     // =================================
     // STATUS BUTTON
     // =================================
@@ -922,7 +910,6 @@ function createBookingCard(
     return card;
 
 }
-
 
 
 // =====================================
@@ -977,7 +964,6 @@ function getLocation(
 }
 
 
-
 // =====================================
 // STATUS BUTTON TEXT
 // =====================================
@@ -986,8 +972,27 @@ function getStatusButtonText(
     bookingStatus
 ) {
 
+    const statusValue =
+        String(
+            bookingStatus ||
+            ""
+        )
+        .trim()
+        .toUpperCase();
+
+
     if (
-        bookingStatus ===
+        statusValue ===
+        "PENDING"
+    ) {
+
+        return "START JOB";
+
+    }
+
+
+    if (
+        statusValue ===
         "ON JOB"
     ) {
 
@@ -997,7 +1002,7 @@ function getStatusButtonText(
 
 
     if (
-        bookingStatus ===
+        statusValue ===
         "ON THE WAY"
     ) {
 
@@ -1007,7 +1012,7 @@ function getStatusButtonText(
 
 
     if (
-        bookingStatus ===
+        statusValue ===
         "PICKED UP"
     ) {
 
@@ -1016,10 +1021,9 @@ function getStatusButtonText(
     }
 
 
-    return "";
+    return "START JOB";
 
 }
-
 
 
 // =====================================
@@ -1040,9 +1044,26 @@ async function updateJobStatus(
 
     if (!booking) {
 
+        console.error(
+            "❌ Booking not found:",
+            bookingId
+        );
+
         return;
 
     }
+
+
+    console.log(
+        "🚗 START/STATUS BUTTON CLICKED",
+        {
+            bookingId:
+                booking.id,
+
+            currentStatus:
+                booking.status
+        }
+    );
 
 
     // =================================
@@ -1066,7 +1087,24 @@ async function updateJobStatus(
 
 
     if (
-        driverError ||
+        driverError
+    ) {
+
+        console.error(
+            "❌ Driver approval check failed:",
+            driverError
+        );
+
+        alert(
+            "Unable to verify driver approval."
+        );
+
+        return;
+
+    }
+
+
+    if (
         !driver ||
         driver.approved !== true ||
         driver.approval_status !==
@@ -1082,6 +1120,24 @@ async function updateJobStatus(
     }
 
 
+    // =================================
+    // NORMALISE STATUS
+    // =================================
+
+    const currentStatus =
+        String(
+            booking.status ||
+            ""
+        )
+        .trim()
+        .toUpperCase();
+
+
+    console.log(
+        "📌 Normalised booking status:",
+        currentStatus
+    );
+
 
     // =================================
     // NEXT STATUS
@@ -1091,7 +1147,17 @@ async function updateJobStatus(
 
 
     if (
-        booking.status ===
+        currentStatus ===
+        "PENDING"
+    ) {
+
+        nextStatus =
+            "ON JOB";
+
+    }
+
+    else if (
+        currentStatus ===
         "ON JOB"
     ) {
 
@@ -1101,7 +1167,7 @@ async function updateJobStatus(
     }
 
     else if (
-        booking.status ===
+        currentStatus ===
         "ON THE WAY"
     ) {
 
@@ -1111,7 +1177,7 @@ async function updateJobStatus(
     }
 
     else if (
-        booking.status ===
+        currentStatus ===
         "PICKED UP"
     ) {
 
@@ -1122,10 +1188,26 @@ async function updateJobStatus(
 
     else {
 
+        console.error(
+            "❌ Unknown booking status:",
+            booking.status
+        );
+
+        alert(
+            `Cannot start this job.\n\nCurrent status: ${booking.status}`
+        );
+
         return;
 
     }
 
+
+    console.log(
+        "➡️ Changing status:",
+        currentStatus,
+        "→",
+        nextStatus
+    );
 
 
     // =================================
@@ -1133,6 +1215,7 @@ async function updateJobStatus(
     // =================================
 
     const {
+        data: updatedBooking,
         error
     } =
         await window.supabaseClient
@@ -1146,23 +1229,33 @@ async function updateJobStatus(
         .eq(
             "id",
             booking.id
-        );
+        )
+        .select(
+            "id, status"
+        )
+        .single();
 
 
     if (error) {
 
-        alert(
-            error.message
+        console.error(
+            "❌ BOOKING STATUS UPDATE FAILED:",
+            error
         );
 
-        console.error(
-            error
+        alert(
+            `Unable to update booking.\n\n${error.message}`
         );
 
         return;
 
     }
 
+
+    console.log(
+        "✅ BOOKING UPDATED:",
+        updatedBooking
+    );
 
 
     // =================================
@@ -1171,7 +1264,6 @@ async function updateJobStatus(
 
     booking.status =
         nextStatus;
-
 
 
     // =================================
@@ -1227,6 +1319,7 @@ async function updateJobStatus(
         ) {
 
             console.error(
+                "❌ Driver status update error:",
                 driverUpdateError
             );
 
@@ -1243,14 +1336,11 @@ async function updateJobStatus(
 
         renderBookings();
 
-
         updateDashboard();
-
 
         return;
 
     }
-
 
 
     // =================================
@@ -1263,11 +1353,9 @@ async function updateJobStatus(
 
     updateDashboard();
 
-
     renderBookings();
 
 }
-
 
 
 // =====================================
@@ -1400,7 +1488,6 @@ async function toggleDuty() {
 }
 
 
-
 // =====================================
 // UPDATE DASHBOARD
 // =====================================
@@ -1441,7 +1528,6 @@ function updateDashboard() {
     }
 
 
-
     // =================================
     // ON DUTY
     // =================================
@@ -1476,7 +1562,6 @@ function updateDashboard() {
     }
 
 
-
     // =================================
     // ON JOB
     // =================================
@@ -1507,7 +1592,6 @@ function updateDashboard() {
     }
 
 
-
     // =================================
     // ON THE WAY
     // =================================
@@ -1536,7 +1620,6 @@ function updateDashboard() {
         return;
 
     }
-
 
 
     // =================================
@@ -1571,7 +1654,6 @@ function updateDashboard() {
 }
 
 
-
 // =====================================
 // GOOGLE MAPS
 // =====================================
@@ -1598,7 +1680,6 @@ function openGoogleMaps(
 }
 
 
-
 // =====================================
 // WAZE
 // =====================================
@@ -1623,7 +1704,6 @@ function openWaze(
     );
 
 }
-
 
 
 // =====================================
@@ -1670,7 +1750,6 @@ function startGPS() {
     );
 
 }
-
 
 
 // =====================================
@@ -1735,7 +1814,6 @@ async function updateLocation(
 }
 
 
-
 // =====================================
 // GPS ERROR
 // =====================================
@@ -1750,7 +1828,6 @@ function gpsError(
     );
 
 }
-
 
 
 // =====================================
@@ -1786,6 +1863,8 @@ function escapeHTML(
     );
 
 }
+
+
 // =====================================
 // AUTO REFRESH BOOKINGS
 // =====================================
@@ -1819,6 +1898,8 @@ function startBookingAutoRefresh() {
 
 
 startBookingAutoRefresh();
+
+
 // =====================================
 // NEW BOOKING NOTIFICATION
 // =====================================
@@ -1826,7 +1907,9 @@ startBookingAutoRefresh();
 function showNewBookingNotification(
     booking
 ) {
+
     playBookingNotificationSound();
+
 
     const reference =
         booking.reference_no ||
@@ -1847,90 +1930,7 @@ function showNewBookingNotification(
         message
     );
 
-// =====================================
-// NEW BOOKING SOUND
-// =====================================
 
-function playBookingNotificationSound() {
-
-    const AudioContext =
-        window.AudioContext ||
-        window.webkitAudioContext;
-
-    if (!AudioContext) {
-        return;
-    }
-
-    const audioContext =
-        new AudioContext();
-
-    const now =
-        audioContext.currentTime;
-
-
-    // First ding
-    const oscillator1 =
-        audioContext.createOscillator();
-
-    const gain1 =
-        audioContext.createGain();
-
-    oscillator1.type = "sine";
-    oscillator1.frequency.value = 880;
-
-    gain1.gain.setValueAtTime(
-        0.0001,
-        now
-    );
-
-    gain1.gain.exponentialRampToValueAtTime(
-        0.25,
-        now + 0.02
-    );
-
-    gain1.gain.exponentialRampToValueAtTime(
-        0.0001,
-        now + 0.25
-    );
-
-    oscillator1.connect(gain1);
-    gain1.connect(audioContext.destination);
-
-    oscillator1.start(now);
-    oscillator1.stop(now + 0.25);
-
-
-    // Second ding
-    const oscillator2 =
-        audioContext.createOscillator();
-
-    const gain2 =
-        audioContext.createGain();
-
-    oscillator2.type = "sine";
-    oscillator2.frequency.value = 1175;
-
-    gain2.gain.setValueAtTime(
-        0.0001,
-        now + 0.18
-    );
-
-    gain2.gain.exponentialRampToValueAtTime(
-        0.25,
-        now + 0.20
-    );
-
-    gain2.gain.exponentialRampToValueAtTime(
-        0.0001,
-        now + 0.45
-    );
-
-    oscillator2.connect(gain2);
-    gain2.connect(audioContext.destination);
-
-    oscillator2.start(now + 0.18);
-    oscillator2.stop(now + 0.45);
-}
     // =================================
     // BROWSER NOTIFICATION
     // =================================
@@ -1965,6 +1965,149 @@ function playBookingNotificationSound() {
 
 }
 
+
+// =====================================
+// NEW BOOKING SOUND
+// =====================================
+
+function playBookingNotificationSound() {
+
+    const AudioContext =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+
+    if (!AudioContext) {
+
+        return;
+
+    }
+
+
+    const audioContext =
+        new AudioContext();
+
+
+    const now =
+        audioContext.currentTime;
+
+
+    // =================================
+    // FIRST DING
+    // =================================
+
+    const oscillator1 =
+        audioContext.createOscillator();
+
+
+    const gain1 =
+        audioContext.createGain();
+
+
+    oscillator1.type =
+        "sine";
+
+
+    oscillator1.frequency.value =
+        880;
+
+
+    gain1.gain.setValueAtTime(
+        0.0001,
+        now
+    );
+
+
+    gain1.gain.exponentialRampToValueAtTime(
+        0.25,
+        now + 0.02
+    );
+
+
+    gain1.gain.exponentialRampToValueAtTime(
+        0.0001,
+        now + 0.25
+    );
+
+
+    oscillator1.connect(
+        gain1
+    );
+
+
+    gain1.connect(
+        audioContext.destination
+    );
+
+
+    oscillator1.start(
+        now
+    );
+
+
+    oscillator1.stop(
+        now + 0.25
+    );
+
+
+    // =================================
+    // SECOND DING
+    // =================================
+
+    const oscillator2 =
+        audioContext.createOscillator();
+
+
+    const gain2 =
+        audioContext.createGain();
+
+
+    oscillator2.type =
+        "sine";
+
+
+    oscillator2.frequency.value =
+        1175;
+
+
+    gain2.gain.setValueAtTime(
+        0.0001,
+        now + 0.18
+    );
+
+
+    gain2.gain.exponentialRampToValueAtTime(
+        0.25,
+        now + 0.20
+    );
+
+
+    gain2.gain.exponentialRampToValueAtTime(
+        0.0001,
+        now + 0.45
+    );
+
+
+    oscillator2.connect(
+        gain2
+    );
+
+
+    gain2.connect(
+        audioContext.destination
+    );
+
+
+    oscillator2.start(
+        now + 0.18
+    );
+
+
+    oscillator2.stop(
+        now + 0.45
+    );
+
+}
 
 
 // =====================================

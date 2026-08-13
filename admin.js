@@ -2,6 +2,7 @@
 // VALETHOLIC ADMIN
 // =====================================
 
+
 // =====================================
 // LOGIN CHECK
 // =====================================
@@ -10,7 +11,8 @@ if (
     sessionStorage.getItem("adminLoggedIn") !== "true"
 ) {
 
-    window.location.href = "login.html";
+    window.location.href =
+        "login.html";
 
 }
 
@@ -33,6 +35,42 @@ let adminPermissions = [];
 async function loadCurrentAdmin() {
 
     const {
+        data: {
+            user
+        },
+        error: userError
+    } =
+        await window.supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        userError ||
+        !user
+    ) {
+
+        console.error(
+            "Unable to get current Supabase user:",
+            userError
+        );
+
+        return;
+
+    }
+
+
+    console.log(
+        "Current Supabase user:",
+        user
+    );
+
+
+    // =================================
+    // FIND ADMIN BY EMAIL
+    // =================================
+
+    const {
         data: admin,
         error
     } =
@@ -40,8 +78,8 @@ async function loadCurrentAdmin() {
             .from("Admins")
             .select("*")
             .eq(
-                "username",
-                "admin"
+                "email",
+                user.email
             )
             .single();
 
@@ -58,7 +96,19 @@ async function loadCurrentAdmin() {
     }
 
 
-    currentAdmin = admin;
+    if (!admin) {
+
+        console.error(
+            "No admin record found."
+        );
+
+        return;
+
+    }
+
+
+    currentAdmin =
+        admin;
 
 
     // =================================
@@ -93,7 +143,8 @@ async function loadCurrentAdmin() {
     adminPermissions =
         (permissions || [])
             .map(
-                item => item.permission
+                item =>
+                    item.permission
             );
 
 
@@ -112,7 +163,10 @@ async function loadCurrentAdmin() {
     applyAdminPermissions();
 
 
-    // Load admin management table
+    // =================================
+    // LOAD ADMIN MANAGEMENT
+    // =================================
+
     await loadAdmins();
 
 }
@@ -126,11 +180,14 @@ function hasPermission(
     permission
 ) {
 
-    // Master always has access
+    // =================================
+    // MASTER ALWAYS HAS ACCESS
+    // =================================
 
     if (
         currentAdmin &&
-        currentAdmin.role === "MASTER"
+        currentAdmin.role ===
+            "MASTER"
     ) {
 
         return true;
@@ -173,7 +230,9 @@ function applyAdminPermissions() {
         adminManagement.style.display =
             "block";
 
-    } else {
+    }
+
+    else {
 
         adminManagement.style.display =
             "none";
@@ -188,7 +247,6 @@ function applyAdminPermissions() {
 // =====================================
 
 async function loadDashboard() {
-
 
     // =================================
     // LOAD BOOKINGS
@@ -256,15 +314,18 @@ async function loadDashboard() {
             "totalBookings"
         );
 
+
     const pendingBookings =
         document.getElementById(
             "pendingBookings"
         );
 
+
     const completedBookings =
         document.getElementById(
             "completedBookings"
         );
+
 
     const todayBookings =
         document.getElementById(
@@ -285,8 +346,13 @@ async function loadDashboard() {
         pendingBookings.textContent =
             bookingData.filter(
                 booking =>
-                    booking.status ===
-                    "Pending"
+                    String(
+                        booking.status ||
+                        ""
+                    )
+                    .trim()
+                    .toUpperCase() ===
+                    "PENDING"
             ).length;
 
     }
@@ -297,8 +363,13 @@ async function loadDashboard() {
         completedBookings.textContent =
             bookingData.filter(
                 booking =>
-                    booking.status ===
-                    "Completed"
+                    String(
+                        booking.status ||
+                        ""
+                    )
+                    .trim()
+                    .toUpperCase() ===
+                    "COMPLETED"
             ).length;
 
     }
@@ -340,7 +411,8 @@ async function loadDashboard() {
 
     if (table) {
 
-        table.innerHTML = "";
+        table.innerHTML =
+            "";
 
 
         const filteredBookings =
@@ -415,15 +487,19 @@ async function loadDashboard() {
                 </tr>
             `;
 
-        } else {
+        }
+
+        else {
 
             filteredBookings.forEach(
                 booking => {
 
+                    let pickup =
+                        "-";
 
-                    let pickup = "-";
 
-                    let destination = "-";
+                    let destination =
+                        "-";
 
 
                     // -----------------------------
@@ -449,14 +525,26 @@ async function loadDashboard() {
                             booking.pickups
                         ) {
 
-                            pickup =
+                            const parsed =
                                 JSON.parse(
                                     booking.pickups
-                                )[0];
+                                );
+
+
+                            pickup =
+                                Array.isArray(
+                                    parsed
+                                )
+                                    ? parsed.join(
+                                        "<br>"
+                                    )
+                                    : parsed;
 
                         }
 
-                    } catch {
+                    }
+
+                    catch {
 
                         pickup =
                             booking.pickups ||
@@ -488,14 +576,26 @@ async function loadDashboard() {
                             booking.destinations
                         ) {
 
-                            destination =
+                            const parsed =
                                 JSON.parse(
                                     booking.destinations
-                                )[0];
+                                );
+
+
+                            destination =
+                                Array.isArray(
+                                    parsed
+                                )
+                                    ? parsed.join(
+                                        "<br>"
+                                    )
+                                    : parsed;
 
                         }
 
-                    } catch {
+                    }
+
+                    catch {
 
                         destination =
                             booking.destinations ||
@@ -579,28 +679,198 @@ async function loadDashboard() {
 
 
     // =================================
-    // LOAD DRIVER APPLICATIONS
+    // LOAD DRIVERS
     // =================================
+
+    await loadDrivers();
+
+}
+
+
+// =====================================
+// CHECK IF DRIVER IS APPROVED
+// =====================================
+
+function isApprovedDriver(
+    driver
+) {
+
+    const approvalStatus =
+        String(
+            driver.approval_status ||
+            ""
+        )
+        .trim()
+        .toUpperCase();
+
+
+    return (
+        driver.approved === true ||
+        approvalStatus ===
+            "APPROVED"
+    );
+
+}
+
+
+// =====================================
+// CHECK IF DRIVER IS PENDING
+// =====================================
+
+function isPendingDriver(
+    driver
+) {
+
+    const approvalStatus =
+        String(
+            driver.approval_status ||
+            ""
+        )
+        .trim()
+        .toUpperCase();
+
+
+    return (
+        approvalStatus ===
+        "PENDING"
+    );
+
+}
+
+
+// =====================================
+// CHECK IF DRIVER HAS ACTIVE JOB
+// =====================================
+
+function driverHasActiveJob(
+    driver,
+    bookingData
+) {
+
+    if (!bookingData) {
+
+        return false;
+
+    }
+
+
+    const activeStatuses = [
+        "ON JOB",
+        "ON THE WAY",
+        "PICKED UP"
+    ];
+
+
+    return bookingData.some(
+        booking => {
+
+            if (
+                booking.driver_id !==
+                driver.auth_id
+            ) {
+
+                return false;
+
+            }
+
+
+            const bookingStatus =
+                String(
+                    booking.status ||
+                    ""
+                )
+                .trim()
+                .toUpperCase();
+
+
+            return activeStatuses.includes(
+                bookingStatus
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================
+// LOAD DRIVERS
+// =====================================
+
+async function loadDrivers() {
 
     const {
         data: drivers,
-        error: driverError
+        error
     } =
         await window.supabaseClient
             .from("Drivers")
-            .select(
-                "id, approved, approval_status"
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
             );
 
 
-    const pendingDrivers =
-        (drivers || [])
-            .filter(
-                driver =>
-                    driver.approval_status ===
-                    "PENDING"
-            ).length;
+    if (error) {
 
+        console.error(
+            "Driver loading error:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    const driverData =
+        drivers || [];
+
+
+    // =================================
+    // APPROVED DRIVERS
+    // =================================
+
+    const approvedDrivers =
+        driverData.filter(
+            isApprovedDriver
+        );
+
+
+    // =================================
+    // PENDING DRIVERS
+    // =================================
+
+    const pendingDrivers =
+        driverData.filter(
+            isPendingDriver
+        );
+
+
+    // =================================
+    // DRIVER COUNT
+    // =================================
+
+    const driverCount =
+        document.getElementById(
+            "driverCount"
+        );
+
+
+    if (driverCount) {
+
+        driverCount.textContent =
+            approvedDrivers.length;
+
+    }
+
+
+    // =================================
+    // PENDING DRIVER COUNT
+    // =================================
 
     const pendingDriverCount =
         document.getElementById(
@@ -611,45 +881,38 @@ async function loadDashboard() {
     if (pendingDriverCount) {
 
         pendingDriverCount.textContent =
-            pendingDrivers;
-
-    }
-
-
-    if (driverError) {
-
-        console.error(
-            "Driver loading error:",
-            driverError
-        );
-
-        return;
+            pendingDrivers.length;
 
     }
 
 
     // =================================
-    // DRIVER APPLICATION LIST
+    // LOAD PENDING TABLE
     // =================================
 
-    const {
-        data: driverApplications,
-        error: applicationsError
-    } =
-        await window.supabaseClient
-            .from("Drivers")
-            .select("*")
-            .eq(
-                "approval_status",
-                "PENDING"
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
+    await renderPendingDrivers(
+        pendingDrivers
+    );
 
+
+    // =================================
+    // LOAD APPROVED TABLE
+    // =================================
+
+    await renderApprovedDrivers(
+        approvedDrivers
+    );
+
+}
+
+
+// =====================================
+// RENDER PENDING DRIVERS
+// =====================================
+
+async function renderPendingDrivers(
+    pendingDrivers
+) {
 
     const driverTable =
         document.getElementById(
@@ -664,29 +927,10 @@ async function loadDashboard() {
     }
 
 
-    if (applicationsError) {
-
-        console.error(
-            "Driver applications error:",
-            applicationsError
-        );
-
-        driverTable.innerHTML = `
-            <tr>
-                <td colspan="6">
-                    Unable to load driver applications.
-                </td>
-            </tr>
-        `;
-
-        return;
-
-    }
-
-
     if (
-        !driverApplications ||
-        driverApplications.length === 0
+        !pendingDrivers ||
+        pendingDrivers.length ===
+            0
     ) {
 
         driverTable.innerHTML = `
@@ -702,10 +946,11 @@ async function loadDashboard() {
     }
 
 
-    driverTable.innerHTML = "";
+    driverTable.innerHTML =
+        "";
 
 
-    driverApplications.forEach(
+    pendingDrivers.forEach(
         driver => {
 
             driverTable.innerHTML += `
@@ -714,22 +959,28 @@ async function loadDashboard() {
 
                     <td>
                         ${
-                            driver.name ||
-                            "-"
+                            escapeHTML(
+                                driver.name ||
+                                "-"
+                            )
                         }
                     </td>
 
                     <td>
                         ${
-                            driver.mobile ||
-                            "-"
+                            escapeHTML(
+                                driver.mobile ||
+                                "-"
+                            )
                         }
                     </td>
 
                     <td>
                         ${
-                            driver.license ||
-                            "-"
+                            escapeHTML(
+                                driver.license ||
+                                "-"
+                            )
                         }
                     </td>
 
@@ -783,6 +1034,225 @@ async function loadDashboard() {
 
 
 // =====================================
+// RENDER APPROVED DRIVERS
+// =====================================
+
+async function renderApprovedDrivers(
+    approvedDrivers
+) {
+
+    const approvedDriverTable =
+        document.getElementById(
+            "approvedDriverTable"
+        );
+
+
+    if (!approvedDriverTable) {
+
+        return;
+
+    }
+
+
+    if (
+        !approvedDrivers ||
+        approvedDrivers.length ===
+            0
+    ) {
+
+        approvedDriverTable.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    No approved drivers.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    approvedDriverTable.innerHTML =
+        "";
+
+
+    // =================================
+    // LOAD BOOKINGS
+    // =================================
+
+    const {
+        data: bookings,
+        error
+    } =
+        await window.supabaseClient
+            .from("Bookings")
+            .select(
+                "id, driver_id, status"
+            );
+
+
+    if (error) {
+
+        console.error(
+            "Unable to load bookings for driver status:",
+            error
+        );
+
+    }
+
+
+    approvedDrivers.forEach(
+        driver => {
+
+            const activeJob =
+                driverHasActiveJob(
+                    driver,
+                    bookings || []
+                );
+
+
+            let driverStatus =
+                driver.status ||
+                "OFF DUTY";
+
+
+            driverStatus =
+                String(
+                    driverStatus
+                )
+                .trim()
+                .toUpperCase();
+
+
+            let statusDisplay =
+                driverStatus;
+
+
+            if (
+                driverStatus ===
+                "ON DUTY"
+            ) {
+
+                statusDisplay =
+                    "🟢 ON DUTY";
+
+            }
+
+            else if (
+                driverStatus ===
+                "OFF DUTY"
+            ) {
+
+                statusDisplay =
+                    "⚪ OFF DUTY";
+
+            }
+
+            else if (
+                driverStatus ===
+                "ON JOB"
+            ) {
+
+                statusDisplay =
+                    "🟡 ON JOB";
+
+            }
+
+            else if (
+                driverStatus ===
+                "ON THE WAY"
+            ) {
+
+                statusDisplay =
+                    "🚗 ON THE WAY";
+
+            }
+
+            else if (
+                driverStatus ===
+                "PICKED UP"
+            ) {
+
+                statusDisplay =
+                    "🟢 PICKED UP";
+
+            }
+
+
+            const removeButton =
+                activeJob
+                    ? `
+                        <button
+                            disabled
+                            title="Driver has an active job."
+                            style="
+                                opacity:.5;
+                                cursor:not-allowed;
+                            "
+                        >
+                            ACTIVE JOB
+                        </button>
+                      `
+                    : `
+                        <button
+                            class="reject-btn"
+                            onclick="
+                                removeDriver(
+                                    '${driver.id}'
+                                )
+                            "
+                        >
+                            REMOVE
+                        </button>
+                      `;
+
+
+            approvedDriverTable.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        ${
+                            escapeHTML(
+                                driver.name ||
+                                "-"
+                            )
+                        }
+                    </td>
+
+                    <td>
+                        ${
+                            escapeHTML(
+                                driver.mobile ||
+                                "-"
+                            )
+                        }
+                    </td>
+
+                    <td>
+                        ${statusDisplay}
+                    </td>
+
+                    <td>
+                        APPROVED
+                    </td>
+
+                    <td>
+                        ${removeButton}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+}
+
+
+// =====================================
 // LOAD ALL ADMINS
 // =====================================
 
@@ -818,7 +1288,7 @@ async function loadAdmins() {
             await window.supabaseClient
                 .from("Admins")
                 .select(
-                    "id, username, name, email, role, is_active"
+                    "id, username, name, email, role, is_active, created_at"
                 )
                 .order(
                     "created_at",
@@ -837,7 +1307,7 @@ async function loadAdmins() {
 
             adminTable.innerHTML = `
                 <tr>
-                    <td colspan="5">
+                    <td colspan="6">
                         Unable to load admins.
                     </td>
                 </tr>
@@ -856,12 +1326,13 @@ async function loadAdmins() {
 
         if (
             !admins ||
-            admins.length === 0
+            admins.length ===
+                0
         ) {
 
             adminTable.innerHTML = `
                 <tr>
-                    <td colspan="5">
+                    <td colspan="6">
                         No admins found.
                     </td>
                 </tr>
@@ -873,7 +1344,7 @@ async function loadAdmins() {
 
 
         // =================================
-        // LOAD ALL PERMISSIONS AT ONCE
+        // LOAD PERMISSIONS
         // =================================
 
         const {
@@ -896,7 +1367,7 @@ async function loadAdmins() {
 
             adminTable.innerHTML = `
                 <tr>
-                    <td colspan="5">
+                    <td colspan="6">
                         Unable to load permissions.
                     </td>
                 </tr>
@@ -907,17 +1378,12 @@ async function loadAdmins() {
         }
 
 
-        console.log(
-            "ALL PERMISSIONS LOADED:",
-            allPermissions
-        );
-
-
         // =================================
         // CLEAR TABLE
         // =================================
 
-        adminTable.innerHTML = "";
+        adminTable.innerHTML =
+            "";
 
 
         // =================================
@@ -926,7 +1392,6 @@ async function loadAdmins() {
 
         admins.forEach(
             admin => {
-
 
                 // =================================
                 // MASTER
@@ -943,15 +1408,19 @@ async function loadAdmins() {
 
                             <td>
                                 ${
-                                    admin.name ||
-                                    "-"
+                                    escapeHTML(
+                                        admin.name ||
+                                        "-"
+                                    )
                                 }
                             </td>
 
                             <td>
                                 ${
-                                    admin.username ||
-                                    "-"
+                                    escapeHTML(
+                                        admin.username ||
+                                        "-"
+                                    )
                                 }
                             </td>
 
@@ -961,6 +1430,10 @@ async function loadAdmins() {
 
                             <td>
                                 Full Access
+                            </td>
+
+                            <td>
+                                ACTIVE
                             </td>
 
                             <td>
@@ -977,7 +1450,7 @@ async function loadAdmins() {
 
 
                 // =================================
-                // MATCH PERMISSIONS BY ADMIN ID
+                // MATCH PERMISSIONS
                 // =================================
 
                 const adminPermissionsForRow =
@@ -995,16 +1468,6 @@ async function loadAdmins() {
                             permissionRow =>
                                 permissionRow.permission
                         );
-
-
-                console.log(
-                    "ADMIN:",
-                    admin.username,
-                    "ID:",
-                    admin.id,
-                    "PERMISSIONS:",
-                    adminPermissionsForRow
-                );
 
 
                 // =================================
@@ -1073,6 +1536,73 @@ async function loadAdmins() {
 
 
                 // =================================
+                // STATUS
+                // =================================
+
+                const isActive =
+                    admin.is_active !==
+                    false;
+
+
+                const statusDisplay =
+                    isActive
+                        ? "🟢 ACTIVE"
+                        : "⚪ REMOVED";
+
+
+                // =================================
+                // REMOVE BUTTON
+                // =================================
+
+                let actionDisplay =
+                    "REMOVE";
+
+
+                if (
+                    currentAdmin &&
+                    String(
+                        currentAdmin.id
+                    ).trim() ===
+                    String(
+                        admin.id
+                    ).trim()
+                ) {
+
+                    actionDisplay =
+                        "CURRENT ADMIN";
+
+                }
+
+                else if (
+                    !isActive
+                ) {
+
+                    actionDisplay =
+                        "REMOVED";
+
+                }
+
+                else {
+
+                    actionDisplay = `
+
+                        <button
+                            class="reject-btn"
+                            onclick="
+                                removeAdmin(
+                                    '${admin.id}'
+                                )
+                            "
+                        >
+                            REMOVE
+                        </button>
+
+                    `;
+
+                }
+
+
+                // =================================
                 // ADD ROW
                 // =================================
 
@@ -1082,15 +1612,19 @@ async function loadAdmins() {
 
                         <td>
                             ${
-                                admin.name ||
-                                "-"
+                                escapeHTML(
+                                    admin.name ||
+                                    "-"
+                                )
                             }
                         </td>
 
                         <td>
                             ${
-                                admin.username ||
-                                "-"
+                                escapeHTML(
+                                    admin.username ||
+                                    "-"
+                                )
                             }
                         </td>
 
@@ -1103,7 +1637,11 @@ async function loadAdmins() {
                         </td>
 
                         <td>
-                            VIEW
+                            ${statusDisplay}
+                        </td>
+
+                        <td>
+                            ${actionDisplay}
                         </td>
 
                     </tr>
@@ -1120,7 +1658,9 @@ async function loadAdmins() {
         );
 
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "Unexpected admin loading error:",
@@ -1129,13 +1669,199 @@ async function loadAdmins() {
 
         adminTable.innerHTML = `
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     Unable to load admins.
                 </td>
             </tr>
         `;
 
     }
+
+}
+
+
+// =====================================
+// REMOVE ADMIN
+// =====================================
+
+async function removeAdmin(
+    adminId
+) {
+
+    if (!hasPermission("manage_admins")) {
+
+        alert(
+            "You do not have permission to remove admins."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // CANNOT REMOVE YOURSELF
+    // =================================
+
+    if (
+        currentAdmin &&
+        String(
+            currentAdmin.id
+        ).trim() ===
+        String(
+            adminId
+        ).trim()
+    ) {
+
+        alert(
+            "You cannot remove your own admin account."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // LOAD ADMIN
+    // =================================
+
+    const {
+        data: admin,
+        error: adminError
+    } =
+        await window.supabaseClient
+            .from("Admins")
+            .select(
+                "id, name, username, role, is_active"
+            )
+            .eq(
+                "id",
+                adminId
+            )
+            .single();
+
+
+    if (adminError) {
+
+        console.error(
+            "Admin lookup error:",
+            adminError
+        );
+
+        alert(
+            adminError.message
+        );
+
+        return;
+
+    }
+
+
+    if (!admin) {
+
+        alert(
+            "Admin not found."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // MASTER PROTECTION
+    // =================================
+
+    if (
+        admin.role ===
+        "MASTER"
+    ) {
+
+        alert(
+            "MASTER Admin cannot be removed."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        admin.is_active ===
+        false
+    ) {
+
+        alert(
+            "This admin has already been removed."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // CONFIRM
+    // =================================
+
+    const confirmed =
+        confirm(
+            `Remove admin "${admin.name || admin.username}"?\n\nThey will no longer be able to use the Valetholic Admin system.`
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    // =================================
+    // DEACTIVATE ADMIN
+    // =================================
+
+    const {
+        error
+    } =
+        await window.supabaseClient
+            .from("Admins")
+            .update({
+
+                is_active:
+                    false
+
+            })
+            .eq(
+                "id",
+                adminId
+            );
+
+
+    if (error) {
+
+        console.error(
+            "Remove admin error:",
+            error
+        );
+
+        alert(
+            "Unable to remove admin.\n\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Admin removed successfully."
+    );
+
+
+    await loadAdmins();
 
 }
 
@@ -1165,27 +1891,32 @@ function openAddAdmin() {
 
     document.getElementById(
         "newAdminName"
-    ).value = "";
+    ).value =
+        "";
 
 
     document.getElementById(
         "newAdminUsername"
-    ).value = "";
+    ).value =
+        "";
 
 
     document.getElementById(
         "newAdminPassword"
-    ).value = "";
+    ).value =
+        "";
 
 
     document.getElementById(
         "newAdminConfirmPassword"
-    ).value = "";
+    ).value =
+        "";
 
 
     document.getElementById(
         "newAdminRole"
-    ).value = "ADMIN";
+    ).value =
+        "ADMIN";
 
 
     setAdminPermissions(
@@ -1237,30 +1968,36 @@ function setAdminPermissions(
             "permViewBookings"
         );
 
+
     const manageBookings =
         document.getElementById(
             "permManageBookings"
         );
+
 
     const approveDrivers =
         document.getElementById(
             "permApproveDrivers"
         );
 
+
     const viewDrivers =
         document.getElementById(
             "permViewDrivers"
         );
+
 
     const viewGPS =
         document.getElementById(
             "permViewGPS"
         );
 
+
     const manageAdmins =
         document.getElementById(
             "permManageAdmins"
         );
+
 
     const systemSettings =
         document.getElementById(
@@ -1268,12 +2005,9 @@ function setAdminPermissions(
         );
 
 
-    // =================================
-    // NORMAL ADMIN
-    // =================================
-
     if (
-        role === "ADMIN"
+        role ===
+        "ADMIN"
     ) {
 
         viewBookings.checked =
@@ -1300,12 +2034,9 @@ function setAdminPermissions(
     }
 
 
-    // =================================
-    // SEMI-MASTER
-    // =================================
-
     if (
-        role === "SEMI-MASTER"
+        role ===
+        "SEMI-MASTER"
     ) {
 
         viewBookings.checked =
@@ -1395,21 +2126,27 @@ async function createAdmin() {
 
 
     const password =
-        document.getElementById(
-            "newAdminPassword"
-        ).value;
+        document
+            .getElementById(
+                "newAdminPassword"
+            )
+            .value;
 
 
     const confirmPassword =
-        document.getElementById(
-            "newAdminConfirmPassword"
-        ).value;
+        document
+            .getElementById(
+                "newAdminConfirmPassword"
+            )
+            .value;
 
 
     const role =
-        document.getElementById(
-            "newAdminRole"
-        ).value;
+        document
+            .getElementById(
+                "newAdminRole"
+            )
+            .value;
 
 
     // =================================
@@ -1447,7 +2184,8 @@ async function createAdmin() {
 
 
     if (
-        password.length < 6
+        password.length <
+        6
     ) {
 
         alert(
@@ -1722,7 +2460,9 @@ async function createAdmin() {
         await loadAdmins();
 
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "Create admin error:",
@@ -1734,8 +2474,9 @@ async function createAdmin() {
             error.message
         );
 
+    }
 
-    } finally {
+    finally {
 
         if (button) {
 
@@ -1776,6 +2517,7 @@ async function markCompleted() {
         "markCompleted clicked"
     );
 
+
     console.log(
         currentBookingId
     );
@@ -1811,8 +2553,10 @@ async function markCompleted() {
         await window.supabaseClient
             .from("Bookings")
             .update({
+
                 status:
                     "Completed"
+
             })
             .eq(
                 "reference_no",
@@ -1973,7 +2717,10 @@ async function rejectDriver(
                     false,
 
                 approval_status:
-                    "REJECTED"
+                    "REJECTED",
+
+                status:
+                    "OFF DUTY"
 
             })
             .eq(
@@ -2004,6 +2751,236 @@ async function rejectDriver(
 
 
     await loadDashboard();
+
+}
+
+
+// =====================================
+// REMOVE DRIVER
+// =====================================
+
+async function removeDriver(
+    driverId
+) {
+
+    // =================================
+    // PERMISSION
+    // =================================
+
+    if (
+        !hasPermission(
+            "view_drivers"
+        )
+    ) {
+
+        alert(
+            "You do not have permission to manage drivers."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // LOAD DRIVER
+    // =================================
+
+    const {
+        data: driver,
+        error: driverError
+    } =
+        await window.supabaseClient
+            .from("Drivers")
+            .select("*")
+            .eq(
+                "id",
+                driverId
+            )
+            .single();
+
+
+    if (driverError) {
+
+        console.error(
+            "Driver lookup error:",
+            driverError
+        );
+
+        alert(
+            driverError.message
+        );
+
+        return;
+
+    }
+
+
+    if (!driver) {
+
+        alert(
+            "Driver not found."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // LOAD BOOKINGS
+    // =================================
+
+    const {
+        data: bookings,
+        error: bookingError
+    } =
+        await window.supabaseClient
+            .from("Bookings")
+            .select(
+                "id, driver_id, status"
+            );
+
+
+    if (bookingError) {
+
+        console.error(
+            "Booking lookup error:",
+            bookingError
+        );
+
+        alert(
+            bookingError.message
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // ACTIVE JOB CHECK
+    // =================================
+
+    if (
+        driverHasActiveJob(
+            driver,
+            bookings || []
+        )
+    ) {
+
+        alert(
+            "This driver currently has an active job.\n\nComplete the job before removing the driver."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // CONFIRM
+    // =================================
+
+    const confirmed =
+        confirm(
+            `Remove driver "${driver.name || "this driver"}"?\n\nThey will no longer appear as an approved Valetholic driver.`
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    // =================================
+    // REMOVE DRIVER FROM ACTIVE SYSTEM
+    // =================================
+
+    const {
+        error
+    } =
+        await window.supabaseClient
+            .from("Drivers")
+            .update({
+
+                approved:
+                    false,
+
+                approval_status:
+                    "REJECTED",
+
+                status:
+                    "OFF DUTY"
+
+            })
+            .eq(
+                "id",
+                driverId
+            );
+
+
+    if (error) {
+
+        console.error(
+            "Remove driver error:",
+            error
+        );
+
+        alert(
+            "Unable to remove driver.\n\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Driver removed successfully."
+    );
+
+
+    await loadDashboard();
+
+}
+
+
+// =====================================
+// HTML ESCAPE
+// =====================================
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ??
+        ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
@@ -2061,7 +3038,8 @@ document.addEventListener(
 
                 if (
                     modal &&
-                    event.target === modal
+                    event.target ===
+                    modal
                 ) {
 
                     modal.style.display =
@@ -2092,7 +3070,8 @@ window.addEventListener(
 
         if (
             modal &&
-            event.target === modal
+            event.target ===
+            modal
         ) {
 
             closeAddAdmin();

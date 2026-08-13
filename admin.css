@@ -249,3 +249,346 @@ button:hover{
 #addAdminModal .admin-modal::-webkit-scrollbar-thumb {
     border-radius: 10px;
 }
+/* =====================================
+   MOBILE ADMIN BOOKING LAYOUT
+===================================== */
+
+@media (max-width: 768px) {
+
+    /* -----------------------------
+       NAVBAR
+    ----------------------------- */
+
+    .navbar {
+        height: auto;
+        min-height: 90px;
+
+        padding: 18px 20px;
+
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+
+    .logo {
+        gap: 10px;
+    }
+
+
+    .logo img {
+        width: 42px;
+    }
+
+
+    .logo span {
+        font-size: 16px;
+        letter-spacing: 1px;
+    }
+
+
+    .admin-actions {
+        width: 100%;
+
+        display: flex;
+        flex-wrap: wrap;
+
+        gap: 8px 12px;
+
+        font-size: 13px;
+    }
+
+
+    /* -----------------------------
+       MAIN CONTAINER
+    ----------------------------- */
+
+    .admin-container {
+        width: 94%;
+
+        margin: 25px auto;
+
+        padding-top: 20px !important;
+    }
+
+
+    /* -----------------------------
+       TABLE CARD
+    ----------------------------- */
+
+    .table-card {
+        padding: 16px;
+
+        border-radius: 14px;
+    }
+
+
+    /* -----------------------------
+       TABLE HEADER
+    ----------------------------- */
+
+    .table-header {
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 15px;
+
+    }
+
+
+    .table-header h1 {
+        font-size: 25px;
+    }
+
+
+    .table-header h2 {
+        font-size: 22px;
+    }
+
+
+    /* -----------------------------
+       BOOKING CONTROLS
+    ----------------------------- */
+
+    .table-controls {
+
+        display: flex;
+
+        flex-direction: column;
+
+        width: 100%;
+
+        gap: 10px;
+
+    }
+
+
+    .table-controls select,
+    .table-controls input {
+
+        width: 100%;
+
+        min-height: 44px;
+
+        box-sizing: border-box;
+
+    }
+
+
+    /* -----------------------------
+       BOOKING TABLE
+       
+       On mobile, each booking
+       becomes a vertical block.
+    ----------------------------- */
+
+    .table-card > div[style*="overflow-x"] {
+
+        overflow-x: visible !important;
+
+    }
+
+
+    table,
+    thead,
+    tbody,
+    tr,
+    th,
+    td {
+
+        display: block;
+
+        width: 100%;
+
+    }
+
+
+    /* Hide desktop header */
+
+    thead {
+
+        display: none;
+
+    }
+
+
+    tbody tr {
+
+        background: #202020;
+
+        border: 1px solid #303030;
+
+        border-radius: 14px;
+
+        margin-bottom: 18px;
+
+        padding: 8px 0;
+
+    }
+
+
+    tbody td {
+
+        display: flex;
+
+        align-items: flex-start;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 12px 14px;
+
+        border-bottom: 1px solid #2c2c2c;
+
+        text-align: right;
+
+    }
+
+
+    tbody td:last-child {
+
+        border-bottom: none;
+
+    }
+
+
+    /* -----------------------------
+       LABELS
+       
+       These correspond to:
+       Reference
+       Customer
+       Mobile
+       Pickup
+       Destination
+       Date
+       Status
+       Driver
+       Action
+    ----------------------------- */
+
+    tbody td:nth-child(1)::before {
+        content: "Reference";
+    }
+
+
+    tbody td:nth-child(2)::before {
+        content: "Customer";
+    }
+
+
+    tbody td:nth-child(3)::before {
+        content: "Mobile";
+    }
+
+
+    tbody td:nth-child(4)::before {
+        content: "Pickup";
+    }
+
+
+    tbody td:nth-child(5)::before {
+        content: "Destination";
+    }
+
+
+    tbody td:nth-child(6)::before {
+        content: "Date";
+    }
+
+
+    tbody td:nth-child(7)::before {
+        content: "Status";
+    }
+
+
+    tbody td:nth-child(8)::before {
+        content: "Driver";
+    }
+
+
+    tbody td:nth-child(9)::before {
+        content: "Action";
+    }
+
+
+    tbody td::before {
+
+        flex: 0 0 90px;
+
+        text-align: left;
+
+        color: #D4AF37;
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        letter-spacing: .5px;
+
+    }
+
+
+    /* -----------------------------
+       CELL CONTENT
+    ----------------------------- */
+
+    tbody td {
+
+        color: #fff;
+
+        word-break: break-word;
+
+    }
+
+
+    /* -----------------------------
+       OPEN BUTTON
+    ----------------------------- */
+
+    tbody td:last-child {
+
+        justify-content: space-between;
+
+        align-items: center;
+
+    }
+
+
+    tbody td:last-child button {
+
+        width: auto;
+
+        min-width: 90px;
+
+    }
+
+
+    /* -----------------------------
+       EMPTY / LOADING ROW
+    ----------------------------- */
+
+    tbody td[colspan] {
+
+        display: block;
+
+        text-align: center;
+
+    }
+
+
+    tbody td[colspan]::before {
+
+        display: none;
+
+    }
+
+}
