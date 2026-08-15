@@ -1,1165 +1,258 @@
-// =========================================
-// VALETHOLIC
-// BOOKING REVIEW & SUBMISSION
-// =========================================
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
 
-// =========================================
-// GET SAVED BOOKING
-// =========================================
+    <!-- =====================================
+         BASIC DOCUMENT SETTINGS
+    ====================================== -->
 
-let booking = null;
+    <meta charset="UTF-8">
 
-try {
 
-    booking =
-        JSON.parse(
-            localStorage.getItem("booking")
-        );
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-} catch (error) {
 
-    console.error(
-        "Unable to read saved booking:",
-        error
-    );
+    <meta
+        name="description"
+        content="Review your Valetholic valet booking before confirming."
+    >
 
-}
 
+    <meta
+        name="theme-color"
+        content="#0A0A0A"
+    >
 
-// =========================================
-// CHECK BOOKING
-// =========================================
 
-if (!booking) {
+    <title>
+        Review Booking | Valetholic
+    </title>
 
-    alert(
-        "No booking found."
-    );
 
-    window.location.href =
-        "index.html";
 
-}
+    <!-- =====================================
+         FONTS
+    ====================================== -->
 
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
 
-// =========================================
-// BASIC DATA SAFETY
-// =========================================
 
-const pickups =
-    Array.isArray(booking.pickups)
-        ? booking.pickups
-        : [];
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
 
-const destinations =
-    Array.isArray(booking.destinations)
-        ? booking.destinations
-        : [];
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
 
-// =========================================
-// ESCAPE HTML
-// =========================================
 
-function escapeHTML(value) {
+    <!-- =====================================
+         BOOKING PAGE STYLES
+    ====================================== -->
 
-    if (
-        value === null ||
-        value === undefined
-    ) {
+    <link
+        rel="stylesheet"
+        href="booking.css"
+    >
 
-        return "";
+</head>
 
-    }
 
 
-    return String(value)
+<body>
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
+    <!-- =====================================
+         MAIN CONTENT
+    ====================================== -->
 
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-// =========================================
-// FORMAT LIST
-// =========================================
-
-function formatList(values) {
-
-    if (
-        !Array.isArray(values) ||
-        values.length === 0
-    ) {
-
-        return "Not provided";
-
-    }
-
-
-    return values
-
-        .map(
-            value =>
-                escapeHTML(value)
-        )
-
-        .join(
-            "<br>"
-        );
-
-}
-
-
-// =========================================
-// FARE CALCULATION
-// =========================================
-
-
-// =========================================
-// NUMBER OF PICKUPS
-// =========================================
-
-const pickupCount =
-    pickups.length;
-
-
-// =========================================
-// NUMBER OF DESTINATIONS
-// =========================================
-
-const destinationCount =
-    destinations.length;
-
-
-// =========================================
-// ADDITIONAL STOPS
-// =========================================
-//
-// First pickup = included
-// First destination = included
-//
-// Every additional pickup or destination
-// normally costs $10.
-//
-// HOWEVER:
-//
-// If the booking is outside our normal
-// operating hours, the entire fare is
-// treated as Price Upon Enquiry ($0).
-// =========================================
-
-const additionalPickups =
-    Math.max(
-        0,
-        pickupCount - 1
-    );
-
-
-const additionalDestinations =
-    Math.max(
-        0,
-        destinationCount - 1
-    );
-
-
-const additionalStops =
-    additionalPickups +
-    additionalDestinations;
-
-
-const normalAdditionalStopCharge =
-    additionalStops * 10;
-
-
-// =========================================
-// BOOKING TIME
-// =========================================
-
-const timeParts =
-    String(
-        booking.time ||
-        "00:00"
-    )
-    .split(":")
-    .map(Number);
-
-
-const hour =
-    Number.isFinite(
-        timeParts[0]
-    )
-        ? timeParts[0]
-        : 0;
-
-
-const minute =
-    Number.isFinite(
-        timeParts[1]
-    )
-        ? timeParts[1]
-        : 0;
-
-
-const timeInMinutes =
-    (hour * 60) +
-    minute;
-
-
-// =========================================
-// OPERATING PERIODS
-// =========================================
-//
-// PEAK HOURS
-//
-// 7:30 PM - 9:00 PM
-// 4:00 AM - 5:00 AM
-//
-// STANDARD HOURS
-//
-// 9:00 PM - 4:00 AM
-//
-// PRICE UPON ENQUIRY
-//
-// Before 7:30 PM
-// After 5:00 AM
-// =========================================
-
-
-// =========================================
-// EVENING PEAK
-// =========================================
-
-const eveningPeak =
-    timeInMinutes >=
-        (19 * 60 + 30)
-    &&
-    timeInMinutes <
-        (21 * 60);
-
-
-// =========================================
-// MORNING PEAK
-// =========================================
-
-const morningPeak =
-    timeInMinutes >=
-        (4 * 60)
-    &&
-    timeInMinutes <
-        (5 * 60);
-
-
-// =========================================
-// STANDARD HOURS
-// =========================================
-//
-// 9:00 PM - 11:59 PM
-// OR
-// 12:00 AM - 3:59 AM
-// =========================================
-
-const standardHours =
-    timeInMinutes >=
-        (21 * 60)
-    ||
-    timeInMinutes <
-        (4 * 60);
-
-
-// =========================================
-// PRICE UPON ENQUIRY
-// =========================================
-
-const priceUponEnquiry =
-    !eveningPeak &&
-    !morningPeak &&
-    !standardHours;
-
-
-// =========================================
-// BASE FARE
-// =========================================
-
-let baseFare;
-
-
-if (
-    priceUponEnquiry
-) {
-
-    baseFare =
-        0;
-
-}
-
-else if (
-    eveningPeak ||
-    morningPeak
-) {
-
-    baseFare =
-        60;
-
-}
-
-else {
-
-    baseFare =
-        48;
-
-}
-
-
-// =========================================
-// ADDITIONAL STOP CHARGE
-// =========================================
-//
-// Price Upon Enquiry = $0
-//
-// This prevents the page from showing
-// something like:
-//
-// Base Fare: $0
-// Additional Stops: $20
-//
-// Instead the entire enquiry booking
-// remains $0 until Valetholic quotes it.
-// =========================================
-
-const additionalStopCharge =
-    priceUponEnquiry
-        ? 0
-        : normalAdditionalStopCharge;
-
-
-// =========================================
-// FARE PERIOD TEXT
-// =========================================
-
-let farePeriod;
-
-
-if (
-    eveningPeak
-) {
-
-    farePeriod =
-        "Peak Hours • 7:30 PM – 9:00 PM";
-
-}
-
-else if (
-    morningPeak
-) {
-
-    farePeriod =
-        "Peak Hours • 4:00 AM – 5:00 AM";
-
-}
-
-else if (
-    standardHours
-) {
-
-    farePeriod =
-        "Standard Hours • 9:00 PM – 4:00 AM";
-
-}
-
-else {
-
-    farePeriod =
-        "Price Upon Enquiry";
-
-}
-
-
-// =========================================
-// TOTAL FARE
-// =========================================
-
-const totalFare =
-    priceUponEnquiry
-        ? 0
-        : baseFare +
-          additionalStopCharge;
-
-
-// =========================================
-// DISPLAY VALUES
-// =========================================
-
-const customerName =
-    escapeHTML(
-        booking.customer_name ||
-        "Customer"
-    );
-
-
-const mobile =
-    escapeHTML(
-        booking.mobile ||
-        ""
-    );
-
-
-const bookingDate =
-    escapeHTML(
-        booking.date ||
-        ""
-    );
-
-
-const bookingTime =
-    escapeHTML(
-        booking.time ||
-        ""
-    );
-
-
-const vehicle =
-    escapeHTML(
-        booking.vehicle ||
-        ""
-    );
-
-
-const remarks =
-    escapeHTML(
-        booking.remarks ||
-        "None"
-    );
-
-
-// =========================================
-// DISPLAY SUMMARY
-// =========================================
-
-const summary =
-    document.getElementById(
-        "summary"
-    );
-
-
-if (!summary) {
-
-    console.error(
-        "Booking summary container not found."
-    );
-
-}
-
-else {
-
-    summary.innerHTML = `
-
-        <!-- =================================
-             JOURNEY
-        ================================== -->
-
-        <div
-            class="summary-card booking-card"
-        >
-
-            <h2>
-                Journey
-            </h2>
-
-
-            <div class="summary-item">
-
-                <span class="label">
-                    📍 Pickup
-                </span>
-
-                <span class="value">
-
-                    ${formatList(
-                        pickups
-                    )}
-
-                </span>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span class="label">
-                    📍 Destination
-                </span>
-
-                <span class="value">
-
-                    ${formatList(
-                        destinations
-                    )}
-
-                </span>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span class="label">
-                    👤 Customer
-                </span>
-
-                <span class="value">
-
-                    ${customerName}
-
-                </span>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span class="label">
-                    📱 Mobile
-                </span>
-
-                <span class="value">
-
-                    ${mobile}
-
-                </span>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span class="label">
-                    📅 Date
-                </span>
-
-                <span class="value">
-
-                    ${bookingDate}
-
-                </span>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span class="label">
-                    🕒 Time
-                </span>
-
-                <span class="value">
-
-                    ${bookingTime}
-
-                </span>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span class="label">
-                    🚘 Vehicle
-                </span>
-
-                <span class="value">
-
-                    ${vehicle}
-
-                </span>
-
-            </div>
-
-
-            <div class="summary-item">
-
-                <span class="label">
-                    📝 Remarks
-                </span>
-
-                <span class="value">
-
-                    ${remarks}
-
-                </span>
-
-            </div>
-
-        </div>
+    <main
+        class="container"
+        aria-labelledby="pageTitle"
+    >
 
 
         <!-- =================================
-             FARE
+             PAGE HEADER
         ================================== -->
 
-        <div
-            class="summary-card fare-card"
+        <header>
+
+            <h1
+                id="pageTitle"
+            >
+
+                Review Your Booking
+
+            </h1>
+
+
+            <p
+                id="bookingIntro"
+                style="
+                    color:#8f8f8f;
+                    margin-top:-14px;
+                    margin-bottom:28px;
+                    line-height:1.6;
+                    font-size:14px;
+                "
+            >
+
+                Please check your trip details
+                before confirming your booking.
+
+            </p>
+
+        </header>
+
+
+
+        <!-- =================================
+             BOOKING SUMMARY
+
+             booking.js populates this.
+        ================================== -->
+
+        <section
+            id="summary"
+            aria-label="Booking summary"
         >
 
-            <h2>
-                Fare Estimate
-            </h2>
+            <div
+                style="
+                    width:100%;
+                    padding:30px;
+                    background:#141414;
+                    border:1px solid rgba(255,255,255,.08);
+                    border-radius:18px;
+                    color:#888;
+                    text-align:center;
+                "
+                id="summaryLoading"
+            >
 
-
-            <!-- BASE FARE -->
-
-            <div class="summary-item">
-
-                <span class="label">
-
-                    <strong>
-
-                        Base Fare
-                        <br>
-
-                        (${farePeriod})
-
-                    </strong>
-
-                </span>
-
-
-                <span class="value">
-
-                    <strong>
-
-                        $${baseFare}
-
-                    </strong>
-
-                </span>
+                Loading your booking...
 
             </div>
 
-
-            <!-- ADDITIONAL STOPS -->
-
-            <div class="summary-item">
-
-                <span class="label">
-
-                    Additional Stops
-
-                </span>
+        </section>
 
 
-                <span class="value">
-
-                    $${additionalStopCharge}
-
-                </span>
-
-            </div>
+    </main>
 
 
-            <!-- TOTAL -->
 
-            <div class="summary-item">
+    <!-- =====================================
+         SUPABASE
+    ====================================== -->
 
-                <span class="label">
-
-                    <strong>
-                        Total
-                    </strong>
-
-                </span>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
 
 
-                <span class="value">
-
-                    <strong>
-
-                        $${totalFare}
-
-                    </strong>
-
-                </span>
-
-            </div>
+    <script
+        src="supabase.js"
+    ></script>
 
 
-            ${
-                priceUponEnquiry
-                    ? `
 
-                        <div
-                            style="
-                                margin-top:18px;
-                                padding:14px;
-                                border-radius:12px;
-                                background:rgba(212,175,55,.08);
-                                border:1px solid rgba(212,175,55,.20);
-                                color:#D4AF37;
-                                font-size:13px;
-                                line-height:1.6;
-                                text-align:center;
-                            "
-                        >
+    <!-- =====================================
+         BOOKING LOGIC
+    ====================================== -->
 
-                            💬 Final fare will be
-                            provided upon enquiry.
+    <script
+        src="booking.js"
+    ></script>
 
-                        </div>
 
-                    `
-                    : ""
+
+    <!-- =====================================
+         LOADING FALLBACK
+    ====================================== -->
+
+    <script>
+
+        /*
+         * booking.js is responsible for
+         * replacing #summary with the
+         * actual booking information.
+         *
+         * This fallback prevents the page
+         * from looking completely empty while
+         * the booking information loads.
+         */
+
+        window.addEventListener(
+            "load",
+            function () {
+
+                const loading =
+                    document.getElementById(
+                        "summaryLoading"
+                    );
+
+
+                /*
+                 * Give booking.js a moment to
+                 * populate the summary.
+                 */
+
+                setTimeout(
+                    function () {
+
+                        if (
+                            loading &&
+                            loading.parentNode
+                        ) {
+
+                            /*
+                             * Only remove the
+                             * loading message if
+                             * booking.js has already
+                             * added other content.
+                             */
+
+                            const summary =
+                                document.getElementById(
+                                    "summary"
+                                );
+
+
+                            if (
+                                summary &&
+                                summary.children.length >
+                                1
+                            ) {
+
+                                loading.remove();
+
+                            }
+
+                        }
+
+                    },
+                    500
+                );
+
             }
-
-        </div>
-
-
-        <!-- =================================
-             ACTION BUTTONS
-        ================================== -->
-
-        <div class="buttons">
-
-            <button
-                type="button"
-                id="editBookingButton"
-            >
-
-                ← Edit Booking
-
-            </button>
-
-
-            <button
-                type="button"
-                class="gold"
-                id="submitBookingButton"
-            >
-
-                Submit Booking Request
-
-            </button>
-
-        </div>
-
-    `;
-
-}
-
-
-// =========================================
-// EDIT BOOKING
-// =========================================
-
-const editBookingButton =
-    document.getElementById(
-        "editBookingButton"
-    );
-
-
-if (
-    editBookingButton
-) {
-
-    editBookingButton.addEventListener(
-        "click",
-        function () {
-
-            history.back();
-
-        }
-    );
-
-}
-
-
-// =========================================
-// SUBMIT BUTTON
-// =========================================
-
-const submitButton =
-    document.getElementById(
-        "submitBookingButton"
-    );
-
-
-// =========================================
-// PREVENT DOUBLE SUBMISSION
-// =========================================
-
-let bookingSubmitting =
-    false;
-
-
-if (
-    submitButton
-) {
-
-    submitButton.addEventListener(
-        "click",
-        submitBooking
-    );
-
-}
-
-
-// =========================================
-// GENERATE REFERENCE NUMBER
-// =========================================
-
-async function generateReferenceNumber() {
-
-    while (true) {
-
-        const reference =
-            Math.floor(
-                1000 +
-                Math.random() *
-                9000
-            );
-
-
-        const currentMonth =
-            new Date()
-                .toISOString()
-                .slice(
-                    0,
-                    7
-                );
-
-
-        const {
-            data,
-            error
-        } =
-            await window.supabaseClient
-                .from("Bookings")
-                .select(
-                    "reference_no, created_at"
-                );
-
-
-        // =================================
-        // REFERENCE LOOKUP ERROR
-        // =================================
-
-        if (
-            error
-        ) {
-
-            console.error(
-                "Reference lookup error:",
-                error
-            );
-
-
-            /*
-             * Preserve existing behaviour.
-             *
-             * If the lookup fails,
-             * use the generated number.
-             */
-
-            return reference;
-
-        }
-
-
-        const rows =
-            Array.isArray(data)
-                ? data
-                : [];
-
-
-        const exists =
-            rows.some(
-                row => {
-
-                    if (
-                        !row.reference_no ||
-                        !row.created_at
-                    ) {
-
-                        return false;
-
-                    }
-
-
-                    return (
-
-                        Number(
-                            row.reference_no
-                        ) ===
-                        reference
-
-                    )
-
-                    &&
-
-                    row.created_at
-                        .startsWith(
-                            currentMonth
-                        );
-
-                }
-            );
-
-
-        if (
-            !exists
-        ) {
-
-            return reference;
-
-        }
-
-    }
-
-}
-
-
-// =========================================
-// SUBMIT BOOKING
-// =========================================
-
-async function submitBooking() {
-
-
-    // =====================================
-    // PREVENT DOUBLE CLICK
-    // =====================================
-
-    if (
-        bookingSubmitting
-    ) {
-
-        return;
-
-    }
-
-
-    bookingSubmitting =
-        true;
-
-
-    // =====================================
-    // DISABLE BUTTON
-    // =====================================
-
-    if (
-        submitButton
-    ) {
-
-        submitButton.disabled =
-            true;
-
-
-        submitButton.textContent =
-            "Submitting...";
-
-    }
-
-
-    try {
-
-
-        // =================================
-        // CHECK SUPABASE
-        // =================================
-
-        if (
-            !window.supabaseClient
-        ) {
-
-            throw new Error(
-                "Booking service is not available. Please refresh the page and try again."
-            );
-
-        }
-
-
-        // =================================
-        // GET REFERENCE
-        // =================================
-
-        const reference =
-            await generateReferenceNumber();
-
-
-        // =================================
-        // INSERT BOOKING
-        // =================================
-
-        const {
-            data,
-            error
-        } =
-            await window.supabaseClient
-                .from("Bookings")
-                .insert([
-
-                    {
-
-                        reference_no:
-                            reference,
-
-                        customer_name:
-                            booking.customer_name,
-
-                        mobile:
-                            booking.mobile,
-
-                        pickups:
-                            pickups,
-
-                        destinations:
-                            destinations,
-
-                        booking_date:
-                            booking.date,
-
-                        booking_time:
-                            booking.time,
-
-                        vehicle_model:
-                            booking.vehicle,
-
-                        remarks:
-                            booking.remarks ||
-                            null
-
-                    }
-
-                ])
-                .select();
-
-
-        // =================================
-        // SUPABASE ERROR
-        // =================================
-
-        if (
-            error
-        ) {
-
-            console.error(
-                "Booking submission error:",
-                error
-            );
-
-
-            throw new Error(
-                error.message ||
-                "Unable to submit booking."
-            );
-
-        }
-
-
-        // =================================
-        // SUCCESS
-        // =================================
-
-        console.log(
-            "Booking created successfully:",
-            data
         );
 
-
-        // =================================
-        // SAVE CREATED BOOKING
-        // =================================
-
-        if (
-            data &&
-            data.length > 0
-        ) {
-
-            localStorage.setItem(
-                "bookingData",
-                JSON.stringify(
-                    data[0]
-                )
-            );
-
-        }
+    </script>
 
 
-        // =================================
-        // GO TO SUCCESS PAGE
-        // =================================
+</body>
 
-        window.location.href =
-            `success.html?ref=${encodeURIComponent(
-                reference
-            )}`;
-
-
-    }
-
-    catch (error) {
-
-
-        // =================================
-        // ERROR HANDLING
-        // =================================
-
-        console.error(
-            "Unexpected booking error:",
-            error
-        );
-
-
-        alert(
-            error.message ||
-            "Unable to submit booking. Please try again."
-        );
-
-
-        // =================================
-        // RESTORE BUTTON
-        // =================================
-
-        bookingSubmitting =
-            false;
-
-
-        if (
-            submitButton
-        ) {
-
-            submitButton.disabled =
-                false;
-
-
-            submitButton.textContent =
-                "Submit Booking Request";
-
-        }
-
-    }
-
-}
+</html>

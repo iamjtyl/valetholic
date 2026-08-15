@@ -224,8 +224,12 @@ const standardHours =
 // BASE FARE
 // =========================================
 
-let baseFare = 48;
+let baseFare = 0;
 
+
+// =========================================
+// STANDARD / PEAK FARES
+// =========================================
 
 if (
     eveningPeak ||
@@ -233,6 +237,12 @@ if (
 ) {
 
     baseFare = 60;
+
+}
+
+else if (standardHours) {
+
+    baseFare = 48;
 
 }
 
