@@ -3,46 +3,533 @@
 
 <head>
 
+    <!-- =====================================
+         BASIC DOCUMENT SETTINGS
+    ====================================== -->
+
     <meta charset="UTF-8">
+
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Valetholic Admin | Bookings</title>
+
+    <meta
+        name="theme-color"
+        content="#0F0F0F"
+    >
+
+
+    <meta
+        name="description"
+        content="Valetholic Admin booking management portal."
+    >
+
+
+    <title>
+        Valetholic Admin | Bookings
+    </title>
+
+
+
+    <!-- =====================================
+         FONTS
+    ====================================== -->
 
     <link
         rel="preconnect"
         href="https://fonts.googleapis.com"
     >
 
+
     <link
         rel="preconnect"
-        href="https://fonts.googleapis.com"
+        href="https://fonts.gstatic.com"
+        crossorigin
     >
+
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+
+    <!-- =====================================
+         STYLES
+    ====================================== -->
 
     <link
         rel="stylesheet"
         href="styles.css"
     >
 
+
     <link
         rel="stylesheet"
         href="admin.css"
     >
 
+
+
+    <!-- =====================================
+         SMALL PAGE-SPECIFIC POLISH
+    ====================================== -->
+
+    <style>
+
+        /* =================================
+           PAGE HEADER
+        ================================= */
+
+        .booking-page-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 25px;
+
+        }
+
+
+        .booking-page-header h1 {
+
+            margin: 0;
+
+            font-family:
+                "Cormorant Garamond",
+                serif;
+
+            font-size: 34px;
+
+            font-weight: 600;
+
+            line-height: 1.1;
+
+        }
+
+
+        .booking-page-header p {
+
+            margin-top: 7px;
+
+            color: #888;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* =================================
+           TABLE CONTROLS
+        ================================= */
+
+        .table-controls {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+        .table-controls select,
+        .table-controls input {
+
+            min-height: 44px;
+
+            padding: 0 13px;
+
+            background: #111;
+
+            color: #fff;
+
+            border:
+                1px solid #333;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease;
+
+        }
+
+
+        .table-controls select:focus,
+        .table-controls input:focus {
+
+            border-color: #D4AF37;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(212,175,55,.12);
+
+        }
+
+
+        .table-controls input {
+
+            width: 210px;
+
+        }
+
+
+        /* =================================
+           BOOKING TABLE
+        ================================= */
+
+        .booking-table-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+        }
+
+
+        .booking-table-wrapper table {
+
+            min-width: 1050px;
+
+        }
+
+
+        /* =================================
+           STATUS BADGES
+        ================================= */
+
+        .booking-status {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 78px;
+
+            padding: 5px 9px;
+
+            border-radius: 999px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: .3px;
+
+            white-space: nowrap;
+
+        }
+
+
+        .booking-status.pending {
+
+            color: #E1BF59;
+
+            background:
+                rgba(212,175,55,.10);
+
+            border:
+                1px solid
+                rgba(212,175,55,.25);
+
+        }
+
+
+        .booking-status.on-job {
+
+            color: #7EC8FF;
+
+            background:
+                rgba(60,140,210,.10);
+
+            border:
+                1px solid
+                rgba(60,140,210,.25);
+
+        }
+
+
+        .booking-status.completed {
+
+            color: #6ED69B;
+
+            background:
+                rgba(63,166,107,.10);
+
+            border:
+                1px solid
+                rgba(63,166,107,.25);
+
+        }
+
+
+        .booking-status.cancelled {
+
+            color: #F08080;
+
+            background:
+                rgba(180,35,35,.10);
+
+            border:
+                1px solid
+                rgba(180,35,35,.25);
+
+        }
+
+
+        .booking-status.default {
+
+            color: #BDBDBD;
+
+            background:
+                rgba(255,255,255,.06);
+
+            border:
+                1px solid
+                rgba(255,255,255,.10);
+
+        }
+
+
+        /* =================================
+           ACTION BUTTONS
+        ================================= */
+
+        .booking-actions {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            white-space: nowrap;
+
+        }
+
+
+        .booking-actions button {
+
+            min-height: 38px;
+
+            padding:
+                8px 13px;
+
+            border-radius: 8px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+        }
+
+
+        .booking-actions .view-btn {
+
+            background: #D4AF37;
+
+            color: #111;
+
+        }
+
+
+        .booking-actions .delete-btn {
+
+            background: #B42323;
+
+            color: #fff;
+
+        }
+
+
+        .booking-actions .delete-btn:hover {
+
+            background: #D64545;
+
+        }
+
+
+        /* =================================
+           LOADING / EMPTY
+        ================================= */
+
+        .booking-message {
+
+            padding: 35px 20px !important;
+
+            color: #888 !important;
+
+            text-align: center !important;
+
+        }
+
+
+        /* =================================
+           MOBILE
+        ================================= */
+
+        @media (
+            max-width: 768px
+        ) {
+
+            .booking-page-header {
+
+                align-items: stretch;
+
+                flex-direction: column;
+
+                gap: 12px;
+
+            }
+
+
+            .booking-page-header h1 {
+
+                font-size: 30px;
+
+            }
+
+
+            .table-controls {
+
+                width: 100%;
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+            }
+
+
+            .table-controls select,
+            .table-controls input {
+
+                width: 100%;
+
+            }
+
+
+            /*
+             * On mobile the table becomes
+             * the vertical booking-card layout
+             * supplied by admin.css.
+             */
+
+            .booking-table-wrapper {
+
+                overflow-x: visible;
+
+            }
+
+
+            .booking-table-wrapper table {
+
+                min-width: 0;
+
+            }
+
+
+            .booking-actions {
+
+                justify-content: flex-end;
+
+                width: 100%;
+
+            }
+
+
+            .booking-actions button {
+
+                min-width: 82px;
+
+            }
+
+        }
+
+
+        /* =================================
+           SMALL MOBILE
+        ================================= */
+
+        @media (
+            max-width: 480px
+        ) {
+
+            .booking-page-header h1 {
+
+                font-size: 27px;
+
+            }
+
+
+            .booking-page-header p {
+
+                font-size: 13px;
+
+            }
+
+
+            .booking-actions {
+
+                gap: 5px;
+
+            }
+
+
+            .booking-actions button {
+
+                min-width: 74px;
+
+                padding:
+                    8px 10px;
+
+                font-size: 10px;
+
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 
 <body class="admin-page">
 
 
 <!-- =====================================
-     NAVBAR
+     NAVIGATION
 ====================================== -->
 
-<nav class="navbar">
+<nav
+    class="navbar"
+    aria-label="Admin navigation"
+>
+
+
+    <!-- =================================
+         LOGO
+    ================================== -->
 
     <div class="logo">
 
@@ -51,6 +538,7 @@
             alt="Valetholic"
         >
 
+
         <span>
             VALETHOLIC ADMIN
         </span>
@@ -58,49 +546,72 @@
     </div>
 
 
+
+    <!-- =================================
+         ADMIN ACTIONS
+    ================================== -->
+
     <div class="admin-actions">
+
 
         <a
             href="index.html"
             class="website-link"
         >
+
             🌐 Website
+
         </a>
 
 
-        <span>|</span>
+        <span aria-hidden="true">
+            |
+        </span>
 
 
         <a
             href="ops-dashboard.html"
             class="ops-btn"
         >
+
             OPS Portal
+
         </a>
 
 
-        <span>|</span>
+        <span aria-hidden="true">
+            |
+        </span>
+
 
         <a
             href="ops-newbooking.html"
             class="ops-btn"
         >
+
             New Booking
+
         </a>
 
 
-        <span>|</span>
+        <span aria-hidden="true">
+            |
+        </span>
 
 
         <a
             href="#"
             class="logout-link"
-            onclick="logout()"
+            id="logoutLink"
         >
+
             🚪 Logout
+
         </a>
 
+
     </div>
+
 
 </nav>
 
@@ -110,64 +621,102 @@
      MAIN
 ====================================== -->
 
-<section
+<main
     class="admin-container"
     style="
-        padding-top: 120px;
+        padding-top: 40px;
     "
 >
 
 
-    <div class="table-card">
+    <section
+        class="table-card"
+        aria-labelledby="bookingsTitle"
+    >
 
 
-        <!-- HEADER -->
+        <!-- =================================
+             HEADER
+        ================================== -->
 
         <div class="table-header">
 
-            <div>
 
-                <h1>
-                    Bookings
-                </h1>
+            <div class="booking-page-header">
 
-                <p
-                    style="
-                        margin-top: 6px;
-                        opacity: 0.7;
-                    "
-                >
-                    View and manage all Valetholic bookings.
-                </p>
+
+                <div>
+
+                    <h1 id="bookingsTitle">
+                        Bookings
+                    </h1>
+
+
+                    <p>
+
+                        View and manage all
+                        Valetholic bookings.
+
+                    </p>
+
+                </div>
+
 
             </div>
 
 
-            <!-- CONTROLS -->
+
+            <!-- =================================
+                 FILTERS
+            ================================== -->
 
             <div class="table-controls">
 
 
+                <label
+                    for="statusFilter"
+                    class="sr-only"
+                    style="
+                        position:absolute;
+                        width:1px;
+                        height:1px;
+                        padding:0;
+                        margin:-1px;
+                        overflow:hidden;
+                        clip:rect(0,0,0,0);
+                        white-space:nowrap;
+                        border:0;
+                    "
+                >
+
+                    Filter bookings by status
+
+                </label>
+
+
                 <select
                     id="statusFilter"
-                    onchange="loadBookings()"
                 >
 
                     <option value="All">
                         All
                     </option>
 
+
                     <option value="Pending">
                         Pending
                     </option>
+
 
                     <option value="On Job">
                         On Job
                     </option>
 
+
                     <option value="Completed">
                         Completed
                     </option>
+
 
                     <option value="Cancelled">
                         Cancelled
@@ -176,14 +725,38 @@
                 </select>
 
 
-                <input
-                    type="text"
-                    id="searchBooking"
-                    placeholder="🔍 Search..."
-                    onkeyup="loadBookings()"
+
+                <label
+                    for="searchBooking"
+                    class="sr-only"
+                    style="
+                        position:absolute;
+                        width:1px;
+                        height:1px;
+                        padding:0;
+                        margin:-1px;
+                        overflow:hidden;
+                        clip:rect(0,0,0,0);
+                        white-space:nowrap;
+                        border:0;
+                    "
                 >
 
+                    Search bookings
+
+                </label>
+
+
+                <input
+                    type="search"
+                    id="searchBooking"
+                    placeholder="🔍 Search bookings..."
+                    autocomplete="off"
+                >
+
+
             </div>
+
 
         </div>
 
@@ -194,55 +767,67 @@
         ====================================== -->
 
         <div
-            style="
-                overflow-x: auto;
-                width: 100%;
-            "
+            class="booking-table-wrapper"
         >
 
+
             <table>
+
 
                 <thead>
 
                     <tr>
 
+
                         <th>
                             Reference
                         </th>
+
 
                         <th>
                             Customer
                         </th>
 
+
                         <th>
                             Mobile
                         </th>
+
 
                         <th>
                             Pickup
                         </th>
 
+
                         <th>
                             Destination
                         </th>
+
 
                         <th>
                             Date
                         </th>
 
+
                         <th>
                             Status
                         </th>
 
-                         <th>
+
+                        <th>
                             Driver
+                        </th>
+
+
                         <th>
                             Action
                         </th>
 
+
                     </tr>
 
                 </thead>
+
 
 
                 <tbody
@@ -252,24 +837,29 @@
                     <tr>
 
                         <td
-                            colspan="8"
-                            style="text-align:center;"
+                            colspan="9"
+                            class="booking-message"
                         >
+
                             Loading bookings...
+
                         </td>
 
                     </tr>
 
                 </tbody>
 
+
             </table>
+
 
         </div>
 
-    </div>
+
+    </section>
 
 
-</section>
+</main>
 
 
 
@@ -277,13 +867,19 @@
      SUPABASE
 ====================================== -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
 
-<script src="supabase.js"></script>
+
+<script
+    src="supabase.js"
+></script>
 
 
 
 <script>
+
 
 // =====================================
 // LOGIN CHECK
@@ -302,44 +898,178 @@ if (
 
 
 // =====================================
+// DOM ELEMENTS
+// =====================================
+
+const bookingTable =
+    document.getElementById(
+        "bookingTable"
+    );
+
+
+const statusFilter =
+    document.getElementById(
+        "statusFilter"
+    );
+
+
+const searchBooking =
+    document.getElementById(
+        "searchBooking"
+    );
+
+
+const logoutLink =
+    document.getElementById(
+        "logoutLink"
+    );
+
+
+// =====================================
+// SEARCH DEBOUNCE
+// =====================================
+//
+// Prevents loadBookings() from firing
+// repeatedly while the user is typing.
+//
+
+let searchTimer = null;
+
+
+if (
+    searchBooking
+) {
+
+    searchBooking.addEventListener(
+        "input",
+        function () {
+
+            clearTimeout(
+                searchTimer
+            );
+
+
+            searchTimer =
+                setTimeout(
+                    () => {
+
+                        loadBookings();
+
+                    },
+                    180
+                );
+
+        }
+    );
+
+}
+
+
+// =====================================
+// STATUS FILTER
+// =====================================
+
+if (
+    statusFilter
+) {
+
+    statusFilter.addEventListener(
+        "change",
+        loadBookings
+    );
+
+}
+
+
+// =====================================
+// LOGOUT
+// =====================================
+
+if (
+    logoutLink
+) {
+
+    logoutLink.addEventListener(
+        "click",
+        function (
+            event
+        ) {
+
+            event.preventDefault();
+
+            logout();
+
+        }
+    );
+
+}
+
+
+// =====================================
 // LOAD BOOKINGS
 // =====================================
 
 async function loadBookings() {
 
-    const table =
-        document.getElementById(
-            "bookingTable"
-        );
 
-
-    if (!table) {
+    if (
+        !bookingTable
+    ) {
 
         return;
 
     }
 
 
+    // =================================
+    // LOADING STATE
+    // =================================
+
+    bookingTable.innerHTML = `
+
+        <tr>
+
+            <td
+                colspan="9"
+                class="booking-message"
+            >
+
+                Loading bookings...
+
+            </td>
+
+        </tr>
+
+    `;
+
+
+    // =================================
+    // SEARCH
+    // =================================
+
     const keyword =
         (
-            document.getElementById(
-                "searchBooking"
-            )?.value || ""
+            searchBooking?.value ||
+            ""
         )
-            .toLowerCase()
-            .trim();
+        .toLowerCase()
+        .trim();
 
 
-    const statusFilter =
-        document.getElementById(
-            "statusFilter"
-        )?.value || "All";
+    // =================================
+    // STATUS
+    // =================================
+
+    const selectedStatus =
+        statusFilter?.value ||
+        "All";
 
 
     try {
 
+
         // =================================
-        // GET BOOKINGS
+        // LOAD BOOKINGS
         // =================================
 
         const {
@@ -352,65 +1082,54 @@ async function loadBookings() {
                 .order(
                     "created_at",
                     {
-                        ascending: false
+                        ascending:
+                            false
                     }
                 );
 
-            // =================================
-// LOAD DRIVERS
-// =================================
 
-const {
-    data: drivers,
-    error: driverError
-} = await window.supabaseClient
-    .from("Drivers")
-    .select("id, auth_id, name")
+        // =================================
+        // BOOKING ERROR
+        // =================================
 
+        if (
+            error
+        ) {
 
-if (driverError) {
-
-    console.error(
-        "Driver loading error:",
-        driverError
-    );
-
-}
-
-        if (error) {
-
-            console.error(
-                "Booking loading error:",
-                error
-            );
-
-
-            table.innerHTML = `
-
-                <tr>
-
-                    <td
-                        colspan="8"
-                        style="text-align:center;"
-                    >
-
-                        Unable to load bookings.
-
-                    </td>
-
-                </tr>
-
-            `;
-
-            return;
+            throw error;
 
         }
 
 
-        console.log(
-            "BOOKINGS LOADED:",
-            bookings
-        );
+        // =================================
+        // LOAD DRIVERS
+        // =================================
+
+        const {
+            data: drivers,
+            error: driverError
+        } =
+            await window.supabaseClient
+                .from("Drivers")
+                .select(
+                    "id, auth_id, name"
+                );
+
+
+        if (
+            driverError
+        ) {
+
+            console.error(
+                "Driver loading error:",
+                driverError
+            );
+
+        }
+
+
+        const driverList =
+            drivers || [];
 
 
         // =================================
@@ -418,38 +1137,66 @@ if (driverError) {
         // =================================
 
         const filteredBookings =
-            (bookings || []).filter(
+            (
+                bookings ||
+                []
+            )
+            .filter(
                 booking => {
 
 
                     const customer =
-                        (
+                        String(
                             booking.customer_name ||
                             ""
                         )
-                            .toLowerCase();
+                        .toLowerCase();
 
 
                     const mobile =
-                        (
+                        String(
                             booking.mobile ||
                             ""
                         )
-                            .toLowerCase();
+                        .toLowerCase();
 
 
                     const reference =
                         (
-                            "VH-" +
-                            (
+                            "vh-" +
+                            String(
                                 booking.reference_no ||
                                 ""
                             )
                         )
-                            .toLowerCase();
+                        .toLowerCase();
 
 
-                    const matchSearch =
+                    const pickupText =
+                        getSearchableLocationText(
+                            booking.pickups
+                        );
+
+
+                    const destinationText =
+                        getSearchableLocationText(
+                            booking.destinations
+                        );
+
+
+                    const status =
+                        String(
+                            booking.status ||
+                            ""
+                        )
+                        .toLowerCase();
+
+
+                    // -------------------------
+                    // SEARCH MATCH
+                    // -------------------------
+
+                    const matchesSearch =
 
                         customer.includes(
                             keyword
@@ -465,23 +1212,45 @@ if (driverError) {
 
                         reference.includes(
                             keyword
+                        )
+
+                        ||
+
+                        pickupText.includes(
+                            keyword
+                        )
+
+                        ||
+
+                        destinationText.includes(
+                            keyword
+                        )
+
+                        ||
+
+                        status.includes(
+                            keyword
                         );
 
 
-                    const matchStatus =
+                    // -------------------------
+                    // STATUS MATCH
+                    // -------------------------
 
-                        statusFilter ===
+                    const matchesStatus =
+
+                        selectedStatus ===
                             "All"
 
                         ||
 
                         booking.status ===
-                            statusFilter;
+                            selectedStatus;
 
 
                     return (
-                        matchSearch &&
-                        matchStatus
+                        matchesSearch &&
+                        matchesStatus
                     );
 
                 }
@@ -489,14 +1258,7 @@ if (driverError) {
 
 
         // =================================
-        // CLEAR TABLE
-        // =================================
-
-        table.innerHTML = "";
-
-
-        // =================================
-        // NOTHING FOUND
+        // EMPTY
         // =================================
 
         if (
@@ -504,13 +1266,13 @@ if (driverError) {
             0
         ) {
 
-            table.innerHTML = `
+            bookingTable.innerHTML = `
 
                 <tr>
 
                     <td
-                        colspan="8"
-                        style="text-align:center;"
+                        colspan="9"
+                        class="booking-message"
                     >
 
                         No bookings found.
@@ -521,244 +1283,558 @@ if (driverError) {
 
             `;
 
+
             return;
 
         }
 
 
         // =================================
-        // RENDER BOOKINGS
+        // RENDER
         // =================================
+
+        bookingTable.innerHTML =
+            "";
+
+
+        const fragment =
+            document.createDocumentFragment();
+
 
         filteredBookings.forEach(
             booking => {
 
 
-                let pickup =
-                    "-";
+                // =================================
+                // LOCATION TEXT
+                // =================================
 
-
-                let destination =
-                    "-";
-
-
-                // -----------------------------
-                // PICKUP
-                // -----------------------------
-
-                try {
-
-                    if (
-                        Array.isArray(
-                            booking.pickups
-                        )
-                    ) {
-
-                        pickup =
-                            booking.pickups.join(
-                                "<br>"
-                            );
-
-                    }
-
-                    else if (
+                const pickup =
+                    formatLocations(
                         booking.pickups
-                    ) {
-
-                        const parsed =
-                            JSON.parse(
-                                booking.pickups
-                            );
-
-                        pickup =
-                            Array.isArray(parsed)
-                                ? parsed.join("<br>")
-                                : parsed;
-
-                    }
-
-                } catch {
-
-                    pickup =
-                        booking.pickups ||
-                        "-";
-
-                }
+                    );
 
 
-                // -----------------------------
-                // DESTINATION
-                // -----------------------------
-
-                try {
-
-                    if (
-                        Array.isArray(
-                            booking.destinations
-                        )
-                    ) {
-
-                        destination =
-                            booking.destinations.join(
-                                "<br>"
-                            );
-
-                    }
-
-                    else if (
+                const destination =
+                    formatLocations(
                         booking.destinations
-                    ) {
+                    );
 
-                        const parsed =
-                            JSON.parse(
-                                booking.destinations
-                            );
 
-                        destination =
-                            Array.isArray(parsed)
-                                ? parsed.join("<br>")
-                                : parsed;
+                // =================================
+                // DRIVER
+                // =================================
 
-                    }
+                const driver =
+                    driverList.find(
+                        item =>
+                            item.auth_id ===
+                            booking.driver_id
+                    );
 
-                } catch {
 
-                    destination =
-                        booking.destinations ||
-                        "-";
-
-                }
+                const driverName =
+                    driver
+                        ? driver.name
+                        : "Unassigned";
 
 
                 // =================================
                 // ROW
                 // =================================
 
-                table.innerHTML += `
-
-                    <tr>
-
-                        <td>
-                            VH-${
-                                booking.reference_no ||
-                                "----"
-                            }
-                        </td>
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
 
 
-                        <td>
-                            ${
-                                booking.customer_name ||
-                                "-"
-                            }
-                        </td>
+                // =================================
+                // REFERENCE
+                // =================================
 
-
-                        <td>
-                            ${
-                                booking.mobile ||
-                                "-"
-                            }
-                        </td>
-
-
-                        <td>
-                            ${pickup}
-                        </td>
-
-
-                        <td>
-                            ${destination}
-                        </td>
-
-
-                        <td>
-                            ${
-                                booking.booking_date ||
-                                "-"
-                            }
-                        </td>
-
-
-                        <td>
-                            ${
-                                booking.status ||
-                                "-"
-                            }
-                        </td>
-                        
-                        <td>
-    ${
-        (() => {
-
-            const driver =
-                (drivers || []).find(
-                    d =>
-                        d.auth_id ===
-                        booking.driver_id
+                row.appendChild(
+                    createCell(
+                        "VH-" +
+                        (
+                            booking.reference_no ||
+                            "----"
+                        )
+                    )
                 );
 
-            return driver
-                ? driver.name
-                : "Unassigned";
 
-        })()
-    }
-</td>
+                // =================================
+                // CUSTOMER
+                // =================================
 
-                        <td>
+                row.appendChild(
+                    createCell(
+                        booking.customer_name ||
+                        "-"
+                    )
+                );
 
-                            <button
-                                class="view-btn"
-                                onclick="
-                                    viewBooking(
-                                        '${booking.id}'
-                                    )
-                                "
-                            >
-                                OPEN
-                            </button>
 
-                        </td>
+                // =================================
+                // MOBILE
+                // =================================
 
-                    </tr>
+                row.appendChild(
+                    createCell(
+                        booking.mobile ||
+                        "-"
+                    )
+                );
 
-                `;
+
+                // =================================
+                // PICKUP
+                // =================================
+
+                row.appendChild(
+                    createCell(
+                        pickup,
+                        true
+                    )
+                );
+
+
+                // =================================
+                // DESTINATION
+                // =================================
+
+                row.appendChild(
+                    createCell(
+                        destination,
+                        true
+                    )
+                );
+
+
+                // =================================
+                // DATE
+                // =================================
+
+                row.appendChild(
+                    createCell(
+                        booking.booking_date ||
+                        "-"
+                    )
+                );
+
+
+                // =================================
+                // STATUS
+                // =================================
+
+                const statusCell =
+                    document.createElement(
+                        "td"
+                    );
+
+
+                const statusBadge =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                statusBadge.className =
+                    `booking-status ${
+                        getStatusClass(
+                            booking.status
+                        )
+                    }`;
+
+
+                statusBadge.textContent =
+                    booking.status ||
+                    "-";
+
+
+                statusCell.appendChild(
+                    statusBadge
+                );
+
+
+                row.appendChild(
+                    statusCell
+                );
+
+
+                // =================================
+                // DRIVER
+                // =================================
+
+                row.appendChild(
+                    createCell(
+                        driverName
+                    )
+                );
+
+
+                // =================================
+                // ACTIONS
+                // =================================
+
+                const actionCell =
+                    document.createElement(
+                        "td"
+                    );
+
+
+                const actions =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                actions.className =
+                    "booking-actions";
+
+
+                // OPEN
+
+                const openButton =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                openButton.type =
+                    "button";
+
+
+                openButton.className =
+                    "view-btn";
+
+
+                openButton.textContent =
+                    "OPEN";
+
+
+                openButton.addEventListener(
+                    "click",
+                    () => {
+
+                        viewBooking(
+                            booking.id
+                        );
+
+                    }
+                );
+
+
+                // DELETE
+
+                const deleteButton =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                deleteButton.type =
+                    "button";
+
+
+                deleteButton.className =
+                    "delete-btn";
+
+
+                deleteButton.textContent =
+                    "DELETE";
+
+
+                deleteButton.addEventListener(
+                    "click",
+                    () => {
+
+                        deleteBooking(
+                            booking.id,
+                            booking.reference_no
+                        );
+
+                    }
+                );
+
+
+                actions.appendChild(
+                    openButton
+                );
+
+
+                actions.appendChild(
+                    deleteButton
+                );
+
+
+                actionCell.appendChild(
+                    actions
+                );
+
+
+                row.appendChild(
+                    actionCell
+                );
+
+
+                fragment.appendChild(
+                    row
+                );
 
             }
         );
 
 
+        bookingTable.appendChild(
+            fragment
+        );
+
+
         console.log(
-            "BOOKING TABLE RENDERED:",
+            "BOOKINGS LOADED:",
             filteredBookings.length
         );
 
 
-    } catch (error) {
+    }
+
+
+    catch (
+        error
+    ) {
 
         console.error(
-            "Unexpected booking error:",
+            "Booking loading error:",
             error
         );
 
 
-        table.innerHTML = `
+        bookingTable.innerHTML = `
 
             <tr>
 
                 <td
-                    colspan="8"
-                    style="text-align:center;"
+                    colspan="9"
+                    class="booking-message"
                 >
 
                     Unable to load bookings.
+
+                    <br>
+
+                    <small>
+                        Please refresh the page
+                        and try again.
+                    </small>
 
                 </td>
 
             </tr>
 
         `;
+
+    }
+
+}
+
+
+// =====================================
+// CREATE TABLE CELL
+// =====================================
+
+function createCell(
+    value,
+    allowLineBreaks = false
+) {
+
+    const cell =
+        document.createElement(
+            "td"
+        );
+
+
+    if (
+        allowLineBreaks
+    ) {
+
+        const values =
+            Array.isArray(value)
+                ? value
+                : String(
+                    value ||
+                    "-"
+                )
+                .split(
+                    "\n"
+                );
+
+
+        values.forEach(
+            (
+                item,
+                index
+            ) => {
+
+                if (
+                    index > 0
+                ) {
+
+                    cell.appendChild(
+                        document.createElement(
+                            "br"
+                        )
+                    );
+
+                }
+
+
+                cell.appendChild(
+                    document.createTextNode(
+                        item
+                    )
+                );
+
+            }
+        );
+
+    }
+
+    else {
+
+        cell.textContent =
+            value ||
+            "-";
+
+    }
+
+
+    return cell;
+
+}
+
+
+// =====================================
+// FORMAT LOCATIONS
+// =====================================
+
+function formatLocations(
+    value
+) {
+
+    if (
+        Array.isArray(value)
+    ) {
+
+        return value.length
+            ? value
+            : ["-"];
+
+    }
+
+
+    if (
+        typeof value ===
+        "string"
+    ) {
+
+        try {
+
+            const parsed =
+                JSON.parse(
+                    value
+                );
+
+
+            if (
+                Array.isArray(
+                    parsed
+                )
+            ) {
+
+                return parsed.length
+                    ? parsed
+                    : ["-"];
+
+            }
+
+
+        }
+
+        catch {
+            // Normal text value.
+        }
+
+
+        return value
+            ? [value]
+            : ["-"];
+
+    }
+
+
+    return ["-"];
+
+}
+
+
+// =====================================
+// SEARCHABLE LOCATION TEXT
+// =====================================
+
+function getSearchableLocationText(
+    value
+) {
+
+    return formatLocations(
+        value
+    )
+    .join(" ")
+    .toLowerCase();
+
+}
+
+
+// =====================================
+// STATUS CLASS
+// =====================================
+
+function getStatusClass(
+    status
+) {
+
+    switch (
+        String(
+            status ||
+            ""
+        )
+        .toLowerCase()
+    ) {
+
+        case "pending":
+
+            return "pending";
+
+
+        case "on job":
+
+            return "on-job";
+
+
+        case "completed":
+
+            return "completed";
+
+
+        case "cancelled":
+
+            return "cancelled";
+
+
+        default:
+
+            return "default";
 
     }
 
@@ -773,8 +1849,130 @@ function viewBooking(
     id
 ) {
 
+    if (
+        !id
+    ) {
+
+        return;
+
+    }
+
+
     window.location.href =
-        `ops-booking.html?id=${id}`;
+        `ops-booking.html?id=${
+            encodeURIComponent(
+                id
+            )
+        }`;
+
+}
+
+
+// =====================================
+// DELETE BOOKING
+// =====================================
+
+async function deleteBooking(
+    bookingId,
+    referenceNo
+) {
+
+
+    if (
+        !bookingId
+    ) {
+
+        alert(
+            "Booking ID is missing."
+        );
+
+        return;
+
+    }
+
+
+    const displayReference =
+        referenceNo
+            ? `VH-${referenceNo}`
+            : "this booking";
+
+
+    // =================================
+    // CONFIRM
+    // =================================
+
+    const confirmed =
+        confirm(
+            `DELETE ${displayReference}?\n\n` +
+            `This action cannot be undone.`
+        );
+
+
+    if (
+        !confirmed
+    ) {
+
+        return;
+
+    }
+
+
+    // =================================
+    // DELETE
+    // =================================
+
+    try {
+
+        const {
+            error
+        } =
+            await window.supabaseClient
+                .from("Bookings")
+                .delete()
+                .eq(
+                    "id",
+                    bookingId
+                );
+
+
+        if (
+            error
+        ) {
+
+            throw error;
+
+        }
+
+
+        alert(
+            `${displayReference} has been deleted.`
+        );
+
+
+        await loadBookings();
+
+    }
+
+
+    catch (
+        error
+    ) {
+
+        console.error(
+            "Delete booking error:",
+            error
+        );
+
+
+        alert(
+            "Unable to delete booking.\n\n" +
+            (
+                error.message ||
+                "Please try again."
+            )
+        );
+
+    }
 
 }
 

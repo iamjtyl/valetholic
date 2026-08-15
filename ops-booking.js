@@ -636,21 +636,67 @@ async function assignDriver() {
     // SAVE DRIVER
     // =================================
 
-    const {
+    // =================================
+// GENERATE TRACKING TOKEN
+// =================================
+
+let trackingToken =
+    currentBooking.tracking_token;
+
+
+if (!trackingToken) {
+
+    trackingToken =
+        crypto.randomUUID();
+
+}
+
+
+// =================================
+// SAVE DRIVER + TRACKING TOKEN
+// =================================
+
+const {
+    error
+} =
+    await window.supabaseClient
+    .from("Bookings")
+    .update({
+
+        driver_id:
+            selectedDriver,
+
+        tracking_token:
+            trackingToken
+
+    })
+    .eq(
+        "id",
+        currentBooking.id
+    );
+
+
+if (error) {
+
+    console.error(
+        "Driver assignment error:",
         error
-    } =
-        await window.supabaseClient
-        .from("Bookings")
-        .update({
+    );
 
-            driver_id:
-                selectedDriver
+    message.textContent =
+        error.message;
 
-        })
-        .eq(
-            "id",
-            currentBooking.id
-        );
+    return;
+
+}
+
+
+currentBooking.driver_id =
+    selectedDriver;
+
+
+currentBooking.tracking_token =
+    trackingToken;
 
 
     if (error) {
@@ -685,7 +731,58 @@ async function assignDriver() {
             ? `${driver.name} assigned successfully.`
             : "Driver assigned successfully.";
 
+    // =================================
+// TRACKING LINK
+// =================================
 
+const trackingLink =
+    `${window.location.origin}/track.html?token=${encodeURIComponent(trackingToken)}`;
+
+
+message.innerHTML = `
+
+    ${
+        driver
+            ? `${driver.name} assigned successfully.`
+            : "Driver assigned successfully."
+    }
+
+    <br><br>
+
+    <strong>
+        Customer Tracking Link:
+    </strong>
+
+    <br>
+
+    <input
+        type="text"
+        value="${trackingLink}"
+        readonly
+        style="
+            width:100%;
+            margin-top:8px;
+            padding:10px;
+            box-sizing:border-box;
+        "
+        onclick="this.select()"
+    >
+
+    <br><br>
+
+    <button
+        type="button"
+        onclick="
+            navigator.clipboard.writeText(
+                '${trackingLink}'
+            )
+        "
+    >
+        📍 COPY TRACKING LINK
+    </button>
+
+`;
+            
     updateAssignButton();
 
 }

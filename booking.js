@@ -1,11 +1,30 @@
 // =========================================
-// VALETHOLIC BOOKING REVIEW
+// VALETHOLIC
+// BOOKING REVIEW & SUBMISSION
 // =========================================
 
-const booking =
-    JSON.parse(
-        localStorage.getItem("booking")
+
+// =========================================
+// GET SAVED BOOKING
+// =========================================
+
+let booking = null;
+
+try {
+
+    booking =
+        JSON.parse(
+            localStorage.getItem("booking")
+        );
+
+} catch (error) {
+
+    console.error(
+        "Unable to read saved booking:",
+        error
     );
+
+}
 
 
 // =========================================
@@ -14,7 +33,9 @@ const booking =
 
 if (!booking) {
 
-    alert("No booking found.");
+    alert(
+        "No booking found."
+    );
 
     window.location.href =
         "index.html";
@@ -23,21 +44,109 @@ if (!booking) {
 
 
 // =========================================
+// BASIC DATA SAFETY
+// =========================================
+
+const pickups =
+    Array.isArray(booking.pickups)
+        ? booking.pickups
+        : [];
+
+const destinations =
+    Array.isArray(booking.destinations)
+        ? booking.destinations
+        : [];
+
+
+// =========================================
+// ESCAPE HTML
+// =========================================
+//
+// Booking information comes from user input.
+//
+// We escape values before placing them into
+// innerHTML so a customer cannot accidentally
+// inject HTML or JavaScript into the review page.
+//
+
+function escapeHTML(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// =========================================
+// FORMAT LIST
+// =========================================
+
+function formatList(values) {
+
+    if (
+        !Array.isArray(values) ||
+        values.length === 0
+    ) {
+
+        return "Not provided";
+
+    }
+
+
+    return values
+        .map(
+            value =>
+                escapeHTML(value)
+        )
+        .join("<br>");
+
+}
+
+
+// =========================================
 // FARE CALCULATION
 // =========================================
 
+
 // Number of pickups
+
 const pickupCount =
-    Array.isArray(booking.pickups)
-        ? booking.pickups.length
-        : 0;
+    pickups.length;
 
 
 // Number of destinations
+
 const destinationCount =
-    Array.isArray(booking.destinations)
-        ? booking.destinations.length
-        : 0;
+    destinations.length;
 
 
 // =========================================
@@ -77,19 +186,36 @@ const additionalStopCharge =
 // =========================================
 // PEAK HOUR CHECK
 // =========================================
+//
+// Evening peak:
+// 7:30 PM - 9:00 PM
+//
+// Morning peak:
+// 4:00 AM - 5:00 AM
+//
 
 const timeParts =
-    String(booking.time || "00:00")
-        .split(":")
-        .map(Number);
+    String(
+        booking.time || "00:00"
+    )
+    .split(":")
+    .map(Number);
 
 
 const hour =
-    timeParts[0] || 0;
+    Number.isFinite(
+        timeParts[0]
+    )
+        ? timeParts[0]
+        : 0;
 
 
 const minute =
-    timeParts[1] || 0;
+    Number.isFinite(
+        timeParts[1]
+    )
+        ? timeParts[1]
+        : 0;
 
 
 const timeInMinutes =
@@ -100,22 +226,21 @@ const timeInMinutes =
 // =========================================
 // PEAK PERIODS
 // =========================================
-//
-// Evening peak:
-// 7:30 PM - 9:00 PM
-//
-// Morning peak:
-// 4:00 AM - 5:00 AM
-//
 
 const eveningPeak =
-    timeInMinutes >= (19 * 60 + 30) &&
-    timeInMinutes <= (21 * 60);
+    timeInMinutes >=
+        (19 * 60 + 30)
+    &&
+    timeInMinutes <=
+        (21 * 60);
 
 
 const morningPeak =
-    timeInMinutes >= (4 * 60) &&
-    timeInMinutes <= (5 * 60);
+    timeInMinutes >=
+        (4 * 60)
+    &&
+    timeInMinutes <=
+        (5 * 60);
 
 
 const isPeakHour =
@@ -136,6 +261,26 @@ const baseFare =
 // =========================================
 // FARE PERIOD TEXT
 // =========================================
+//
+// IMPORTANT:
+//
+// Your existing business logic only defines
+// two peak periods:
+//
+// 4:00 AM - 5:00 AM
+// 7:30 PM - 9:00 PM
+//
+// All other times currently receive the
+// $48 standard fare.
+//
+// The text below therefore intentionally
+// avoids claiming that all $48 hours are
+// literally 9:00 PM - 4:00 AM.
+//
+// If you want a different operating-hour
+// description, we can change the wording
+// later without changing the fare.
+//
 
 let farePeriod;
 
@@ -157,7 +302,7 @@ else if (morningPeak) {
 else {
 
     farePeriod =
-        "Standard Hours • 9:00 PM – 4:00 AM";
+        "Standard Hours";
 
 }
 
@@ -172,6 +317,52 @@ const totalFare =
 
 
 // =========================================
+// DISPLAY VALUES
+// =========================================
+
+const customerName =
+    escapeHTML(
+        booking.customer_name ||
+        "Customer"
+    );
+
+
+const mobile =
+    escapeHTML(
+        booking.mobile ||
+        ""
+    );
+
+
+const bookingDate =
+    escapeHTML(
+        booking.date ||
+        ""
+    );
+
+
+const bookingTime =
+    escapeHTML(
+        booking.time ||
+        ""
+    );
+
+
+const vehicle =
+    escapeHTML(
+        booking.vehicle ||
+        ""
+    );
+
+
+const remarks =
+    escapeHTML(
+        booking.remarks ||
+        "None"
+    );
+
+
+// =========================================
 // DISPLAY SUMMARY
 // =========================================
 
@@ -181,211 +372,284 @@ const summary =
     );
 
 
-summary.innerHTML = `
+if (!summary) {
 
-<div class="summary-card booking-card">
+    console.error(
+        "Booking summary container not found."
+    );
 
-    <h2>Journey</h2>
+} else {
 
+    summary.innerHTML = `
 
-    <div class="summary-item">
+        <!-- =================================
+             JOURNEY
+        ================================== -->
 
-        <span class="label">
-            📍 Pickup
-        </span>
+        <div class="summary-card booking-card">
 
-        <span class="value">
+            <h2>
+                Journey
+            </h2>
 
-            ${
-                booking.pickups
-                    .join("<br>")
-            }
 
-        </span>
+            <div class="summary-item">
 
-    </div>
+                <span class="label">
+                    📍 Pickup
+                </span>
 
+                <span class="value">
 
-    <div class="summary-item">
+                    ${formatList(pickups)}
 
-        <span class="label">
-            📍 Destination
-        </span>
+                </span>
 
-        <span class="value">
+            </div>
 
-            ${
-                booking.destinations
-                    .join("<br>")
-            }
 
-        </span>
+            <div class="summary-item">
 
-    </div>
+                <span class="label">
+                    📍 Destination
+                </span>
 
+                <span class="value">
 
-    <div class="summary-item">
+                    ${formatList(destinations)}
 
-        <span class="label">
-            📅 Date
-        </span>
+                </span>
 
-        <span class="value">
+            </div>
 
-            ${booking.date}
 
-        </span>
+            <div class="summary-item">
 
-    </div>
+                <span class="label">
+                    📅 Date
+                </span>
 
+                <span class="value">
 
-    <div class="summary-item">
+                    ${bookingDate}
 
-        <span class="label">
-            🕒 Time
-        </span>
+                </span>
 
-        <span class="value">
+            </div>
 
-            ${booking.time}
 
-        </span>
+            <div class="summary-item">
 
-    </div>
+                <span class="label">
+                    🕒 Time
+                </span>
 
+                <span class="value">
 
-    <div class="summary-item">
+                    ${bookingTime}
 
-        <span class="label">
-            🚘 Vehicle
-        </span>
+                </span>
 
-        <span class="value">
+            </div>
 
-            ${booking.vehicle}
 
-        </span>
+            <div class="summary-item">
 
-    </div>
+                <span class="label">
+                    🚘 Vehicle
+                </span>
 
+                <span class="value">
 
-    <div class="summary-item">
+                    ${vehicle}
 
-        <span class="label">
-            📝 Remarks
-        </span>
+                </span>
 
-        <span class="value">
+            </div>
 
-            ${
-                booking.remarks ||
-                "None"
-            }
 
-        </span>
+            <div class="summary-item">
 
-    </div>
+                <span class="label">
+                    📝 Remarks
+                </span>
 
-</div>
+                <span class="value">
 
+                    ${remarks}
 
-<div class="summary-card fare-card">
+                </span>
 
-    <h2>Fare Estimate</h2>
+            </div>
 
+        </div>
 
-    <!-- BASE FARE -->
 
-    <div class="summary-item">
+        <!-- =================================
+             FARE
+        ================================== -->
 
-        <span class="label">
+        <div class="summary-card fare-card">
 
-    <strong>
-        Base Fare<br>
-    
-        (${farePeriod})
-    </strong>
+            <h2>
+                Fare Estimate
+            </h2>
 
-    </span>
 
-        <span class="value">
+            <!-- BASE FARE -->
 
-            <strong>
-                $${baseFare}
-            </strong>
+            <div class="summary-item">
 
-        </span>
+                <span class="label">
 
-    </div>
+                    <strong>
+                        Base Fare<br>
+                        (${farePeriod})
+                    </strong>
 
+                </span>
 
-    <!-- ADDITIONAL STOPS -->
 
-    <div class="summary-item">
+                <span class="value">
 
-        <span class="label">
+                    <strong>
+                        $${baseFare}
+                    </strong>
 
-            Additional Stops
+                </span>
 
-        </span>
+            </div>
 
-        <span class="value">
 
-            $${additionalStopCharge}
+            <!-- ADDITIONAL STOPS -->
 
-        </span>
+            <div class="summary-item">
 
-    </div>
+                <span class="label">
+                    Additional Stops
+                </span>
 
 
-    <!-- TOTAL -->
+                <span class="value">
 
-    <div class="summary-item">
+                    $${additionalStopCharge}
 
-        <span class="label">
+                </span>
 
-            <strong>
-                Total
-            </strong>
+            </div>
 
-        </span>
 
-        <span class="value">
+            <!-- TOTAL -->
 
-            <strong>
-                $${totalFare}
-            </strong>
+            <div class="summary-item">
 
-        </span>
+                <span class="label">
 
-    </div>
+                    <strong>
+                        Total
+                    </strong>
 
-</div>
+                </span>
 
 
-<div class="buttons">
+                <span class="value">
 
-    <button
-        onclick="history.back()"
-    >
+                    <strong>
+                        $${totalFare}
+                    </strong>
 
-        ← Edit Booking
+                </span>
 
-    </button>
+            </div>
 
+        </div>
 
-    <button
-        class="gold"
-        onclick="submitBooking()"
-    >
 
-        Submit Booking Request
+        <!-- =================================
+             ACTION BUTTONS
+        ================================== -->
 
-    </button>
+        <div class="buttons">
 
-</div>
+            <button
+                type="button"
+                id="editBookingButton"
+            >
 
-`;
+                ← Edit Booking
+
+            </button>
+
+
+            <button
+                type="button"
+                class="gold"
+                id="submitBookingButton"
+            >
+
+                Submit Booking Request
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+// =========================================
+// EDIT BOOKING
+// =========================================
+
+const editBookingButton =
+    document.getElementById(
+        "editBookingButton"
+    );
+
+
+if (
+    editBookingButton
+) {
+
+    editBookingButton.addEventListener(
+        "click",
+        function () {
+
+            history.back();
+
+        }
+    );
+
+}
+
+
+// =========================================
+// SUBMIT BUTTON
+// =========================================
+
+const submitButton =
+    document.getElementById(
+        "submitBookingButton"
+    );
+
+
+// Prevent double submission
+
+let bookingSubmitting =
+    false;
+
+
+if (
+    submitButton
+) {
+
+    submitButton.addEventListener(
+        "click",
+        submitBooking
+    );
+
+}
 
 
 // =========================================
@@ -399,14 +663,18 @@ async function generateReferenceNumber() {
         const reference =
             Math.floor(
                 1000 +
-                Math.random() * 9000
+                Math.random() *
+                9000
             );
 
 
         const currentMonth =
             new Date()
                 .toISOString()
-                .slice(0, 7);
+                .slice(
+                    0,
+                    7
+                );
 
 
         const {
@@ -420,6 +688,10 @@ async function generateReferenceNumber() {
                 );
 
 
+        // =================================
+        // REFERENCE LOOKUP ERROR
+        // =================================
+
         if (error) {
 
             console.error(
@@ -427,36 +699,52 @@ async function generateReferenceNumber() {
                 error
             );
 
+            /*
+             * Preserve the existing behaviour:
+             * if reference lookup fails, use
+             * the generated number instead of
+             * blocking the booking completely.
+             */
+
             return reference;
 
         }
 
 
+        const rows =
+            Array.isArray(data)
+                ? data
+                : [];
+
+
         const exists =
-            data.some(row => {
+            rows.some(
+                row => {
 
-                if (
-                    !row.reference_no ||
-                    !row.created_at
-                ) {
+                    if (
+                        !row.reference_no ||
+                        !row.created_at
+                    ) {
 
-                    return false;
+                        return false;
 
-                }
+                    }
 
 
-                return (
-                    Number(
-                        row.reference_no
-                    ) === reference
+                    return (
+                        Number(
+                            row.reference_no
+                        ) ===
+                        reference
+                    )
                     &&
                     row.created_at
                         .startsWith(
                             currentMonth
-                        )
-                );
+                        );
 
-            });
+                }
+            );
 
 
         if (!exists) {
@@ -476,19 +764,71 @@ async function generateReferenceNumber() {
 
 async function submitBooking() {
 
+
+    // =====================================
+    // PREVENT DOUBLE CLICK
+    // =====================================
+
+    if (
+        bookingSubmitting
+    ) {
+
+        return;
+
+    }
+
+
+    bookingSubmitting =
+        true;
+
+
+    // =====================================
+    // DISABLE BUTTON
+    // =====================================
+
+    if (
+        submitButton
+    ) {
+
+        submitButton.disabled =
+            true;
+
+
+        submitButton.textContent =
+            "Submitting...";
+
+    }
+
+
     try {
 
-        // ==========================
+
+        // =================================
+        // CHECK SUPABASE
+        // =================================
+
+        if (
+            !window.supabaseClient
+        ) {
+
+            throw new Error(
+                "Booking service is not available. Please refresh the page and try again."
+            );
+
+        }
+
+
+        // =================================
         // GET REFERENCE
-        // ==========================
+        // =================================
 
         const reference =
             await generateReferenceNumber();
 
 
-        // ==========================
+        // =================================
         // INSERT BOOKING
-        // ==========================
+        // =================================
 
         const {
             data,
@@ -510,10 +850,10 @@ async function submitBooking() {
                             booking.mobile,
 
                         pickups:
-                            booking.pickups,
+                            pickups,
 
                         destinations:
-                            booking.destinations,
+                            destinations,
 
                         booking_date:
                             booking.date,
@@ -525,7 +865,8 @@ async function submitBooking() {
                             booking.vehicle,
 
                         remarks:
-                            booking.remarks || null
+                            booking.remarks ||
+                            null
 
                     }
 
@@ -533,9 +874,9 @@ async function submitBooking() {
                 .select();
 
 
-        // ==========================
-        // ERROR
-        // ==========================
+        // =================================
+        // SUPABASE ERROR
+        // =================================
 
         if (error) {
 
@@ -544,24 +885,27 @@ async function submitBooking() {
                 error
             );
 
-            alert(
-                error.message
+            throw new Error(
+                error.message ||
+                "Unable to submit booking."
             );
-
-            return;
 
         }
 
 
-        // ==========================
+        // =================================
         // SUCCESS
-        // ==========================
+        // =================================
 
         console.log(
             "Booking created successfully:",
             data
         );
 
+
+        // =================================
+        // SAVE CREATED BOOKING
+        // =================================
 
         if (
             data &&
@@ -578,24 +922,55 @@ async function submitBooking() {
         }
 
 
-        // ==========================
+        // =================================
         // GO TO SUCCESS PAGE
-        // ==========================
+        // =================================
 
         window.location.href =
-            `success.html?ref=${reference}`;
+            `success.html?ref=${encodeURIComponent(
+                reference
+            )}`;
 
 
     } catch (error) {
+
+
+        // =================================
+        // ERROR HANDLING
+        // =================================
 
         console.error(
             "Unexpected booking error:",
             error
         );
 
+
         alert(
+            error.message ||
             "Unable to submit booking. Please try again."
         );
+
+
+        // =================================
+        // RESTORE BUTTON
+        // =================================
+
+        bookingSubmitting =
+            false;
+
+
+        if (
+            submitButton
+        ) {
+
+            submitButton.disabled =
+                false;
+
+
+            submitButton.textContent =
+                "Submit Booking Request";
+
+        }
 
     }
 

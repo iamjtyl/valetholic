@@ -3,36 +3,256 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- =====================================
+         BASIC DOCUMENT SETTINGS
+    ====================================== -->
 
-<title>Review Booking | Valetholic</title>
+    <meta charset="UTF-8">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<link rel="stylesheet" href="booking.css">
+
+    <meta
+        name="description"
+        content="Review your Valetholic valet booking before confirming."
+    >
+
+
+    <meta
+        name="theme-color"
+        content="#0A0A0A"
+    >
+
+
+    <title>
+        Review Booking | Valetholic
+    </title>
+
+
+
+    <!-- =====================================
+         FONTS
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+
+    <!-- =====================================
+         BOOKING PAGE STYLES
+    ====================================== -->
+
+    <link
+        rel="stylesheet"
+        href="booking.css"
+    >
 
 </head>
 
+
+
 <body>
 
-<div class="container">
 
-    <h1>
+    <!-- =====================================
+         MAIN CONTENT
+    ====================================== -->
 
-        Review Your Booking
+    <main
+        class="container"
+        aria-labelledby="pageTitle"
+    >
 
-    </h1>
 
-    <div id="summary"></div>
+        <!-- =================================
+             PAGE HEADER
+        ================================== -->
 
-</div>
+        <header>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script src="booking.js"></script>
+            <h1
+                id="pageTitle"
+            >
+
+                Review Your Booking
+
+            </h1>
+
+
+            <p
+                id="bookingIntro"
+                style="
+                    color:#8f8f8f;
+                    margin-top:-14px;
+                    margin-bottom:28px;
+                    line-height:1.6;
+                    font-size:14px;
+                "
+            >
+
+                Please check your trip details
+                before confirming your booking.
+
+            </p>
+
+        </header>
+
+
+
+        <!-- =================================
+             BOOKING SUMMARY
+
+             booking.js populates this.
+        ================================== -->
+
+        <section
+            id="summary"
+            aria-label="Booking summary"
+        >
+
+            <div
+                style="
+                    width:100%;
+                    padding:30px;
+                    background:#141414;
+                    border:1px solid rgba(255,255,255,.08);
+                    border-radius:18px;
+                    color:#888;
+                    text-align:center;
+                "
+                id="summaryLoading"
+            >
+
+                Loading your booking...
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================
+         SUPABASE
+    ====================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <script
+        src="supabase.js"
+    ></script>
+
+
+
+    <!-- =====================================
+         BOOKING LOGIC
+    ====================================== -->
+
+    <script
+        src="booking.js"
+    ></script>
+
+
+
+    <!-- =====================================
+         LOADING FALLBACK
+    ====================================== -->
+
+    <script>
+
+        /*
+         * booking.js is responsible for
+         * replacing #summary with the
+         * actual booking information.
+         *
+         * This fallback prevents the page
+         * from looking completely empty while
+         * the booking information loads.
+         */
+
+        window.addEventListener(
+            "load",
+            function () {
+
+                const loading =
+                    document.getElementById(
+                        "summaryLoading"
+                    );
+
+
+                /*
+                 * Give booking.js a moment to
+                 * populate the summary.
+                 */
+
+                setTimeout(
+                    function () {
+
+                        if (
+                            loading &&
+                            loading.parentNode
+                        ) {
+
+                            /*
+                             * Only remove the
+                             * loading message if
+                             * booking.js has already
+                             * added other content.
+                             */
+
+                            const summary =
+                                document.getElementById(
+                                    "summary"
+                                );
+
+
+                            if (
+                                summary &&
+                                summary.children.length >
+                                1
+                            ) {
+
+                                loading.remove();
+
+                            }
+
+                        }
+
+                    },
+                    500
+                );
+
+            }
+        );
+
+    </script>
+
+
 </body>
 
-</html> 
+</html>

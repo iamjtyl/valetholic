@@ -1,685 +1,2031 @@
 /* ====================================
-VALETHOLIC 2.0
-==================================== */
+   VALETHOLIC
+   MASTER STYLESHEET
+   ==================================== */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    background:#0A0A0A;
-    color:#fff;
-    font-family:"Inter",sans-serif;
-}
-
-a{
-    text-decoration:none;
-    color:inherit;
-}
-
-img{
-    display:block;
-    max-width:100%;
-}
 
 /* ====================================
-NAVIGATION
-==================================== */
+   DESIGN TOKENS
+   ==================================== */
 
-.navbar{
+:root {
 
-    position:fixed;
+    --black:
+        #0A0A0A;
 
-    top:0;
+    --black-soft:
+        #111111;
 
-    left:0;
+    --card:
+        #151515;
 
-    width:100%;
+    --input:
+        #1F1F1F;
 
-    height:80px;
+    --border:
+        rgba(255,255,255,.08);
 
-    background:#0A0A0A;
+    --border-soft:
+        rgba(255,255,255,.05);
 
-    border-bottom:1px solid rgba(255,255,255,.08);
+    --gold:
+        #D4AF37;
 
-    display:flex;
+    --gold-light:
+        #E1BF59;
 
-    align-items:center;
+    --gold-dark:
+        #B89425;
 
-    justify-content:space-between;
+    --text:
+        #FFFFFF;
 
-    padding:0 70px;
+    --text-soft:
+        #BDBDBD;
 
-    z-index:1000;
+    --text-muted:
+        #A8A8A8;
 
-}
+    --text-dim:
+        #888888;
 
-.logo{
+    --radius:
+        18px;
 
-    display:flex;
+    --radius-small:
+        10px;
 
-    align-items:center;
-
-    gap:15px;
-
-}
-
-.logo img{
-
-    width:42px;
-
-}
-
-.logo span{
-
-    font-size:22px;
-
-    letter-spacing:3px;
-
-    font-weight:700;
+    --nav-height:
+        80px;
 
 }
 
-.navbar ul{
-
-    display:flex;
-
-    list-style:none;
-
-    gap:45px;
-
-}
-
-.navbar li{
-
-    list-style:none;
-
-}
-
-.navbar a{
-
-    color:#BDBDBD;
-
-    transition:.25s;
-
-}
-
-.navbar a:hover{
-
-    color:#D4AF37;
-
-}
-
-.nav-button{
-
-    background:#D4AF37;
-
-    color:#111 !important;
-
-    padding:14px 28px;
-
-    border-radius:10px;
-
-    font-weight:600;
-
-}
 
 /* ====================================
-HERO
+   RESET
 ==================================== */
 
-.hero{
+* {
 
-    max-width:1400px;
+    margin: 0;
 
-    margin:auto;
+    padding: 0;
 
-    min-height:100vh;
-
-    display:grid;
-
-    grid-template-columns:1.15fr .85fr;
-
-    gap:80px;
-
-    align-items:center;
-
-    padding:120px 70px 60px;
+    box-sizing: border-box;
 
 }
 
-.hero-left{
 
-    max-width:620px;
+html {
 
-}
+    scroll-behavior: smooth;
 
-.hero-label{
-
-    color:#D4AF37;
-
-    text-transform:uppercase;
-
-    letter-spacing:5px;
-
-    font-size:14px;
-
-    margin-bottom:28px;
+    background:
+        var(--black);
 
 }
 
-.hero-title{
 
-    font-family:"Cormorant Garamond",serif;
+body {
 
-    font-size:68px;
+    min-height: 100vh;
 
-    line-height:1.05;
+    overflow-x: hidden;
 
-    font-weight:600;
+    background:
+        var(--black);
 
-    margin-bottom:30px;
+    color:
+        var(--text);
 
-}
+    font-family:
+        "Inter",
+        sans-serif;
 
-.hero-title span{
+    line-height:
+        1.5;
 
-    color:#D4AF37;
+    -webkit-font-smoothing:
+        antialiased;
 
-}
-
-.hero-price{
-
-    margin-bottom:30px;
-
-}
-
-.hero-price small{
-
-    display:block;
-
-    color:#888;
-
-    font-size:18px;
+    text-rendering:
+        optimizeLegibility;
 
 }
 
-.hero-price h2{
 
-    color:#D4AF37;
+a {
 
-    font-size:60px;
+    color:
+        inherit;
 
-    margin-top:5px;
-
-}
-
-.hero-description{
-
-    max-width:520px;
-
-    color:#A9A9A9;
-
-    font-size:18px;
-
-    line-height:1.8;
-
-    margin-bottom:40px;
+    text-decoration:
+        none;
 
 }
 
-.gold-btn{
 
-    display:inline-block;
+button,
+input,
+select,
+textarea {
 
-    background:#D4AF37;
-
-    color:#111;
-
-    padding:18px 42px;
-
-    border-radius:10px;
-
-    font-weight:700;
-
-    transition:.25s;
+    font:
+        inherit;
 
 }
 
-.gold-btn:hover{
 
-    transform:translateY(-2px);
+button {
 
-    background:#E1BF59;
+    border:
+        0;
 
 }
+
+
+img {
+
+    display:
+        block;
+
+    max-width:
+        100%;
+
+}
+
+
 /* ====================================
-BOOKING CARD
+   SELECTION
 ==================================== */
 
-.hero-right{
-    display:flex;
-    justify-content:flex-end;
+::selection {
+
+    background:
+        rgba(212,175,55,.30);
+
+    color:
+        #fff;
+
 }
 
-.booking-card{
-    width:100%;
-    max-width:420px;
-    background:#151515;
-    border:1px solid rgba(212,175,55,.25);
-    border-radius:18px;
-    padding:32px;
-    box-shadow:0 20px 50px rgba(0,0,0,.45);
+
+/* ====================================
+   SCROLLBAR
+==================================== */
+
+::-webkit-scrollbar {
+
+    width:
+        10px;
+
 }
 
-.booking-card h2{
-    font-family:"Cormorant Garamond",serif;
-    font-size:34px;
-    margin-bottom:25px;
-    color:#fff;
+
+::-webkit-scrollbar-track {
+
+    background:
+        #111;
+
 }
 
-.booking-card form{
-    display:flex;
-    flex-direction:column;
+
+::-webkit-scrollbar-thumb {
+
+    background:
+        #333;
+
+    border-radius:
+        20px;
+
 }
 
-.booking-card label{
-    margin:14px 0 8px;
-    font-size:14px;
-    color:#BDBDBD;
+
+::-webkit-scrollbar-thumb:hover {
+
+    background:
+        var(--gold);
+
 }
+
+
+/* ====================================
+   NAVIGATION
+==================================== */
+
+.navbar {
+
+    position:
+        fixed;
+
+    top:
+        0;
+
+    left:
+        0;
+
+    width:
+        100%;
+
+    min-height:
+        var(--nav-height);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        25px;
+
+    padding:
+        0 70px;
+
+    background:
+        rgba(10,10,10,.94);
+
+    border-bottom:
+        1px solid var(--border);
+
+    backdrop-filter:
+        blur(14px);
+
+    -webkit-backdrop-filter:
+        blur(14px);
+
+    z-index:
+        1000;
+
+}
+
+
+/* ====================================
+   LOGO
+==================================== */
+
+.logo {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        15px;
+
+    flex-shrink:
+        0;
+
+}
+
+
+.logo img {
+
+    width:
+        42px;
+
+    height:
+        auto;
+
+}
+
+
+.logo span {
+
+    color:
+        #fff;
+
+    font-size:
+        22px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        3px;
+
+    white-space:
+        nowrap;
+
+}
+
+
+/* ====================================
+   NAV LINKS
+==================================== */
+
+.navbar ul {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        45px;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    list-style:
+        none;
+
+}
+
+
+.navbar li {
+
+    list-style:
+        none;
+
+}
+
+
+.navbar ul a {
+
+    position:
+        relative;
+
+    display:
+        inline-block;
+
+    padding:
+        8px 0;
+
+    color:
+        var(--text-soft);
+
+    font-size:
+        14px;
+
+    font-weight:
+        500;
+
+    transition:
+        color .25s ease;
+
+}
+
+
+.navbar ul a::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    bottom:
+        0;
+
+    width:
+        0;
+
+    height:
+        1px;
+
+    background:
+        var(--gold);
+
+    transition:
+        width .25s ease;
+
+}
+
+
+.navbar ul a:hover {
+
+    color:
+        var(--gold);
+
+}
+
+
+.navbar ul a:hover::after {
+
+    width:
+        100%;
+
+}
+
+
+/* ====================================
+   NAV BUTTON
+==================================== */
+
+.nav-button {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        46px;
+
+    padding:
+        0 24px;
+
+    background:
+        var(--gold);
+
+    color:
+        #111 !important;
+
+    border-radius:
+        var(--radius-small);
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        .3px;
+
+    box-shadow:
+        0 8px 24px
+        rgba(212,175,55,.16);
+
+    transition:
+        transform .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+
+}
+
+
+.nav-button:hover {
+
+    background:
+        var(--gold-light);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 30px
+        rgba(212,175,55,.24);
+
+}
+
+
+/* ====================================
+   HERO
+==================================== */
+
+.hero {
+
+    width:
+        min(1400px, 100%);
+
+    min-height:
+        calc(100vh - var(--nav-height));
+
+    margin:
+        0 auto;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(0, 1.15fr)
+        minmax(320px, .85fr);
+
+    align-items:
+        center;
+
+    gap:
+        80px;
+
+    padding:
+        120px 70px 60px;
+
+}
+
+
+/* ====================================
+   HERO LEFT
+==================================== */
+
+.hero-left {
+
+    max-width:
+        620px;
+
+    padding-right:
+        20px;
+
+    animation:
+        fadeUp .8s ease both;
+
+}
+
+
+.hero-label {
+
+    margin-bottom:
+        26px;
+
+    color:
+        var(--gold);
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+    letter-spacing:
+        4px;
+
+    line-height:
+        1.5;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.hero-title {
+
+    max-width:
+        600px;
+
+    margin-bottom:
+        26px;
+
+    color:
+        #fff;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:
+        clamp(
+            52px,
+            5vw,
+            68px
+        );
+
+    font-weight:
+        600;
+
+    line-height:
+        1.02;
+
+    letter-spacing:
+        -.5px;
+
+}
+
+
+.hero-title span {
+
+    color:
+        var(--gold);
+
+}
+
+
+/* ====================================
+   HERO PRICE
+==================================== */
+
+.hero-price {
+
+    display:
+        flex;
+
+    align-items:
+        baseline;
+
+    gap:
+        9px;
+
+    margin-bottom:
+        24px;
+
+}
+
+
+.hero-price small {
+
+    color:
+        var(--text-dim);
+
+    font-size:
+        16px;
+
+}
+
+
+.hero-price h2 {
+
+    margin:
+        0;
+
+    color:
+        var(--gold);
+
+    font-size:
+        54px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1;
+
+}
+
+
+/* ====================================
+   HERO DESCRIPTION
+==================================== */
+
+.hero-description {
+
+    max-width:
+        500px;
+
+    margin-bottom:
+        36px;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        17px;
+
+    line-height:
+        1.8;
+
+}
+
+
+/* ====================================
+   GOLD BUTTON
+==================================== */
+
+.gold-btn {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        54px;
+
+    padding:
+        0 40px;
+
+    background:
+        var(--gold);
+
+    color:
+        #111;
+
+    border-radius:
+        var(--radius-small);
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        1px;
+
+    box-shadow:
+        0 10px 25px
+        rgba(212,175,55,.22);
+
+    transition:
+        transform .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+
+}
+
+
+.gold-btn:hover {
+
+    background:
+        var(--gold-light);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 16px 35px
+        rgba(212,175,55,.32);
+
+}
+
+
+.gold-btn:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+/* ====================================
+   HERO RIGHT
+==================================== */
+
+.hero-right {
+
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+
+    width:
+        100%;
+
+    animation:
+        fadeUp .8s ease .12s both;
+
+}
+
+
+/* ====================================
+   BOOKING CARD
+==================================== */
+
+.booking-card {
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    max-width:
+        390px;
+
+    overflow:
+        hidden;
+
+    padding:
+        28px;
+
+    background:
+        #111;
+
+    border:
+        1px solid
+        rgba(212,175,55,.20);
+
+    border-radius:
+        22px;
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.45);
+
+}
+
+
+/* Luxury top line */
+
+.booking-card::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    left:
+        12%;
+
+    width:
+        76%;
+
+    height:
+        2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(212,175,55,.85),
+            transparent
+        );
+
+}
+
+
+/* ====================================
+   BOOKING CARD TITLE
+==================================== */
+
+.booking-card h2 {
+
+    margin-bottom:
+        20px;
+
+    color:
+        #fff;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:
+        31px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.1;
+
+}
+
+
+/* ====================================
+   BOOKING FORM
+==================================== */
+
+.booking-card form {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+}
+
+
+.booking-card label {
+
+    margin:
+        14px 0 8px;
+
+    color:
+        var(--text-soft);
+
+    font-size:
+        13px;
+
+    font-weight:
+        500;
+
+}
+
+
+/* ====================================
+   INPUTS
+==================================== */
 
 .booking-card input,
-.booking-card select{
-    width:100%;
-    height:50px;
-    background:#1F1F1F;
-    border:1px solid #2E2E2E;
-    border-radius:10px;
-    color:#fff;
-    padding:0 15px;
-    font-size:15px;
-    outline:none;
-    transition:.25s;
-}
+.booking-card select {
 
-.booking-card input:focus,
-.booking-card select:focus{
-    border-color:#D4AF37;
-}
+    width:
+        100%;
 
-.booking-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
+    height:
+        48px;
 
-.booking-card button{
-    margin-top:28px;
-    height:52px;
-    background:#D4AF37;
-    color:#111;
-    border:none;
-    border-radius:10px;
-    font-size:16px;
-    font-weight:700;
-    cursor:pointer;
-    transition:.25s;
-}
+    padding:
+        0 14px;
 
-.booking-card button:hover{
-    background:#E1BF59;
-    transform:translateY(-2px);
-}
+    background:
+        var(--input);
 
-/* ====================================
-HOW IT WORKS
-==================================== */
+    color:
+        #fff;
 
-.how{
-    max-width:1400px;
-    margin:80px auto;
-    padding:0 70px;
-}
+    border:
+        1px solid
+        #2E2E2E;
 
-.how h2{
-    text-align:center;
-    font-family:"Cormorant Garamond",serif;
-    font-size:48px;
-    margin-bottom:60px;
-}
+    border-radius:
+        var(--radius-small);
 
-.steps{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:30px;
-}
+    outline:
+        none;
 
-.step{
-    background:#151515;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:18px;
-    padding:35px;
-    transition:.3s;
-}
+    font-size:
+        15px;
 
-.step:hover{
-    transform:translateY(-6px);
-    border-color:#D4AF37;
-}
-
-.number{
-    color:#D4AF37;
-    font-size:36px;
-    font-weight:700;
-    margin-bottom:20px;
-}
-
-.step h3{
-    margin-bottom:15px;
-    font-size:24px;
-}
-
-.step p{
-    color:#A8A8A8;
-    line-height:1.7;
-}
-
-/* ====================================
-FOOTER
-==================================== */
-
-footer{
-    margin-top:100px;
-    padding:50px 20px;
-    border-top:1px solid rgba(255,255,255,.08);
-    text-align:center;
-}
-
-footer h2{
-    font-family:"Cormorant Garamond",serif;
-    font-size:36px;
-    color:#D4AF37;
-    margin-bottom:10px;
-}
-
-footer p{
-    color:#8A8A8A;
-}
-/* ====================================
-LUXURY POLISH
-==================================== */
-
-/* Hero spacing */
-
-.hero{
-
-    min-height:calc(100vh - 80px);
-
-    padding-top:100px;
-
-    padding-bottom:40px;
+    transition:
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
 
 }
 
-/* Hero text */
-
-.hero-title{
-
-    font-size:60px;
-
-    max-width:560px;
-
-}
-
-.hero-price h2{
-
-    font-size:54px;
-
-}
-
-.hero-description{
-
-    font-size:17px;
-
-    max-width:470px;
-
-}
-
-/* Booking Card */
-
-.booking-card{
-
-    max-width:380px;
-
-    padding:26px;
-
-}
-
-.booking-card h2{
-
-    font-size:30px;
-
-    margin-bottom:20px;
-
-}
-
-.booking-card input,
-.booking-card select{
-
-    height:46px;
-
-    font-size:15px;
-
-}
-
-.booking-card button{
-
-    height:48px;
-
-    margin-top:22px;
-
-    letter-spacing:1px;
-
-}
-
-/* Navigation */
-
-.navbar{
-
-    backdrop-filter:blur(14px);
-
-    background:rgba(10,10,10,.94);
-
-}
-
-.nav-button{
-
-    transition:.3s;
-
-}
-
-.nav-button:hover{
-
-    background:#E0BE5A;
-
-    transform:translateY(-2px);
-
-}
-
-/* Hero Button */
-
-.gold-btn{
-
-    box-shadow:0 10px 25px rgba(212,175,55,.25);
-
-}
-
-.gold-btn:hover{
-
-    box-shadow:0 16px 35px rgba(212,175,55,.35);
-
-}
-
-/* Step Cards */
-
-.step{
-
-    transition:.35s;
-
-}
-
-.step:hover{
-
-    transform:translateY(-8px);
-
-    box-shadow:0 20px 40px rgba(0,0,0,.4);
-
-}
-
-/* Smooth Animation */
-
-.hero-left,
-.hero-right{
-
-    animation:fadeUp .8s ease;
-
-}
-
-@keyframes fadeUp{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(30px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
-
-}
-/* ====================================
-PART 4 - FINAL POLISH
-==================================== */
-
-/* Better spacing */
-
-.hero-left{
-    padding-right:40px;
-}
-
-/* Luxury card */
-
-.booking-card{
-    background:#111;
-    border:1px solid rgba(212,175,55,.20);
-    border-radius:22px;
-}
-
-/* Better placeholder */
-
-.booking-card input::placeholder{
-    color:#666;
-}
-
-/* Input Hover */
 
 .booking-card input:hover,
-.booking-card select:hover{
-    border-color:#555;
+.booking-card select:hover {
+
+    border-color:
+        #4A4A4A;
+
 }
 
-/* Gold Focus */
 
 .booking-card input:focus,
-.booking-card select:focus{
-    border-color:#D4AF37;
-    box-shadow:0 0 0 3px rgba(212,175,55,.15);
-}
+.booking-card select:focus {
 
-/* Remove ugly date icon spacing */
+    background:
+        #222;
 
-input[type="date"]{
-    color:#ccc;
-}
+    border-color:
+        var(--gold);
 
-/* Nice scrollbar */
-
-::-webkit-scrollbar{
-    width:10px;
-}
-
-::-webkit-scrollbar-track{
-    background:#111;
-}
-
-::-webkit-scrollbar-thumb{
-    background:#333;
-    border-radius:20px;
-}
-
-::-webkit-scrollbar-thumb:hover{
-    background:#D4AF37;
-}
-
-/* Responsive */
-
-@media(max-width:1000px){
-
-.hero{
-
-grid-template-columns:1fr;
-
-padding:120px 30px 50px;
-
-gap:50px;
+    box-shadow:
+        0 0 0 3px
+        rgba(212,175,55,.14);
 
 }
 
-.hero-right{
 
-display:flex;
+.booking-card input::placeholder {
 
-justify-content:center;
-
-}
-
-.booking-card{
-
-max-width:100%;
+    color:
+        #666;
 
 }
 
-.steps{
 
-grid-template-columns:1fr;
+/* ====================================
+   DATE INPUT
+==================================== */
+
+.booking-card input[type="date"] {
+
+    color:
+        #ccc;
+
+}
+
+
+.booking-card input[type="date"]::-webkit-calendar-picker-indicator {
+
+    cursor:
+        pointer;
+
+    opacity:
+        .65;
+
+    filter:
+        invert(1);
 
 }
 
-.navbar{
 
-padding:0 25px;
+/* ====================================
+   SELECT
+==================================== */
+
+.booking-card select {
+
+    cursor:
+        pointer;
 
 }
 
-.navbar ul{
 
-display:none;
+/* ====================================
+   BOOKING ROW
+==================================== */
+
+.booking-row {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        15px;
 
 }
+
+
+/* ====================================
+   BOOKING SUBMIT BUTTON
+==================================== */
+
+.booking-card button {
+
+    width:
+        100%;
+
+    min-height:
+        50px;
+
+    margin-top:
+        24px;
+
+    background:
+        var(--gold);
+
+    color:
+        #111;
+
+    border:
+        none;
+
+    border-radius:
+        var(--radius-small);
+
+    font-size:
+        15px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        1px;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 8px 20px
+        rgba(212,175,55,.16);
+
+    transition:
+        transform .25s ease,
+        background .25s ease,
+        box-shadow .25s ease,
+        opacity .25s ease;
+
+}
+
+
+.booking-card button:hover {
+
+    background:
+        var(--gold-light);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 13px 28px
+        rgba(212,175,55,.25);
+
+}
+
+
+.booking-card button:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+.booking-card button:disabled {
+
+    opacity:
+        .55;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+    box-shadow:
+        none;
+
+}
+
+
+/* ====================================
+   HOW IT WORKS
+==================================== */
+
+.how {
+
+    width:
+        min(1400px, 100%);
+
+    margin:
+        80px auto 110px;
+
+    padding:
+        0 70px;
+
+    scroll-margin-top:
+        100px;
+
+}
+
+
+.how h2 {
+
+    margin-bottom:
+        55px;
+
+    color:
+        #fff;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:
+        48px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.1;
+
+    text-align:
+        center;
+
+}
+
+
+/* ====================================
+   STEPS
+==================================== */
+
+.steps {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+    gap:
+        30px;
+
+}
+
+
+.step {
+
+    min-height:
+        210px;
+
+    padding:
+        34px;
+
+    background:
+        #151515;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        18px;
+
+    transition:
+        transform .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+
+}
+
+
+.step:hover {
+
+    transform:
+        translateY(-7px);
+
+    border-color:
+        rgba(212,175,55,.75);
+
+    box-shadow:
+        0 20px 40px
+        rgba(0,0,0,.38);
+
+}
+
+
+/* ====================================
+   STEP NUMBER
+==================================== */
+
+.number {
+
+    margin-bottom:
+        18px;
+
+    color:
+        var(--gold);
+
+    font-size:
+        34px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1;
+
+    font-variant-numeric:
+        tabular-nums;
+
+}
+
+
+/* ====================================
+   STEP TITLE
+==================================== */
+
+.step h3 {
+
+    margin-bottom:
+        12px;
+
+    color:
+        #fff;
+
+    font-size:
+        22px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.2;
+
+}
+
+
+/* ====================================
+   STEP DESCRIPTION
+==================================== */
+
+.step p {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        15px;
+
+    line-height:
+        1.7;
+
+}
+
+
+/* ====================================
+   FOOTER
+==================================== */
+
+footer {
+
+    margin-top:
+        100px;
+
+    padding:
+        55px 20px;
+
+    border-top:
+        1px solid
+        var(--border);
+
+    text-align:
+        center;
+
+}
+
+
+footer h2 {
+
+    margin-bottom:
+        9px;
+
+    color:
+        var(--gold);
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:
+        36px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1;
+
+}
+
+
+footer p {
+
+    color:
+        var(--text-dim);
+
+    font-size:
+        14px;
+
+}
+
+
+/* ====================================
+   KEYBOARD ACCESSIBILITY
+==================================== */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+
+    outline:
+        2px solid
+        var(--gold);
+
+    outline-offset:
+        3px;
+
+}
+
+
+/* ====================================
+   ANIMATION
+==================================== */
+
+@keyframes fadeUp {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(30px);
+
+    }
+
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* ====================================
+   TABLET
+==================================== */
+
+@media (
+    max-width: 1100px
+) {
+
+
+    .navbar {
+
+        padding:
+            0 30px;
+
+    }
+
+
+    .navbar ul {
+
+        gap:
+            25px;
+
+    }
+
+
+    .navbar ul a {
+
+        font-size:
+            13px;
+
+    }
+
+
+    .hero {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            55px;
+
+        padding:
+            120px 40px 60px;
+
+    }
+
+
+    .hero-left {
+
+        max-width:
+            700px;
+
+        padding-right:
+            0;
+
+    }
+
+
+    .hero-right {
+
+        justify-content:
+            center;
+
+    }
+
+
+    .booking-card {
+
+        max-width:
+            500px;
+
+    }
+
+
+    .steps {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .how {
+
+        padding:
+            0 40px;
+
+    }
+
+}
+
+
+/* ====================================
+   MOBILE
+==================================== */
+
+@media (
+    max-width: 768px
+) {
+
+
+    :root {
+
+        --nav-height:
+            72px;
+
+    }
+
+
+    /* ================================
+       NAV
+    ================================= */
+
+    .navbar {
+
+        min-height:
+            var(--nav-height);
+
+        flex-wrap:
+            wrap;
+
+        gap:
+            10px;
+
+        padding:
+            12px 18px;
+
+    }
+
+
+    .logo {
+
+        gap:
+            10px;
+
+    }
+
+
+    .logo img {
+
+        width:
+            36px;
+
+    }
+
+
+    .logo span {
+
+        font-size:
+            17px;
+
+        letter-spacing:
+            2px;
+
+    }
+
+
+    .nav-button {
+
+        min-height:
+            42px;
+
+        padding:
+            0 15px;
+
+        font-size:
+            12px;
+
+    }
+
+
+    .navbar ul {
+
+        order:
+            3;
+
+        width:
+            100%;
+
+        display:
+            flex;
+
+        justify-content:
+            center;
+
+        gap:
+            18px;
+
+        padding:
+            5px 0 2px;
+
+        overflow-x:
+            auto;
+
+        scrollbar-width:
+            none;
+
+    }
+
+
+    .navbar ul::-webkit-scrollbar {
+
+        display:
+            none;
+
+    }
+
+
+    .navbar ul a {
+
+        padding:
+            4px 0;
+
+        font-size:
+            12px;
+
+        white-space:
+            nowrap;
+
+    }
+
+
+    /* ================================
+       HERO
+    ================================= */
+
+    .hero {
+
+        min-height:
+            auto;
+
+        gap:
+            40px;
+
+        padding:
+            155px 20px 55px;
+
+    }
+
+
+    .hero-label {
+
+        margin-bottom:
+            20px;
+
+        font-size:
+            11px;
+
+        letter-spacing:
+            2.5px;
+
+    }
+
+
+    .hero-title {
+
+        margin-bottom:
+            22px;
+
+        font-size:
+            clamp(
+                44px,
+                12vw,
+                58px
+            );
+
+        line-height:
+            .98;
+
+    }
+
+
+    .hero-price {
+
+        margin-bottom:
+            20px;
+
+    }
+
+
+    .hero-price small {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .hero-price h2 {
+
+        font-size:
+            46px;
+
+    }
+
+
+    .hero-description {
+
+        margin-bottom:
+            28px;
+
+        font-size:
+            15px;
+
+        line-height:
+            1.7;
+
+    }
+
+
+    .gold-btn {
+
+        width:
+            100%;
+
+        min-height:
+            52px;
+
+    }
+
+
+    /* ================================
+       BOOKING
+    ================================= */
+
+    .booking-card {
+
+        max-width:
+            none;
+
+        padding:
+            24px 20px;
+
+        border-radius:
+            18px;
+
+    }
+
+
+    .booking-card h2 {
+
+        font-size:
+            29px;
+
+    }
+
+
+    .booking-row {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            0;
+
+    }
+
+
+    .booking-card input,
+    .booking-card select {
+
+        height:
+            48px;
+
+        font-size:
+            15px;
+
+    }
+
+
+    /* ================================
+       HOW
+    ================================= */
+
+    .how {
+
+        margin:
+            55px auto 75px;
+
+        padding:
+            0 20px;
+
+    }
+
+
+    .how h2 {
+
+        margin-bottom:
+            35px;
+
+        font-size:
+            40px;
+
+    }
+
+
+    .step {
+
+        min-height:
+            auto;
+
+        padding:
+            28px;
+
+    }
+
+
+    .number {
+
+        font-size:
+            30px;
+
+    }
+
+
+    .step h3 {
+
+        font-size:
+            21px;
+
+    }
+
+
+    /* ================================
+       FOOTER
+    ================================= */
+
+    footer {
+
+        margin-top:
+            70px;
+
+        padding:
+            45px 20px;
+
+    }
+
+
+}
+
+
+/* ====================================
+   SMALL MOBILE
+==================================== */
+
+@media (
+    max-width: 480px
+) {
+
+
+    .navbar {
+
+        padding:
+            10px 14px;
+
+    }
+
+
+    .logo span {
+
+        font-size:
+            15px;
+
+        letter-spacing:
+            1.7px;
+
+    }
+
+
+    .logo img {
+
+        width:
+            33px;
+
+    }
+
+
+    .nav-button {
+
+        min-height:
+            38px;
+
+        padding:
+            0 12px;
+
+        border-radius:
+            8px;
+
+        font-size:
+            11px;
+
+    }
+
+
+    .navbar ul {
+
+        gap:
+            13px;
+
+    }
+
+
+    .navbar ul a {
+
+        font-size:
+            11px;
+
+    }
+
+
+    .hero {
+
+        padding:
+            145px 16px 45px;
+
+    }
+
+
+    .hero-title {
+
+        font-size:
+            clamp(
+                40px,
+                13vw,
+                52px
+            );
+
+    }
+
+
+    .booking-card {
+
+        padding:
+            22px 17px;
+
+    }
+
+
+    .booking-card h2 {
+
+        font-size:
+            27px;
+
+    }
+
+
+    .how {
+
+        padding:
+            0 16px;
+
+    }
+
+
+    .how h2 {
+
+        font-size:
+            36px;
+
+    }
+
+
+    .step {
+
+        padding:
+            24px;
+
+    }
+
+}
+
+
+/* ====================================
+   REDUCED MOTION
+==================================== */
+
+@media (
+    prefers-reduced-motion: reduce
+) {
+
+
+    html {
+
+        scroll-behavior:
+            auto;
+
+    }
+
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            .01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            .01ms !important;
+
+        scroll-behavior:
+            auto !important;
+
+    }
 
 }

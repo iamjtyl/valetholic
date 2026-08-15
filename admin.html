@@ -3,15 +3,40 @@
 
 <head>
 
+    <!-- =====================================
+         BASIC DOCUMENT SETTINGS
+    ====================================== -->
+
     <meta charset="UTF-8">
+
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Valetholic Admin</title>
 
+    <meta
+        name="theme-color"
+        content="#0F0F0F"
+    >
+
+
+    <meta
+        name="description"
+        content="Valetholic master administration dashboard."
+    >
+
+
+    <title>
+        Valetholic Admin
+    </title>
+
+
+
+    <!-- =====================================
+         FONTS
+    ====================================== -->
 
     <link
         rel="preconnect"
@@ -20,10 +45,22 @@
 
 
     <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+
+    <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
         rel="stylesheet"
     >
 
+
+
+    <!-- =====================================
+         STYLES
+    ====================================== -->
 
     <link
         rel="stylesheet"
@@ -36,25 +73,35 @@
         href="admin.css"
     >
 
+
 </head>
+
 
 
 <body class="admin-page">
 
 
-<!-- =========================
+<!-- =====================================
      NAVIGATION
-========================== -->
+====================================== -->
 
-<nav class="navbar">
+<nav
+    class="navbar"
+    aria-label="Admin navigation"
+>
 
+
+    <!-- =================================
+         LOGO
+    ================================== -->
 
     <div class="logo">
 
         <img
             src="images/logo.png"
-            alt="Valetholic Logo"
+            alt="Valetholic"
         >
+
 
         <span>
             VALETHOLIC ADMIN
@@ -63,6 +110,11 @@
     </div>
 
 
+
+    <!-- =================================
+         NAVIGATION ACTIONS
+    ================================== -->
+
     <div class="admin-actions">
 
 
@@ -70,76 +122,114 @@
             href="index.html"
             class="website-link"
         >
+
             🌐 Website
+
         </a>
 
 
-        <span>|</span>
+        <span aria-hidden="true">
+            |
+        </span>
 
 
         <a
             href="admin-booking.html"
             class="ops-btn"
         >
+
             📋 Bookings
+
         </a>
 
 
-        <span>|</span>
+        <span aria-hidden="true">
+            |
+        </span>
 
 
         <a
             href="ops-dashboard.html"
             class="ops-btn"
         >
+
             OPS Portal
+
         </a>
 
 
-        <span>|</span>
+        <span aria-hidden="true">
+            |
+        </span>
 
 
         <a
             href="#"
             class="logout-link"
-            onclick="logout()"
+            id="logoutLink"
         >
+
             🚪 Logout
+
         </a>
 
 
     </div>
 
+
 </nav>
 
 
 
-<!-- =========================
+<!-- =====================================
      ADMIN DASHBOARD
-========================== -->
+====================================== -->
 
-<section
-    class="admin-container"
-    style="
-        padding-top: 120px;
-    "
->
+<main class="admin-container admin-dashboard">
 
 
-    <h1>
-        Dashboard
-    </h1>
+    <!-- =================================
+         PAGE TITLE
+    ================================== -->
+
+    <header class="admin-page-heading">
+
+        <div>
+
+            <p class="admin-eyebrow">
+                MASTER CONTROL
+            </p>
+
+
+            <h1>
+                Dashboard
+            </h1>
+
+
+            <p class="admin-subtitle">
+                Manage bookings, drivers and
+                Valetholic administrators.
+            </p>
+
+        </div>
+
+    </header>
 
 
 
-    <!-- =========================
+    <!-- =================================
          STATISTICS
-    ========================== -->
+    ================================== -->
 
-    <div class="stats">
+    <section
+        class="stats"
+        aria-label="Dashboard statistics"
+    >
 
 
-        <div class="stat-card">
+        <!-- TOTAL BOOKINGS -->
+
+        <article class="stat-card">
 
             <h2 id="totalBookings">
                 0
@@ -149,11 +239,13 @@
                 Total Bookings
             </p>
 
-        </div>
+        </article>
 
 
 
-        <div class="stat-card">
+        <!-- PENDING BOOKINGS -->
+
+        <article class="stat-card">
 
             <h2 id="pendingBookings">
                 0
@@ -163,11 +255,13 @@
                 Pending
             </p>
 
-        </div>
+        </article>
 
 
 
-        <div class="stat-card">
+        <!-- COMPLETED BOOKINGS -->
+
+        <article class="stat-card">
 
             <h2 id="completedBookings">
                 0
@@ -177,11 +271,13 @@
                 Completed
             </p>
 
-        </div>
+        </article>
 
 
 
-        <div class="stat-card">
+        <!-- TODAY'S BOOKINGS -->
+
+        <article class="stat-card">
 
             <h2 id="todayBookings">
                 0
@@ -191,57 +287,62 @@
                 Today's Bookings
             </p>
 
-        </div>
+        </article>
 
 
 
-        <!-- =========================
-             DRIVER COUNT
-        ========================== -->
+        <!-- APPROVED DRIVERS -->
 
-        <div class="stat-card driver-stat">
+        <article class="stat-card driver-stat">
 
             <h2 id="driverCount">
                 0
             </h2>
 
             <p>
-                Drivers
+                Approved Drivers
             </p>
 
-        </div>
+        </article>
 
 
-    </div>
+    </section>
 
 
 
-    <!-- =========================
+    <!-- =====================================
          ADMIN MANAGEMENT
-    ========================== -->
+    ====================================== -->
 
-    <div
-        class="table-card"
+    <section
+        class="table-card admin-management-card"
         id="adminManagement"
         style="display: none;"
+        aria-labelledby="adminManagementTitle"
     >
 
 
-        <div
-    class="table-header"
-    style="
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 25px;
-    "
->
+        <div class="table-header">
 
 
-            <h2>
-                Admin Management
-            </h2>
+            <div>
+
+                <p class="section-eyebrow">
+                    ACCESS CONTROL
+                </p>
+
+
+                <h2 id="adminManagementTitle">
+                    Admin Management
+                </h2>
+
+
+                <p>
+                    Manage administrator accounts
+                    and their permissions.
+                </p>
+
+            </div>
 
 
             <button
@@ -259,175 +360,330 @@
 
 
 
-        <table>
+        <div class="admin-table-wrapper">
+
+            <table>
 
 
-            <thead>
+                <thead>
 
-                <tr>
+                    <tr>
 
-                    <th>
-                        Name
-                    </th>
-
-                    <th>
-                        Username
-                    </th>
-
-                    <th>
-                        Role
-                    </th>
-
-                    <th>
-                        Permissions
-                    </th>
-
-                    <th>
-                        Action
-                    </th>
-
-                </tr>
-
-            </thead>
+                        <th>
+                            Name
+                        </th>
 
 
-            <tbody id="adminTable">
-
-            </tbody>
-
-
-        </table>
+                        <th>
+                            Username
+                        </th>
 
 
-    </div>
+                        <th>
+                            Role
+                        </th>
+
+
+                        <th>
+                            Permissions
+                        </th>
+
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="adminTable">
+
+                    <!--
+                        Admin rows are generated
+                        by admin.js
+                    -->
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+
+    </section>
 
 
 
-    <!-- =========================
-         DRIVER APPLICATIONS
-    ========================== -->
+    <!-- =====================================
+         PENDING DRIVER APPLICATIONS
+    ====================================== -->
 
-    <div
+    <section
         class="table-card driver-applications"
+        aria-labelledby="pendingDriversTitle"
     >
 
 
         <div class="table-header">
 
-            <h2>
-                Pending Drivers
-            </h2>
+
+            <div>
+
+                <p class="section-eyebrow">
+                    DRIVER MANAGEMENT
+                </p>
+
+
+                <h2 id="pendingDriversTitle">
+                    Pending Drivers
+                </h2>
+
+
+                <p>
+                    Review driver applications
+                    awaiting approval.
+                </p>
+
+            </div>
+
 
         </div>
 
 
-        <table>
 
-            <thead>
+        <div class="admin-table-wrapper">
 
-                <tr>
-
-                    <th>Name</th>
-                    <th>Mobile</th>
-                    <th>Licence</th>
-                    <th>Own Vehicle</th>
-                    <th>Status</th>
-                    <th>Action</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="driverTable">
-            </tbody>
-
-        </table>
+            <table>
 
 
-    </div>
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Name
+                        </th>
 
 
-    <!-- =========================
-         APPROVED DRIVERS
-    ========================== -->
+                        <th>
+                            Mobile
+                        </th>
 
-    <div
+
+                        <th>
+                            Licence
+                        </th>
+
+
+                        <th>
+                            Own Vehicle
+                        </th>
+
+
+                        <th>
+                            Status
+                        </th>
+
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="driverTable">
+
+                    <!--
+                        Pending driver rows are
+                        generated by admin.js
+                    -->
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================
+         APPROVED DRIVER MANAGEMENT
+    ====================================== -->
+
+    <section
         class="table-card driver-management"
         id="driverManagement"
+        aria-labelledby="approvedDriversTitle"
     >
+
 
         <div class="table-header">
 
-            <h2>
-                Approved Drivers
-            </h2>
+
+            <div>
+
+                <p class="section-eyebrow">
+                    ACTIVE DRIVERS
+                </p>
+
+
+                <h2 id="approvedDriversTitle">
+                    Approved Drivers
+                </h2>
+
+
+                <p>
+                    Manage drivers who have
+                    been approved for Valetholic.
+                </p>
+
+            </div>
+
 
         </div>
 
 
-        <table>
 
-            <thead>
+        <div class="admin-table-wrapper">
 
-                <tr>
-                    <th>Name</th>
-                    <th>Mobile</th>
-                    <th>Status</th>
-                    <th>Approval</th>
-                    <th>Action</th>
-                </tr>
-
-            </thead>
-
-            <tbody id="approvedDriverTable">
-            </tbody>
-
-        </table>
-
-    </div>
+            <table>
 
 
+                <thead>
 
-</section>
+                    <tr>
+
+                        <th>
+                            Name
+                        </th>
+
+
+                        <th>
+                            Mobile
+                        </th>
+
+
+                        <th>
+                            Status
+                        </th>
+
+
+                        <th>
+                            Approval
+                        </th>
+
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="approvedDriverTable">
+
+                    <!--
+                        Approved driver rows are
+                        generated by admin.js
+                    -->
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+
+    </section>
+
+
+</main>
 
 
 
-<!-- =========================
+<!-- =====================================
      ADD ADMIN MODAL
-========================== -->
+====================================== -->
 
 <div
     id="addAdminModal"
     class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="addAdminTitle"
 >
 
 
-    <div
-        class="modal-content admin-modal"
-    >
+    <div class="modal-content admin-modal">
 
 
-        <span
+        <!-- =================================
+             CLOSE
+        ================================== -->
+
+        <button
+            type="button"
             class="close-admin-modal"
             onclick="closeAddAdmin()"
+            aria-label="Close add admin window"
         >
+
             &times;
-        </span>
+
+        </button>
 
 
 
-        <h2>
-            Add Admin
-        </h2>
+        <!-- =================================
+             TITLE
+        ================================== -->
+
+        <div class="modal-heading">
+
+            <p class="section-eyebrow">
+                ACCESS CONTROL
+            </p>
 
 
+            <h2 id="addAdminTitle">
+                Add Admin
+            </h2>
+
+
+            <p>
+                Create a new administrator
+                account and assign permissions.
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================
+             ADMIN FORM
+        ================================== -->
 
         <div class="admin-form">
 
 
             <!-- NAME -->
 
-            <label>
+            <label
+                for="newAdminName"
+            >
                 Name
             </label>
 
@@ -436,13 +692,16 @@
                 type="text"
                 id="newAdminName"
                 placeholder="Enter name"
+                autocomplete="name"
             >
 
 
 
             <!-- USERNAME -->
 
-            <label>
+            <label
+                for="newAdminUsername"
+            >
                 Username
             </label>
 
@@ -451,13 +710,16 @@
                 type="text"
                 id="newAdminUsername"
                 placeholder="Enter username"
+                autocomplete="username"
             >
 
 
 
             <!-- PASSWORD -->
 
-            <label>
+            <label
+                for="newAdminPassword"
+            >
                 Password
             </label>
 
@@ -466,13 +728,16 @@
                 type="password"
                 id="newAdminPassword"
                 placeholder="Enter password"
+                autocomplete="new-password"
             >
 
 
 
             <!-- CONFIRM PASSWORD -->
 
-            <label>
+            <label
+                for="newAdminConfirmPassword"
+            >
                 Confirm Password
             </label>
 
@@ -481,22 +746,28 @@
                 type="password"
                 id="newAdminConfirmPassword"
                 placeholder="Confirm password"
+                autocomplete="new-password"
             >
 
 
 
             <!-- ROLE -->
 
-            <label>
+            <label
+                for="newAdminRole"
+            >
                 Role
             </label>
 
 
-            <select id="newAdminRole">
+            <select
+                id="newAdminRole"
+            >
 
                 <option value="ADMIN">
                     ADMIN
                 </option>
+
 
                 <option value="SEMI-MASTER">
                     SEMI-MASTER ADMIN
@@ -506,113 +777,179 @@
 
 
 
-            <!-- PERMISSIONS -->
+            <!-- =================================
+                 PERMISSIONS
+            ================================== -->
 
-            <h3>
-                Permissions
-            </h3>
+            <div class="permission-section">
 
 
+                <h3>
+                    Permissions
+                </h3>
 
-            <label class="permission-item">
 
-                <input
-                    type="checkbox"
-                    id="permViewBookings"
+                <p class="permission-note">
+                    Choose what this admin can
+                    access or manage.
+                </p>
+
+
+                <!-- VIEW BOOKINGS -->
+
+                <label
+                    class="permission-item"
+                    for="permViewBookings"
                 >
 
-                View Bookings
+                    <input
+                        type="checkbox"
+                        id="permViewBookings"
+                    >
 
-            </label>
+                    <span>
+                        View Bookings
+                    </span>
+
+                </label>
 
 
 
-            <label class="permission-item">
+                <!-- MANAGE BOOKINGS -->
 
-                <input
-                    type="checkbox"
-                    id="permManageBookings"
+                <label
+                    class="permission-item"
+                    for="permManageBookings"
                 >
 
-                Manage Bookings
+                    <input
+                        type="checkbox"
+                        id="permManageBookings"
+                    >
 
-            </label>
+                    <span>
+                        Manage Bookings
+                    </span>
+
+                </label>
 
 
 
-            <label class="permission-item">
+                <!-- APPROVE DRIVERS -->
 
-                <input
-                    type="checkbox"
-                    id="permApproveDrivers"
+                <label
+                    class="permission-item"
+                    for="permApproveDrivers"
                 >
 
-                Approve Drivers
+                    <input
+                        type="checkbox"
+                        id="permApproveDrivers"
+                    >
 
-            </label>
+                    <span>
+                        Approve Drivers
+                    </span>
+
+                </label>
 
 
 
-            <label class="permission-item">
+                <!-- VIEW DRIVERS -->
 
-                <input
-                    type="checkbox"
-                    id="permViewDrivers"
+                <label
+                    class="permission-item"
+                    for="permViewDrivers"
                 >
 
-                View Drivers
+                    <input
+                        type="checkbox"
+                        id="permViewDrivers"
+                    >
 
-            </label>
+                    <span>
+                        View Drivers
+                    </span>
+
+                </label>
 
 
 
-            <label class="permission-item">
+                <!-- VIEW GPS -->
 
-                <input
-                    type="checkbox"
-                    id="permViewGPS"
+                <label
+                    class="permission-item"
+                    for="permViewGPS"
                 >
 
-                View GPS
+                    <input
+                        type="checkbox"
+                        id="permViewGPS"
+                    >
 
-            </label>
+                    <span>
+                        View GPS
+                    </span>
+
+                </label>
 
 
 
-            <label class="permission-item">
+                <!-- MANAGE ADMINS -->
 
-                <input
-                    type="checkbox"
-                    id="permManageAdmins"
+                <label
+                    class="permission-item"
+                    for="permManageAdmins"
                 >
 
-                Manage Admins
+                    <input
+                        type="checkbox"
+                        id="permManageAdmins"
+                    >
 
-            </label>
+                    <span>
+                        Manage Admins
+                    </span>
+
+                </label>
 
 
 
-            <label class="permission-item">
+                <!-- SYSTEM SETTINGS -->
 
-                <input
-                    type="checkbox"
-                    id="permSystemSettings"
+                <label
+                    class="permission-item"
+                    for="permSystemSettings"
                 >
 
-                System Settings
+                    <input
+                        type="checkbox"
+                        id="permSystemSettings"
+                    >
 
-            </label>
+                    <span>
+                        System Settings
+                    </span>
+
+                </label>
+
+
+            </div>
 
 
 
-            <!-- CREATE -->
+            <!-- =================================
+                 CREATE ADMIN
+            ================================== -->
 
             <button
                 type="button"
                 class="gold-btn"
                 onclick="createAdmin()"
             >
+
                 CREATE ADMIN
+
             </button>
 
 
@@ -626,15 +963,414 @@
 
 
 
-<!-- =========================
+<!-- =====================================
      SUPABASE
-========================== -->
+====================================== -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
 
-<script src="supabase.js"></script>
 
-<script src="admin.js"></script>
+<script
+    src="supabase.js"
+></script>
+
+
+<script
+    src="admin.js"
+></script>
+
+
+
+<!-- =====================================
+     SMALL PAGE-SPECIFIC POLISH
+====================================== -->
+
+<style>
+
+    /* =================================
+       ADMIN PAGE HEADING
+    ================================= */
+
+    .admin-page-heading {
+
+        margin-bottom: 28px;
+
+    }
+
+
+    .admin-eyebrow,
+    .section-eyebrow {
+
+        margin-bottom: 6px;
+
+        color: #D4AF37;
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+        letter-spacing: 2px;
+
+        text-transform: uppercase;
+
+    }
+
+
+    .admin-page-heading h1 {
+
+        margin: 0;
+
+        font-family:
+            "Cormorant Garamond",
+            serif;
+
+        font-size: 46px;
+
+        font-weight: 600;
+
+        line-height: 1;
+
+    }
+
+
+    .admin-subtitle {
+
+        margin-top: 9px;
+
+        color: #888;
+
+        font-size: 14px;
+
+    }
+
+
+    /* =================================
+       SECTION TEXT
+    ================================= */
+
+    .table-header > div {
+
+        min-width: 0;
+
+    }
+
+
+    .table-header .section-eyebrow {
+
+        margin-bottom: 5px;
+
+    }
+
+
+    .table-header p:not(.section-eyebrow) {
+
+        margin-top: 7px;
+
+        color: #888;
+
+        font-size: 13px;
+
+    }
+
+
+    /* =================================
+       TABLE WRAPPER
+    ================================= */
+
+    .admin-table-wrapper {
+
+        width: 100%;
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+
+    }
+
+
+    .admin-table-wrapper table {
+
+        min-width: 760px;
+
+    }
+
+
+    /* =================================
+       ADMIN MANAGEMENT SPACING
+    ================================= */
+
+    .admin-management-card {
+
+        margin-bottom: 30px;
+
+    }
+
+
+    .driver-applications {
+
+        margin-bottom: 30px;
+
+    }
+
+
+    /* =================================
+       ADD ADMIN BUTTON
+    ================================= */
+
+    .add-admin-btn {
+
+        flex-shrink: 0;
+
+        white-space: nowrap;
+
+    }
+
+
+    /* =================================
+       MODAL CLOSE BUTTON
+    ================================= */
+
+    .close-admin-modal {
+
+        position: absolute;
+
+        top: 20px;
+
+        right: 20px;
+
+        width: 38px;
+
+        min-height: 38px;
+
+        padding: 0;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        background: transparent !important;
+
+        color: #888 !important;
+
+        border: none;
+
+        border-radius: 8px;
+
+        font-size: 28px;
+
+        line-height: 1;
+
+        box-shadow: none !important;
+
+    }
+
+
+    .close-admin-modal:hover {
+
+        background: #222 !important;
+
+        color: #fff !important;
+
+        transform: none !important;
+
+    }
+
+
+    /* =================================
+       MODAL HEADING
+    ================================= */
+
+    .modal-heading {
+
+        padding-right: 40px;
+
+        margin-bottom: 25px;
+
+    }
+
+
+    .modal-heading h2 {
+
+        margin-bottom: 0;
+
+    }
+
+
+    .modal-heading p:last-child {
+
+        margin-top: 7px;
+
+        color: #888;
+
+        font-size: 13px;
+
+    }
+
+
+    /* =================================
+       PERMISSION SECTION
+    ================================= */
+
+    .permission-section {
+
+        margin-top: 10px;
+
+        padding-top: 18px;
+
+        border-top:
+            1px solid
+            rgba(255,255,255,.08);
+
+    }
+
+
+    .permission-section h3 {
+
+        margin-bottom: 3px;
+
+        font-size: 17px;
+
+    }
+
+
+    .permission-note {
+
+        margin-bottom: 10px;
+
+        color: #777;
+
+        font-size: 12px;
+
+    }
+
+
+    .permission-item {
+
+        border-radius: 8px;
+
+        transition:
+            background .2s ease;
+
+    }
+
+
+    .permission-item:hover {
+
+        background:
+            rgba(255,255,255,.035);
+
+    }
+
+
+    /* =================================
+       MOBILE
+    ================================= */
+
+    @media (
+        max-width: 768px
+    ) {
+
+        .admin-page-heading {
+
+            margin-bottom: 22px;
+
+        }
+
+
+        .admin-page-heading h1 {
+
+            font-size: 38px;
+
+        }
+
+
+        .admin-subtitle {
+
+            font-size: 13px;
+
+        }
+
+
+        .table-header {
+
+            align-items: stretch;
+
+        }
+
+
+        .add-admin-btn {
+
+            width: 100%;
+
+        }
+
+
+        .admin-table-wrapper {
+
+            overflow-x: visible;
+
+        }
+
+
+        .admin-table-wrapper table {
+
+            min-width: 0;
+
+        }
+
+
+        .admin-management-card,
+        .driver-applications {
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .modal-heading h2 {
+
+            font-size: 25px;
+
+        }
+
+    }
+
+
+    /* =================================
+       SMALL MOBILE
+    ================================= */
+
+    @media (
+        max-width: 480px
+    ) {
+
+        .admin-page-heading h1 {
+
+            font-size: 34px;
+
+        }
+
+
+        .admin-subtitle {
+
+            font-size: 12px;
+
+        }
+
+
+        .modal-heading {
+
+            padding-right: 35px;
+
+        }
+
+    }
+
+</style>
 
 
 </body>

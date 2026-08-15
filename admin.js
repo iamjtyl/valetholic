@@ -1,5 +1,6 @@
 // =====================================
 // VALETHOLIC ADMIN
+// MASTER ADMIN DASHBOARD
 // =====================================
 
 
@@ -11,8 +12,7 @@ if (
     sessionStorage.getItem("adminLoggedIn") !== "true"
 ) {
 
-    window.location.href =
-        "login.html";
+    window.location.href = "login.html";
 
 }
 
@@ -29,145 +29,231 @@ let adminPermissions = [];
 
 
 // =====================================
+// HELPER
+// =====================================
+
+function getElement(id) {
+
+    return document.getElementById(id);
+
+}
+
+
+// =====================================
+// HTML ESCAPE
+// =====================================
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+// =====================================
+// ATTRIBUTE ESCAPE
+// =====================================
+
+function escapeForAttribute(value) {
+
+    return String(value ?? "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'");
+
+}
+
+
+// =====================================
+// NORMALISE STATUS
+// =====================================
+
+function normaliseStatus(value) {
+
+    return String(value ?? "")
+        .trim()
+        .toUpperCase();
+
+}
+
+
+// =====================================
+// SUPABASE CHECK
+// =====================================
+
+function getSupabase() {
+
+    if (!window.supabaseClient) {
+
+        console.error(
+            "Supabase client is not available."
+        );
+
+        alert(
+            "Valetholic database is not connected.\n\nPlease refresh the page."
+        );
+
+        return null;
+
+    }
+
+    return window.supabaseClient;
+
+}
+
+
+// =====================================
 // LOAD CURRENT ADMIN
 // =====================================
 
 async function loadCurrentAdmin() {
 
-    const {
-        data: {
-            user
-        },
-        error: userError
-    } =
-        await window.supabaseClient
-            .auth
-            .getUser();
+    const supabase = getSupabase();
 
-
-    if (
-        userError ||
-        !user
-    ) {
-
-        console.error(
-            "Unable to get current Supabase user:",
-            userError
-        );
-
+    if (!supabase) {
         return;
-
     }
 
 
-    console.log(
-        "Current Supabase user:",
-        user
-    );
+    const adminId =
+        sessionStorage.getItem("adminId");
 
 
-    // =================================
-    // FIND ADMIN BY EMAIL
-    // =================================
+    try {
 
-    const {
-        data: admin,
-        error
-    } =
-        await window.supabaseClient
-            .from("Admins")
-            .select("*")
-            .eq(
-                "email",
-                user.email
-            )
-            .single();
+        let query =
+            supabase
+                .from("Admins")
+                .select("*");
 
 
-    if (error) {
+        // =================================
+        // LOOK UP BY SESSION ADMIN ID
+        // =================================
+
+        if (adminId) {
+
+            query =
+                query.eq(
+                    "id",
+                    adminId
+                );
+
+        }
+
+        else {
+
+            // =================================
+            // FALLBACK MASTER ACCOUNT
+            // =================================
+
+            query =
+                query.eq(
+                    "username",
+                    "admin"
+                );
+
+        }
+
+
+        const {
+            data: admin,
+            error
+        } =
+            await query.single();
+
+
+        if (error) {
+
+            console.error(
+                "Admin loading error:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        currentAdmin = admin;
+
+
+        // =================================
+        // LOAD PERMISSIONS
+        // =================================
+
+        const {
+            data: permissions,
+            error: permissionError
+        } =
+            await supabase
+                .from("AdminPermissions")
+                .select("permission")
+                .eq(
+                    "admin_id",
+                    admin.id
+                );
+
+
+        if (permissionError) {
+
+            console.error(
+                "Permission loading error:",
+                permissionError
+            );
+
+            return;
+
+        }
+
+
+        adminPermissions =
+            (permissions || [])
+                .map(
+                    item =>
+                        item.permission
+                );
+
+
+        console.log(
+            "Current admin:",
+            currentAdmin
+        );
+
+
+        console.log(
+            "Permissions:",
+            adminPermissions
+        );
+
+
+        // =================================
+        // APPLY PERMISSIONS
+        // =================================
+
+        applyAdminPermissions();
+
+
+        // =================================
+        // LOAD ADMIN LIST
+        // =================================
+
+        await loadAdmins();
+
+    }
+
+    catch (error) {
 
         console.error(
-            "Admin loading error:",
+            "Unexpected current admin error:",
             error
         );
 
-        return;
-
     }
-
-
-    if (!admin) {
-
-        console.error(
-            "No admin record found."
-        );
-
-        return;
-
-    }
-
-
-    currentAdmin =
-        admin;
-
-
-    // =================================
-    // LOAD CURRENT ADMIN PERMISSIONS
-    // =================================
-
-    const {
-        data: permissions,
-        error: permissionError
-    } =
-        await window.supabaseClient
-            .from("AdminPermissions")
-            .select("permission")
-            .eq(
-                "admin_id",
-                admin.id
-            );
-
-
-    if (permissionError) {
-
-        console.error(
-            "Permission loading error:",
-            permissionError
-        );
-
-        return;
-
-    }
-
-
-    adminPermissions =
-        (permissions || [])
-            .map(
-                item =>
-                    item.permission
-            );
-
-
-    console.log(
-        "Current admin:",
-        currentAdmin
-    );
-
-
-    console.log(
-        "Permissions:",
-        adminPermissions
-    );
-
-
-    applyAdminPermissions();
-
-
-    // =================================
-    // LOAD ADMIN MANAGEMENT
-    // =================================
-
-    await loadAdmins();
 
 }
 
@@ -176,17 +262,15 @@ async function loadCurrentAdmin() {
 // CHECK PERMISSION
 // =====================================
 
-function hasPermission(
-    permission
-) {
+function hasPermission(permission) {
 
     // =================================
-    // MASTER ALWAYS HAS ACCESS
+    // MASTER HAS FULL ACCESS
     // =================================
 
     if (
         currentAdmin &&
-        currentAdmin.role ===
+        normaliseStatus(currentAdmin.role) ===
             "MASTER"
     ) {
 
@@ -203,28 +287,22 @@ function hasPermission(
 
 
 // =====================================
-// SHOW / HIDE ADMIN MANAGEMENT
+// APPLY ADMIN PERMISSIONS
 // =====================================
 
 function applyAdminPermissions() {
 
     const adminManagement =
-        document.getElementById(
-            "adminManagement"
-        );
+        getElement("adminManagement");
 
 
     if (!adminManagement) {
-
         return;
-
     }
 
 
     if (
-        hasPermission(
-            "manage_admins"
-        )
+        hasPermission("manage_admins")
     ) {
 
         adminManagement.style.display =
@@ -248,697 +326,352 @@ function applyAdminPermissions() {
 
 async function loadDashboard() {
 
-    // =================================
-    // LOAD BOOKINGS
-    // =================================
+    const supabase = getSupabase();
 
-    const {
-        data: bookings,
-        error
-    } =
-        await window.supabaseClient
-            .from("Bookings")
-            .select("*")
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
+    if (!supabase) {
+        return;
+    }
+
+
+    try {
+
+        // =================================
+        // LOAD BOOKINGS
+        // =================================
+
+        const {
+            data: bookings,
+            error: bookingError
+        } =
+            await supabase
+                .from("Bookings")
+                .select("*")
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (bookingError) {
+
+            console.error(
+                "Booking loading error:",
+                bookingError
             );
 
+            return;
 
-    if (error) {
+        }
+
+
+        const bookingData =
+            bookings || [];
+
+
+        // =================================
+        // DASHBOARD COUNTS
+        // =================================
+
+        const totalBookings =
+            getElement("totalBookings");
+
+
+        const pendingBookings =
+            getElement("pendingBookings");
+
+
+        const completedBookings =
+            getElement("completedBookings");
+
+
+        const todayBookings =
+            getElement("todayBookings");
+
+
+        if (totalBookings) {
+
+            totalBookings.textContent =
+                bookingData.length;
+
+        }
+
+
+        if (pendingBookings) {
+
+            pendingBookings.textContent =
+                bookingData.filter(
+                    booking =>
+                        normaliseStatus(
+                            booking.status
+                        ) === "PENDING"
+                ).length;
+
+        }
+
+
+        if (completedBookings) {
+
+            completedBookings.textContent =
+                bookingData.filter(
+                    booking =>
+                        normaliseStatus(
+                            booking.status
+                        ) === "COMPLETED"
+                ).length;
+
+        }
+
+
+        // =================================
+        // TODAY
+        // =================================
+
+        const today =
+            new Date()
+                .toISOString()
+                .split("T")[0];
+
+
+        if (todayBookings) {
+
+            todayBookings.textContent =
+                bookingData.filter(
+                    booking =>
+                        booking.created_at &&
+                        String(
+                            booking.created_at
+                        ).startsWith(today)
+                ).length;
+
+        }
+
+
+        // =================================
+        // OPTIONAL BOOKING TABLE
+        // =================================
+
+        renderBookingTable(
+            bookingData
+        );
+
+
+        // =================================
+        // LOAD DRIVER DATA
+        // =================================
+
+        const {
+            data: drivers,
+            error: driverError
+        } =
+            await supabase
+                .from("Drivers")
+                .select(
+                    "id, approved, approval_status"
+                );
+
+
+        if (driverError) {
+
+            console.error(
+                "Driver loading error:",
+                driverError
+            );
+
+            return;
+
+        }
+
+
+        const driverData =
+            drivers || [];
+
+
+        // =================================
+        // APPROVED DRIVER COUNT
+        // =================================
+
+        const approvedDrivers =
+            driverData.filter(
+                driver =>
+                    driver.approved === true &&
+                    normaliseStatus(
+                        driver.approval_status
+                    ) === "APPROVED"
+            ).length;
+
+
+        const driverCount =
+            getElement("driverCount");
+
+
+        if (driverCount) {
+
+            driverCount.textContent =
+                approvedDrivers;
+
+        }
+
+
+        // =================================
+        // OPTIONAL LEGACY COUNTERS
+        // =================================
+
+        const pendingDriverCount =
+            getElement("pendingDrivers");
+
+
+        const approvedDriverCount =
+            getElement("approvedDrivers");
+
+
+        const pendingDrivers =
+            driverData.filter(
+                driver =>
+                    normaliseStatus(
+                        driver.approval_status
+                    ) === "PENDING"
+            ).length;
+
+
+        if (pendingDriverCount) {
+
+            pendingDriverCount.textContent =
+                pendingDrivers;
+
+        }
+
+
+        if (approvedDriverCount) {
+
+            approvedDriverCount.textContent =
+                approvedDrivers;
+
+        }
+
+
+        // =================================
+        // DRIVER TABLES
+        // =================================
+
+        await loadDriverApplications();
+
+    }
+
+    catch (error) {
 
         console.error(
-            "Booking loading error:",
+            "Unexpected dashboard loading error:",
             error
         );
 
-        return;
-
     }
-
-
-    const bookingData =
-        bookings || [];
-
-
-    // =================================
-    // SEARCH
-    // =================================
-
-    const keyword =
-        document
-            .getElementById(
-                "searchBooking"
-            )
-            ?.value
-            .toLowerCase()
-            .trim() || "";
-
-
-    const statusFilter =
-        document
-            .getElementById(
-                "statusFilter"
-            )
-            ?.value || "All";
-
-
-    // =================================
-    // DASHBOARD COUNTS
-    // =================================
-
-    const totalBookings =
-        document.getElementById(
-            "totalBookings"
-        );
-
-
-    const pendingBookings =
-        document.getElementById(
-            "pendingBookings"
-        );
-
-
-    const completedBookings =
-        document.getElementById(
-            "completedBookings"
-        );
-
-
-    const todayBookings =
-        document.getElementById(
-            "todayBookings"
-        );
-
-
-    if (totalBookings) {
-
-        totalBookings.textContent =
-            bookingData.length;
-
-    }
-
-
-    if (pendingBookings) {
-
-        pendingBookings.textContent =
-            bookingData.filter(
-                booking =>
-                    String(
-                        booking.status ||
-                        ""
-                    )
-                    .trim()
-                    .toUpperCase() ===
-                    "PENDING"
-            ).length;
-
-    }
-
-
-    if (completedBookings) {
-
-        completedBookings.textContent =
-            bookingData.filter(
-                booking =>
-                    String(
-                        booking.status ||
-                        ""
-                    )
-                    .trim()
-                    .toUpperCase() ===
-                    "COMPLETED"
-            ).length;
-
-    }
-
-
-    // =================================
-    // TODAY'S BOOKINGS
-    // =================================
-
-    const today =
-        new Date()
-            .toISOString()
-            .split("T")[0];
-
-
-    if (todayBookings) {
-
-        todayBookings.textContent =
-            bookingData.filter(
-                booking =>
-                    booking.created_at &&
-                    booking.created_at.startsWith(
-                        today
-                    )
-            ).length;
-
-    }
-
-
-    // =================================
-    // BOOKING TABLE
-    // =================================
-
-    const table =
-        document.getElementById(
-            "bookingTable"
-        );
-
-
-    if (table) {
-
-        table.innerHTML =
-            "";
-
-
-        const filteredBookings =
-            bookingData.filter(
-                booking => {
-
-                    const customer =
-                        (
-                            booking.customer_name ||
-                            ""
-                        )
-                            .toLowerCase();
-
-
-                    const mobile =
-                        (
-                            booking.mobile ||
-                            ""
-                        )
-                            .toLowerCase();
-
-
-                    const reference =
-                        (
-                            "VH-" +
-                            (
-                                booking.reference_no ||
-                                ""
-                            )
-                        )
-                            .toLowerCase();
-
-
-                    const matchSearch =
-                        customer.includes(
-                            keyword
-                        ) ||
-                        mobile.includes(
-                            keyword
-                        ) ||
-                        reference.includes(
-                            keyword
-                        );
-
-
-                    const matchStatus =
-                        statusFilter ===
-                            "All" ||
-                        booking.status ===
-                            statusFilter;
-
-
-                    return (
-                        matchSearch &&
-                        matchStatus
-                    );
-
-                }
-            );
-
-
-        if (
-            filteredBookings.length ===
-            0
-        ) {
-
-            table.innerHTML = `
-                <tr>
-                    <td colspan="8">
-                        No bookings found.
-                    </td>
-                </tr>
-            `;
-
-        }
-
-        else {
-
-            filteredBookings.forEach(
-                booking => {
-
-                    let pickup =
-                        "-";
-
-
-                    let destination =
-                        "-";
-
-
-                    // -----------------------------
-                    // PICKUP
-                    // -----------------------------
-
-                    try {
-
-                        if (
-                            Array.isArray(
-                                booking.pickups
-                            )
-                        ) {
-
-                            pickup =
-                                booking.pickups.join(
-                                    "<br>"
-                                );
-
-                        }
-
-                        else if (
-                            booking.pickups
-                        ) {
-
-                            const parsed =
-                                JSON.parse(
-                                    booking.pickups
-                                );
-
-
-                            pickup =
-                                Array.isArray(
-                                    parsed
-                                )
-                                    ? parsed.join(
-                                        "<br>"
-                                    )
-                                    : parsed;
-
-                        }
-
-                    }
-
-                    catch {
-
-                        pickup =
-                            booking.pickups ||
-                            "-";
-
-                    }
-
-
-                    // -----------------------------
-                    // DESTINATION
-                    // -----------------------------
-
-                    try {
-
-                        if (
-                            Array.isArray(
-                                booking.destinations
-                            )
-                        ) {
-
-                            destination =
-                                booking.destinations.join(
-                                    "<br>"
-                                );
-
-                        }
-
-                        else if (
-                            booking.destinations
-                        ) {
-
-                            const parsed =
-                                JSON.parse(
-                                    booking.destinations
-                                );
-
-
-                            destination =
-                                Array.isArray(
-                                    parsed
-                                )
-                                    ? parsed.join(
-                                        "<br>"
-                                    )
-                                    : parsed;
-
-                        }
-
-                    }
-
-                    catch {
-
-                        destination =
-                            booking.destinations ||
-                            "-";
-
-                    }
-
-
-                    table.innerHTML += `
-
-                        <tr>
-
-                            <td>
-                                VH-${
-                                    booking.reference_no ||
-                                    "----"
-                                }
-                            </td>
-
-                            <td>
-                                ${
-                                    booking.customer_name ||
-                                    "-"
-                                }
-                            </td>
-
-                            <td>
-                                ${
-                                    booking.mobile ||
-                                    "-"
-                                }
-                            </td>
-
-                            <td>
-                                ${pickup}
-                            </td>
-
-                            <td>
-                                ${destination}
-                            </td>
-
-                            <td>
-                                ${
-                                    booking.booking_date ||
-                                    "-"
-                                }
-                            </td>
-
-                            <td>
-                                ${
-                                    booking.status ||
-                                    "-"
-                                }
-                            </td>
-
-                            <td>
-
-                                <button
-                                    class="view-btn"
-                                    onclick="
-                                        viewBooking(
-                                            '${booking.id}'
-                                        )
-                                    "
-                                >
-                                    OPEN
-                                </button>
-
-                            </td>
-
-                        </tr>
-
-                    `;
-
-                }
-            );
-
-        }
-
-    }
-
-
-    // =================================
-    // LOAD DRIVERS
-    // =================================
-
-    await loadDrivers();
 
 }
 
 
 // =====================================
-// CHECK IF DRIVER IS APPROVED
+// RENDER BOOKING TABLE
 // =====================================
 
-function isApprovedDriver(
-    driver
-) {
-
-    const approvalStatus =
-        String(
-            driver.approval_status ||
-            ""
-        )
-        .trim()
-        .toUpperCase();
-
-
-    return (
-        driver.approved === true ||
-        approvalStatus ===
-            "APPROVED"
-    );
-
-}
-
-
-// =====================================
-// CHECK IF DRIVER IS PENDING
-// =====================================
-
-function isPendingDriver(
-    driver
-) {
-
-    const approvalStatus =
-        String(
-            driver.approval_status ||
-            ""
-        )
-        .trim()
-        .toUpperCase();
-
-
-    return (
-        approvalStatus ===
-        "PENDING"
-    );
-
-}
-
-
-// =====================================
-// CHECK IF DRIVER HAS ACTIVE JOB
-// =====================================
-
-function driverHasActiveJob(
-    driver,
+function renderBookingTable(
     bookingData
 ) {
 
-    if (!bookingData) {
+    const table =
+        getElement("bookingTable");
 
-        return false;
 
+    if (!table) {
+        return;
     }
 
 
-    const activeStatuses = [
-        "ON JOB",
-        "ON THE WAY",
-        "PICKED UP"
-    ];
+    const keyword =
+        getElement("searchBooking")
+            ?.value
+            ?.toLowerCase()
+            ?.trim() || "";
 
 
-    return bookingData.some(
-        booking => {
+    const statusFilter =
+        getElement("statusFilter")
+            ?.value || "All";
 
-            if (
-                booking.driver_id !==
-                driver.auth_id
-            ) {
 
-                return false;
+    table.innerHTML = "";
+
+
+    const filteredBookings =
+        bookingData.filter(
+            booking => {
+
+                const customer =
+                    String(
+                        booking.customer_name ||
+                        ""
+                    ).toLowerCase();
+
+
+                const mobile =
+                    String(
+                        booking.mobile ||
+                        ""
+                    ).toLowerCase();
+
+
+                const reference =
+                    (
+                        "vh-" +
+                        String(
+                            booking.reference_no ||
+                            ""
+                        )
+                    ).toLowerCase();
+
+
+                const matchSearch =
+                    !keyword ||
+                    customer.includes(keyword) ||
+                    mobile.includes(keyword) ||
+                    reference.includes(keyword);
+
+
+                const matchStatus =
+                    statusFilter === "All" ||
+                    booking.status === statusFilter;
+
+
+                return (
+                    matchSearch &&
+                    matchStatus
+                );
 
             }
-
-
-            const bookingStatus =
-                String(
-                    booking.status ||
-                    ""
-                )
-                .trim()
-                .toUpperCase();
-
-
-            return activeStatuses.includes(
-                bookingStatus
-            );
-
-        }
-    );
-
-}
-
-
-// =====================================
-// LOAD DRIVERS
-// =====================================
-
-async function loadDrivers() {
-
-    const {
-        data: drivers,
-        error
-    } =
-        await window.supabaseClient
-            .from("Drivers")
-            .select("*")
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
-
-
-    if (error) {
-
-        console.error(
-            "Driver loading error:",
-            error
-        );
-
-        return;
-
-    }
-
-
-    const driverData =
-        drivers || [];
-
-
-    // =================================
-    // APPROVED DRIVERS
-    // =================================
-
-    const approvedDrivers =
-        driverData.filter(
-            isApprovedDriver
         );
 
 
     // =================================
-    // PENDING DRIVERS
+    // EMPTY
     // =================================
-
-    const pendingDrivers =
-        driverData.filter(
-            isPendingDriver
-        );
-
-
-    // =================================
-    // DRIVER COUNT
-    // =================================
-
-    const driverCount =
-        document.getElementById(
-            "driverCount"
-        );
-
-
-    if (driverCount) {
-
-        driverCount.textContent =
-            approvedDrivers.length;
-
-    }
-
-
-    // =================================
-    // PENDING DRIVER COUNT
-    // =================================
-
-    const pendingDriverCount =
-        document.getElementById(
-            "pendingDrivers"
-        );
-
-
-    if (pendingDriverCount) {
-
-        pendingDriverCount.textContent =
-            pendingDrivers.length;
-
-    }
-
-
-    // =================================
-    // LOAD PENDING TABLE
-    // =================================
-
-    await renderPendingDrivers(
-        pendingDrivers
-    );
-
-
-    // =================================
-    // LOAD APPROVED TABLE
-    // =================================
-
-    await renderApprovedDrivers(
-        approvedDrivers
-    );
-
-}
-
-
-// =====================================
-// RENDER PENDING DRIVERS
-// =====================================
-
-async function renderPendingDrivers(
-    pendingDrivers
-) {
-
-    const driverTable =
-        document.getElementById(
-            "driverTable"
-        );
-
-
-    if (!driverTable) {
-
-        return;
-
-    }
-
 
     if (
-        !pendingDrivers ||
-        pendingDrivers.length ===
-            0
+        filteredBookings.length === 0
     ) {
 
-        driverTable.innerHTML = `
+        table.innerHTML = `
+
             <tr>
-                <td colspan="6">
-                    No pending driver applications.
+
+                <td colspan="9">
+
+                    No bookings found.
+
                 </td>
+
             </tr>
+
         `;
 
         return;
@@ -946,79 +679,116 @@ async function renderPendingDrivers(
     }
 
 
-    driverTable.innerHTML =
-        "";
+    // =================================
+    // BOOKINGS
+    // =================================
+
+    filteredBookings.forEach(
+        booking => {
+
+            const pickup =
+                formatLocation(
+                    booking.pickups
+                );
 
 
-    pendingDrivers.forEach(
-        driver => {
+            const destination =
+                formatLocation(
+                    booking.destinations
+                );
 
-            driverTable.innerHTML += `
+
+            const driver =
+                booking.driver_id
+                    ? "Assigned"
+                    : "Unassigned";
+
+
+            table.innerHTML += `
 
                 <tr>
 
                     <td>
+                        VH-${
+                            escapeHTML(
+                                booking.reference_no ||
+                                "----"
+                            )
+                        }
+                    </td>
+
+
+                    <td>
                         ${
                             escapeHTML(
-                                driver.name ||
+                                booking.customer_name ||
                                 "-"
                             )
                         }
                     </td>
 
+
                     <td>
                         ${
                             escapeHTML(
-                                driver.mobile ||
+                                booking.mobile ||
                                 "-"
                             )
                         }
                     </td>
 
+
+                    <td>
+                        ${pickup}
+                    </td>
+
+
+                    <td>
+                        ${destination}
+                    </td>
+
+
                     <td>
                         ${
                             escapeHTML(
-                                driver.license ||
+                                booking.booking_date ||
                                 "-"
                             )
                         }
                     </td>
 
+
                     <td>
                         ${
-                            driver.own_vehicle
-                                ? "Yes"
-                                : "No"
+                            escapeHTML(
+                                booking.status ||
+                                "-"
+                            )
                         }
                     </td>
 
+
                     <td>
-                        <span class="pending-status">
-                            PENDING
-                        </span>
+                        ${escapeHTML(driver)}
                     </td>
+
 
                     <td>
 
                         <button
+                            type="button"
+                            class="view-btn"
                             onclick="
-                                approveDriver(
-                                    '${driver.id}'
+                                viewBooking(
+                                    '${escapeForAttribute(
+                                        booking.id
+                                    )}'
                                 )
                             "
                         >
-                            APPROVE
-                        </button>
 
-                        <button
-                            class="reject-btn"
-                            onclick="
-                                rejectDriver(
-                                    '${driver.id}'
-                                )
-                            "
-                        >
-                            REJECT
+                            OPEN
+
                         </button>
 
                     </td>
@@ -1034,234 +804,510 @@ async function renderPendingDrivers(
 
 
 // =====================================
-// RENDER APPROVED DRIVERS
+// FORMAT LOCATION
 // =====================================
 
-async function renderApprovedDrivers(
-    approvedDrivers
-) {
+function formatLocation(value) {
 
-    const approvedDriverTable =
-        document.getElementById(
+    if (!value) {
+        return "-";
+    }
+
+
+    try {
+
+        if (Array.isArray(value)) {
+
+            return value
+                .map(
+                    item =>
+                        escapeHTML(item)
+                )
+                .join("<br>");
+
+        }
+
+
+        if (
+            typeof value === "string"
+        ) {
+
+            const parsed =
+                JSON.parse(value);
+
+
+            if (Array.isArray(parsed)) {
+
+                return parsed
+                    .map(
+                        item =>
+                            escapeHTML(item)
+                    )
+                    .join("<br>");
+
+            }
+
+
+            return escapeHTML(parsed);
+
+        }
+
+
+        return escapeHTML(value);
+
+    }
+
+    catch {
+
+        return escapeHTML(value);
+
+    }
+
+}
+
+
+// =====================================
+// LOAD DRIVER APPLICATIONS
+// =====================================
+
+async function loadDriverApplications() {
+
+    const supabase = getSupabase();
+
+    if (!supabase) {
+        return;
+    }
+
+
+    const driverTable =
+        getElement("driverTable");
+
+
+    if (!driverTable) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            data: driverApplications,
+            error
+        } =
+            await supabase
+                .from("Drivers")
+                .select("*")
+                .eq(
+                    "approval_status",
+                    "PENDING"
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Driver applications error:",
+                error
+            );
+
+            driverTable.innerHTML = `
+
+                <tr>
+
+                    <td colspan="6">
+
+                        Unable to load
+                        driver applications.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        // =================================
+        // NO PENDING DRIVERS
+        // =================================
+
+        if (
+            !driverApplications ||
+            driverApplications.length === 0
+        ) {
+
+            driverTable.innerHTML = `
+
+                <tr>
+
+                    <td colspan="6">
+
+                        No pending driver
+                        applications.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            await loadApprovedDrivers();
+
+            return;
+
+        }
+
+
+        driverTable.innerHTML = "";
+
+
+        driverApplications.forEach(
+            driver => {
+
+                driverTable.innerHTML += `
+
+                    <tr>
+
+                        <td>
+                            ${
+                                escapeHTML(
+                                    driver.name ||
+                                    "-"
+                                )
+                            }
+                        </td>
+
+
+                        <td>
+                            ${
+                                escapeHTML(
+                                    driver.mobile ||
+                                    "-"
+                                )
+                            }
+                        </td>
+
+
+                        <td>
+                            ${
+                                escapeHTML(
+                                    driver.license ||
+                                    "-"
+                                )
+                            }
+                        </td>
+
+
+                        <td>
+                            ${
+                                driver.own_vehicle
+                                    ? "Yes"
+                                    : "No"
+                            }
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="pending-status"
+                            >
+
+                                PENDING
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                type="button"
+                                onclick="
+                                    approveDriver(
+                                        '${escapeForAttribute(
+                                            driver.id
+                                        )}'
+                                    )
+                                "
+                            >
+
+                                APPROVE
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="reject-btn"
+                                onclick="
+                                    rejectDriver(
+                                        '${escapeForAttribute(
+                                            driver.id
+                                        )}'
+                                    )
+                                "
+                            >
+
+                                REJECT
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        );
+
+
+        await loadApprovedDrivers();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unexpected driver application error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================
+// LOAD APPROVED DRIVERS
+// =====================================
+
+async function loadApprovedDrivers() {
+
+    const supabase = getSupabase();
+
+    if (!supabase) {
+        return;
+    }
+
+
+    const driverTable =
+        getElement(
             "approvedDriverTable"
         );
 
 
-    if (!approvedDriverTable) {
-
+    if (!driverTable) {
         return;
-
     }
 
 
-    if (
-        !approvedDrivers ||
-        approvedDrivers.length ===
-            0
-    ) {
+    try {
 
-        approvedDriverTable.innerHTML = `
-            <tr>
-                <td colspan="5">
-                    No approved drivers.
-                </td>
-            </tr>
-        `;
-
-        return;
-
-    }
-
-
-    approvedDriverTable.innerHTML =
-        "";
-
-
-    // =================================
-    // LOAD BOOKINGS
-    // =================================
-
-    const {
-        data: bookings,
-        error
-    } =
-        await window.supabaseClient
-            .from("Bookings")
-            .select(
-                "id, driver_id, status"
-            );
-
-
-    if (error) {
-
-        console.error(
-            "Unable to load bookings for driver status:",
+        const {
+            data: approvedDrivers,
             error
-        );
-
-    }
-
-
-    approvedDrivers.forEach(
-        driver => {
-
-            const activeJob =
-                driverHasActiveJob(
-                    driver,
-                    bookings || []
+        } =
+            await supabase
+                .from("Drivers")
+                .select(
+                    "id, name, mobile, status, approved, approval_status, created_at"
+                )
+                .eq(
+                    "approved",
+                    true
+                )
+                .eq(
+                    "approval_status",
+                    "APPROVED"
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: true
+                    }
                 );
 
 
-            let driverStatus =
-                driver.status ||
-                "OFF DUTY";
+        if (error) {
 
+            console.error(
+                "Approved driver loading error:",
+                error
+            );
 
-            driverStatus =
-                String(
-                    driverStatus
-                )
-                .trim()
-                .toUpperCase();
-
-
-            let statusDisplay =
-                driverStatus;
-
-
-            if (
-                driverStatus ===
-                "ON DUTY"
-            ) {
-
-                statusDisplay =
-                    "🟢 ON DUTY";
-
-            }
-
-            else if (
-                driverStatus ===
-                "OFF DUTY"
-            ) {
-
-                statusDisplay =
-                    "⚪ OFF DUTY";
-
-            }
-
-            else if (
-                driverStatus ===
-                "ON JOB"
-            ) {
-
-                statusDisplay =
-                    "🟡 ON JOB";
-
-            }
-
-            else if (
-                driverStatus ===
-                "ON THE WAY"
-            ) {
-
-                statusDisplay =
-                    "🚗 ON THE WAY";
-
-            }
-
-            else if (
-                driverStatus ===
-                "PICKED UP"
-            ) {
-
-                statusDisplay =
-                    "🟢 PICKED UP";
-
-            }
-
-
-            const removeButton =
-                activeJob
-                    ? `
-                        <button
-                            disabled
-                            title="Driver has an active job."
-                            style="
-                                opacity:.5;
-                                cursor:not-allowed;
-                            "
-                        >
-                            ACTIVE JOB
-                        </button>
-                      `
-                    : `
-                        <button
-                            class="reject-btn"
-                            onclick="
-                                removeDriver(
-                                    '${driver.id}'
-                                )
-                            "
-                        >
-                            REMOVE
-                        </button>
-                      `;
-
-
-            approvedDriverTable.innerHTML += `
+            driverTable.innerHTML = `
 
                 <tr>
 
-                    <td>
-                        ${
-                            escapeHTML(
-                                driver.name ||
-                                "-"
-                            )
-                        }
-                    </td>
+                    <td colspan="5">
 
-                    <td>
-                        ${
-                            escapeHTML(
-                                driver.mobile ||
-                                "-"
-                            )
-                        }
-                    </td>
+                        Unable to load
+                        approved drivers.
 
-                    <td>
-                        ${statusDisplay}
-                    </td>
-
-                    <td>
-                        APPROVED
-                    </td>
-
-                    <td>
-                        ${removeButton}
                     </td>
 
                 </tr>
 
             `;
 
+            return;
+
         }
-    );
+
+
+        if (
+            !approvedDrivers ||
+            approvedDrivers.length === 0
+        ) {
+
+            driverTable.innerHTML = `
+
+                <tr>
+
+                    <td colspan="5">
+
+                        No approved drivers.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        driverTable.innerHTML = "";
+
+
+        approvedDrivers.forEach(
+            driver => {
+
+                const driverStatus =
+                    driver.status ||
+                    "OFF DUTY";
+
+
+                driverTable.innerHTML += `
+
+                    <tr>
+
+                        <td>
+                            ${
+                                escapeHTML(
+                                    driver.name ||
+                                    "-"
+                                )
+                            }
+                        </td>
+
+
+                        <td>
+                            ${
+                                escapeHTML(
+                                    driver.mobile ||
+                                    "-"
+                                )
+                            }
+                        </td>
+
+
+                        <td>
+                            ${
+                                escapeHTML(
+                                    driverStatus
+                                )
+                            }
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="approved-status"
+                            >
+
+                                APPROVED
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                type="button"
+                                class="reject-btn"
+                                onclick="
+                                    removeDriver(
+                                        '${escapeForAttribute(
+                                            driver.id
+                                        )}',
+                                        '${escapeForAttribute(
+                                            driver.name ||
+                                            "Driver"
+                                        )}'
+                                    )
+                                "
+                            >
+
+                                REMOVE
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unexpected approved driver error:",
+            error
+        );
+
+    }
 
 }
 
 
 // =====================================
-// LOAD ALL ADMINS
+// LOAD ACTIVE ADMINS
 // =====================================
 
 async function loadAdmins() {
 
+    const supabase = getSupabase();
+
+    if (!supabase) {
+        return;
+    }
+
+
     const adminTable =
-        document.getElementById(
-            "adminTable"
-        );
+        getElement("adminTable");
 
 
     if (!adminTable) {
@@ -1278,17 +1324,21 @@ async function loadAdmins() {
     try {
 
         // =================================
-        // LOAD ADMINS
+        // LOAD ACTIVE ADMINS ONLY
         // =================================
 
         const {
             data: admins,
             error: adminError
         } =
-            await window.supabaseClient
+            await supabase
                 .from("Admins")
                 .select(
                     "id, username, name, email, role, is_active, created_at"
+                )
+                .eq(
+                    "is_active",
+                    true
                 )
                 .order(
                     "created_at",
@@ -1306,11 +1356,17 @@ async function loadAdmins() {
             );
 
             adminTable.innerHTML = `
+
                 <tr>
-                    <td colspan="6">
+
+                    <td colspan="5">
+
                         Unable to load admins.
+
                     </td>
+
                 </tr>
+
             `;
 
             return;
@@ -1319,23 +1375,28 @@ async function loadAdmins() {
 
 
         console.log(
-            "ADMINS LOADED:",
+            "ACTIVE ADMINS LOADED:",
             admins
         );
 
 
         if (
             !admins ||
-            admins.length ===
-                0
+            admins.length === 0
         ) {
 
             adminTable.innerHTML = `
+
                 <tr>
-                    <td colspan="6">
-                        No admins found.
+
+                    <td colspan="5">
+
+                        No active admins found.
+
                     </td>
+
                 </tr>
+
             `;
 
             return;
@@ -1351,7 +1412,7 @@ async function loadAdmins() {
             data: allPermissions,
             error: permissionError
         } =
-            await window.supabaseClient
+            await supabase
                 .from("AdminPermissions")
                 .select(
                     "admin_id, permission"
@@ -1366,11 +1427,18 @@ async function loadAdmins() {
             );
 
             adminTable.innerHTML = `
+
                 <tr>
-                    <td colspan="6">
-                        Unable to load permissions.
+
+                    <td colspan="5">
+
+                        Unable to load
+                        permissions.
+
                     </td>
+
                 </tr>
+
             `;
 
             return;
@@ -1378,12 +1446,7 @@ async function loadAdmins() {
         }
 
 
-        // =================================
-        // CLEAR TABLE
-        // =================================
-
-        adminTable.innerHTML =
-            "";
+        adminTable.innerHTML = "";
 
 
         // =================================
@@ -1393,13 +1456,18 @@ async function loadAdmins() {
         admins.forEach(
             admin => {
 
+                const role =
+                    normaliseStatus(
+                        admin.role
+                    );
+
+
                 // =================================
                 // MASTER
                 // =================================
 
                 if (
-                    admin.role ===
-                    "MASTER"
+                    role === "MASTER"
                 ) {
 
                     adminTable.innerHTML += `
@@ -1415,6 +1483,7 @@ async function loadAdmins() {
                                 }
                             </td>
 
+
                             <td>
                                 ${
                                     escapeHTML(
@@ -1424,20 +1493,27 @@ async function loadAdmins() {
                                 }
                             </td>
 
+
                             <td>
                                 👑 MASTER
                             </td>
+
 
                             <td>
                                 Full Access
                             </td>
 
-                            <td>
-                                ACTIVE
-                            </td>
 
                             <td>
-                                MASTER
+
+                                <span
+                                    class="current-admin-label"
+                                >
+
+                                    MASTER
+
+                                </span>
+
                             </td>
 
                         </tr>
@@ -1450,57 +1526,55 @@ async function loadAdmins() {
 
 
                 // =================================
-                // MATCH PERMISSIONS
+                // PERMISSIONS
                 // =================================
 
-                const adminPermissionsForRow =
-                    (allPermissions || [])
-                        .filter(
-                            permissionRow =>
-                                String(
-                                    permissionRow.admin_id
-                                ).trim() ===
-                                String(
-                                    admin.id
-                                ).trim()
-                        )
-                        .map(
-                            permissionRow =>
-                                permissionRow.permission
-                        );
+                const permissionsForAdmin =
+                    (
+                        allPermissions ||
+                        []
+                    )
+                    .filter(
+                        permissionRow =>
+                            String(
+                                permissionRow.admin_id
+                            ).trim() ===
+                            String(
+                                admin.id
+                            ).trim()
+                    )
+                    .map(
+                        permissionRow =>
+                            permissionRow.permission
+                    );
 
-
-                // =================================
-                // FORMAT PERMISSIONS
-                // =================================
 
                 let permissionText =
                     "No Permissions";
 
 
                 if (
-                    adminPermissionsForRow.length >
-                    0
+                    permissionsForAdmin.length > 0
                 ) {
 
                     permissionText =
-                        adminPermissionsForRow
+                        permissionsForAdmin
                             .map(
                                 permission =>
-                                    permission
-                                        .replaceAll(
-                                            "_",
-                                            " "
-                                        )
-                                        .replace(
-                                            /\b\w/g,
-                                            letter =>
-                                                letter.toUpperCase()
-                                        )
+                                    String(
+                                        permission
+                                    )
+                                    .replaceAll(
+                                        "_",
+                                        " "
+                                    )
+                                    .replace(
+                                        /\b\w/g,
+                                        letter =>
+                                            letter.toUpperCase()
+                                    )
                             )
-                            .join(
-                                ", "
-                            );
+                            .join(", ");
 
                 }
 
@@ -1510,12 +1584,14 @@ async function loadAdmins() {
                 // =================================
 
                 let roleDisplay =
-                    admin.role ||
-                    "-";
+                    escapeHTML(
+                        admin.role ||
+                        "-"
+                    );
 
 
                 if (
-                    admin.role ===
+                    role ===
                     "SEMI-MASTER"
                 ) {
 
@@ -1525,8 +1601,7 @@ async function loadAdmins() {
                 }
 
                 else if (
-                    admin.role ===
-                    "ADMIN"
+                    role === "ADMIN"
                 ) {
 
                     roleDisplay =
@@ -1536,65 +1611,63 @@ async function loadAdmins() {
 
 
                 // =================================
-                // STATUS
+                // CURRENT ADMIN
                 // =================================
 
-                const isActive =
-                    admin.is_active !==
-                    false;
-
-
-                const statusDisplay =
-                    isActive
-                        ? "🟢 ACTIVE"
-                        : "⚪ REMOVED";
-
-
-                // =================================
-                // REMOVE BUTTON
-                // =================================
-
-                let actionDisplay =
-                    "REMOVE";
-
-
-                if (
+                const isCurrentAdmin =
                     currentAdmin &&
                     String(
                         currentAdmin.id
                     ).trim() ===
                     String(
                         admin.id
-                    ).trim()
+                    ).trim();
+
+
+                let action = "";
+
+
+                if (
+                    isCurrentAdmin
                 ) {
 
-                    actionDisplay =
-                        "CURRENT ADMIN";
+                    action = `
 
-                }
+                        <span
+                            class="current-admin-label"
+                        >
 
-                else if (
-                    !isActive
-                ) {
+                            CURRENT ADMIN
 
-                    actionDisplay =
-                        "REMOVED";
+                        </span>
+
+                    `;
 
                 }
 
                 else {
 
-                    actionDisplay = `
+                    action = `
 
                         <button
+                            type="button"
                             class="reject-btn"
                             onclick="
                                 removeAdmin(
-                                    '${admin.id}'
+                                    '${escapeForAttribute(
+                                        admin.id
+                                    )}',
+                                    '${escapeForAttribute(
+                                        admin.name ||
+                                        admin.username ||
+                                        "admin"
+                                    )}'
                                 )
                             "
                         >
+
                             REMOVE
+
                         </button>
 
                     `;
@@ -1603,7 +1676,7 @@ async function loadAdmins() {
 
 
                 // =================================
-                // ADD ROW
+                // ROW
                 // =================================
 
                 adminTable.innerHTML += `
@@ -1619,6 +1692,7 @@ async function loadAdmins() {
                             }
                         </td>
 
+
                         <td>
                             ${
                                 escapeHTML(
@@ -1628,20 +1702,23 @@ async function loadAdmins() {
                             }
                         </td>
 
+
                         <td>
                             ${roleDisplay}
                         </td>
 
-                        <td>
-                            ${permissionText}
-                        </td>
 
                         <td>
-                            ${statusDisplay}
+                            ${
+                                escapeHTML(
+                                    permissionText
+                                )
+                            }
                         </td>
 
+
                         <td>
-                            ${actionDisplay}
+                            ${action}
                         </td>
 
                     </tr>
@@ -1657,7 +1734,6 @@ async function loadAdmins() {
             admins.length
         );
 
-
     }
 
     catch (error) {
@@ -1668,11 +1744,17 @@ async function loadAdmins() {
         );
 
         adminTable.innerHTML = `
+
             <tr>
-                <td colspan="6">
+
+                <td colspan="5">
+
                     Unable to load admins.
+
                 </td>
+
             </tr>
+
         `;
 
     }
@@ -1681,201 +1763,13 @@ async function loadAdmins() {
 
 
 // =====================================
-// REMOVE ADMIN
-// =====================================
-
-async function removeAdmin(
-    adminId
-) {
-
-    if (!hasPermission("manage_admins")) {
-
-        alert(
-            "You do not have permission to remove admins."
-        );
-
-        return;
-
-    }
-
-
-    // =================================
-    // CANNOT REMOVE YOURSELF
-    // =================================
-
-    if (
-        currentAdmin &&
-        String(
-            currentAdmin.id
-        ).trim() ===
-        String(
-            adminId
-        ).trim()
-    ) {
-
-        alert(
-            "You cannot remove your own admin account."
-        );
-
-        return;
-
-    }
-
-
-    // =================================
-    // LOAD ADMIN
-    // =================================
-
-    const {
-        data: admin,
-        error: adminError
-    } =
-        await window.supabaseClient
-            .from("Admins")
-            .select(
-                "id, name, username, role, is_active"
-            )
-            .eq(
-                "id",
-                adminId
-            )
-            .single();
-
-
-    if (adminError) {
-
-        console.error(
-            "Admin lookup error:",
-            adminError
-        );
-
-        alert(
-            adminError.message
-        );
-
-        return;
-
-    }
-
-
-    if (!admin) {
-
-        alert(
-            "Admin not found."
-        );
-
-        return;
-
-    }
-
-
-    // =================================
-    // MASTER PROTECTION
-    // =================================
-
-    if (
-        admin.role ===
-        "MASTER"
-    ) {
-
-        alert(
-            "MASTER Admin cannot be removed."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        admin.is_active ===
-        false
-    ) {
-
-        alert(
-            "This admin has already been removed."
-        );
-
-        return;
-
-    }
-
-
-    // =================================
-    // CONFIRM
-    // =================================
-
-    const confirmed =
-        confirm(
-            `Remove admin "${admin.name || admin.username}"?\n\nThey will no longer be able to use the Valetholic Admin system.`
-        );
-
-
-    if (!confirmed) {
-
-        return;
-
-    }
-
-
-    // =================================
-    // DEACTIVATE ADMIN
-    // =================================
-
-    const {
-        error
-    } =
-        await window.supabaseClient
-            .from("Admins")
-            .update({
-
-                is_active:
-                    false
-
-            })
-            .eq(
-                "id",
-                adminId
-            );
-
-
-    if (error) {
-
-        console.error(
-            "Remove admin error:",
-            error
-        );
-
-        alert(
-            "Unable to remove admin.\n\n" +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    alert(
-        "Admin removed successfully."
-    );
-
-
-    await loadAdmins();
-
-}
-
-
-// =====================================
-// OPEN ADD ADMIN MODAL
+// OPEN ADD ADMIN
 // =====================================
 
 function openAddAdmin() {
 
     const modal =
-        document.getElementById(
-            "addAdminModal"
-        );
+        getElement("addAdminModal");
 
 
     if (!modal) {
@@ -1889,34 +1783,54 @@ function openAddAdmin() {
     }
 
 
-    document.getElementById(
-        "newAdminName"
-    ).value =
-        "";
+    const name =
+        getElement("newAdminName");
 
 
-    document.getElementById(
-        "newAdminUsername"
-    ).value =
-        "";
+    const username =
+        getElement("newAdminUsername");
 
 
-    document.getElementById(
-        "newAdminPassword"
-    ).value =
-        "";
+    const password =
+        getElement("newAdminPassword");
 
 
-    document.getElementById(
-        "newAdminConfirmPassword"
-    ).value =
-        "";
+    const confirmPassword =
+        getElement(
+            "newAdminConfirmPassword"
+        );
 
 
-    document.getElementById(
-        "newAdminRole"
-    ).value =
-        "ADMIN";
+    const role =
+        getElement("newAdminRole");
+
+
+    if (name) {
+        name.value = "";
+    }
+
+
+    if (username) {
+        username.value = "";
+    }
+
+
+    if (password) {
+        password.value = "";
+    }
+
+
+    if (confirmPassword) {
+        confirmPassword.value = "";
+    }
+
+
+    if (role) {
+
+        role.value =
+            "ADMIN";
+
+    }
 
 
     setAdminPermissions(
@@ -1927,25 +1841,35 @@ function openAddAdmin() {
     modal.style.display =
         "flex";
 
+
+    // =================================
+    // FOCUS
+    // =================================
+
+    if (name) {
+
+        setTimeout(
+            () => name.focus(),
+            50
+        );
+
+    }
+
 }
 
 
 // =====================================
-// CLOSE ADD ADMIN MODAL
+// CLOSE ADD ADMIN
 // =====================================
 
 function closeAddAdmin() {
 
     const modal =
-        document.getElementById(
-            "addAdminModal"
-        );
+        getElement("addAdminModal");
 
 
     if (!modal) {
-
         return;
-
     }
 
 
@@ -1963,142 +1887,112 @@ function setAdminPermissions(
     role
 ) {
 
-    const viewBookings =
-        document.getElementById(
-            "permViewBookings"
-        );
+    const permissionIds = {
 
+        viewBookings:
+            "permViewBookings",
 
-    const manageBookings =
-        document.getElementById(
-            "permManageBookings"
-        );
+        manageBookings:
+            "permManageBookings",
 
+        approveDrivers:
+            "permApproveDrivers",
 
-    const approveDrivers =
-        document.getElementById(
-            "permApproveDrivers"
-        );
+        viewDrivers:
+            "permViewDrivers",
 
+        viewGPS:
+            "permViewGPS",
 
-    const viewDrivers =
-        document.getElementById(
-            "permViewDrivers"
-        );
+        manageAdmins:
+            "permManageAdmins",
 
-
-    const viewGPS =
-        document.getElementById(
-            "permViewGPS"
-        );
-
-
-    const manageAdmins =
-        document.getElementById(
-            "permManageAdmins"
-        );
-
-
-    const systemSettings =
-        document.getElementById(
+        systemSettings:
             "permSystemSettings"
-        );
 
+    };
+
+
+    const boxes = {};
+
+
+    Object.entries(
+        permissionIds
+    )
+    .forEach(
+        ([key, id]) => {
+
+            boxes[key] =
+                getElement(id);
+
+        }
+    );
+
+
+    // =================================
+    // ADMIN
+    // =================================
 
     if (
-        role ===
-        "ADMIN"
+        role === "ADMIN"
     ) {
 
-        viewBookings.checked =
-            true;
+        if (boxes.viewBookings)
+            boxes.viewBookings.checked = true;
 
-        manageBookings.checked =
-            true;
+        if (boxes.manageBookings)
+            boxes.manageBookings.checked = true;
 
-        approveDrivers.checked =
-            false;
+        if (boxes.approveDrivers)
+            boxes.approveDrivers.checked = false;
 
-        viewDrivers.checked =
-            true;
+        if (boxes.viewDrivers)
+            boxes.viewDrivers.checked = true;
 
-        viewGPS.checked =
-            true;
+        if (boxes.viewGPS)
+            boxes.viewGPS.checked = true;
 
-        manageAdmins.checked =
-            false;
+        if (boxes.manageAdmins)
+            boxes.manageAdmins.checked = false;
 
-        systemSettings.checked =
-            false;
+        if (boxes.systemSettings)
+            boxes.systemSettings.checked = false;
 
     }
 
 
+    // =================================
+    // SEMI-MASTER
+    // =================================
+
     if (
-        role ===
-        "SEMI-MASTER"
+        role === "SEMI-MASTER"
     ) {
 
-        viewBookings.checked =
-            true;
+        if (boxes.viewBookings)
+            boxes.viewBookings.checked = true;
 
-        manageBookings.checked =
-            true;
+        if (boxes.manageBookings)
+            boxes.manageBookings.checked = true;
 
-        approveDrivers.checked =
-            true;
+        if (boxes.approveDrivers)
+            boxes.approveDrivers.checked = true;
 
-        viewDrivers.checked =
-            true;
+        if (boxes.viewDrivers)
+            boxes.viewDrivers.checked = true;
 
-        viewGPS.checked =
-            true;
+        if (boxes.viewGPS)
+            boxes.viewGPS.checked = true;
 
-        manageAdmins.checked =
-            true;
+        if (boxes.manageAdmins)
+            boxes.manageAdmins.checked = true;
 
-        systemSettings.checked =
-            false;
+        if (boxes.systemSettings)
+            boxes.systemSettings.checked = false;
 
     }
 
 }
-
-
-// =====================================
-// ROLE CHANGE
-// =====================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        const roleSelect =
-            document.getElementById(
-                "newAdminRole"
-            );
-
-
-        if (!roleSelect) {
-
-            return;
-
-        }
-
-
-        roleSelect.addEventListener(
-            "change",
-            () => {
-
-                setAdminPermissions(
-                    roleSelect.value
-                );
-
-            }
-        );
-
-    }
-);
 
 
 // =====================================
@@ -2107,46 +2001,62 @@ document.addEventListener(
 
 async function createAdmin() {
 
+    const supabase = getSupabase();
+
+    if (!supabase) {
+        return;
+    }
+
+
+    // =================================
+    // PERMISSION
+    // =================================
+
+    if (
+        !hasPermission(
+            "manage_admins"
+        )
+    ) {
+
+        alert(
+            "You do not have permission to create admins."
+        );
+
+        return;
+
+    }
+
+
     const name =
-        document
-            .getElementById(
-                "newAdminName"
-            )
-            .value
-            .trim();
+        getElement(
+            "newAdminName"
+        )?.value
+        ?.trim() || "";
 
 
     const username =
-        document
-            .getElementById(
-                "newAdminUsername"
-            )
-            .value
-            .trim();
+        getElement(
+            "newAdminUsername"
+        )?.value
+        ?.trim() || "";
 
 
     const password =
-        document
-            .getElementById(
-                "newAdminPassword"
-            )
-            .value;
+        getElement(
+            "newAdminPassword"
+        )?.value || "";
 
 
     const confirmPassword =
-        document
-            .getElementById(
-                "newAdminConfirmPassword"
-            )
-            .value;
+        getElement(
+            "newAdminConfirmPassword"
+        )?.value || "";
 
 
     const role =
-        document
-            .getElementById(
-                "newAdminRole"
-            )
-            .value;
+        getElement(
+            "newAdminRole"
+        )?.value || "ADMIN";
 
 
     // =================================
@@ -2170,8 +2080,7 @@ async function createAdmin() {
 
 
     if (
-        password !==
-        confirmPassword
+        password !== confirmPassword
     ) {
 
         alert(
@@ -2184,8 +2093,7 @@ async function createAdmin() {
 
 
     if (
-        password.length <
-        6
+        password.length < 6
     ) {
 
         alert(
@@ -2214,95 +2122,55 @@ async function createAdmin() {
     const permissions = [];
 
 
-    if (
-        document.getElementById(
-            "permViewBookings"
-        ).checked
-    ) {
+    const permissionMap = {
 
-        permissions.push(
-            "view_bookings"
-        );
+        permViewBookings:
+            "view_bookings",
 
-    }
+        permManageBookings:
+            "manage_bookings",
 
+        permApproveDrivers:
+            "approve_drivers",
 
-    if (
-        document.getElementById(
-            "permManageBookings"
-        ).checked
-    ) {
+        permViewDrivers:
+            "view_drivers",
 
-        permissions.push(
-            "manage_bookings"
-        );
+        permViewGPS:
+            "view_gps",
 
-    }
+        permManageAdmins:
+            "manage_admins",
 
-
-    if (
-        document.getElementById(
-            "permApproveDrivers"
-        ).checked
-    ) {
-
-        permissions.push(
-            "approve_drivers"
-        );
-
-    }
-
-
-    if (
-        document.getElementById(
-            "permViewDrivers"
-        ).checked
-    ) {
-
-        permissions.push(
-            "view_drivers"
-        );
-
-    }
-
-
-    if (
-        document.getElementById(
-            "permViewGPS"
-        ).checked
-    ) {
-
-        permissions.push(
-            "view_gps"
-        );
-
-    }
-
-
-    if (
-        document.getElementById(
-            "permManageAdmins"
-        ).checked
-    ) {
-
-        permissions.push(
-            "manage_admins"
-        );
-
-    }
-
-
-    if (
-        document.getElementById(
-            "permSystemSettings"
-        ).checked
-    ) {
-
-        permissions.push(
+        permSystemSettings:
             "system_settings"
-        );
 
-    }
+    };
+
+
+    Object.entries(
+        permissionMap
+    )
+    .forEach(
+        ([elementId, permission]) => {
+
+            const checkbox =
+                getElement(elementId);
+
+
+            if (
+                checkbox &&
+                checkbox.checked
+            ) {
+
+                permissions.push(
+                    permission
+                );
+
+            }
+
+        }
+    );
 
 
     console.log(
@@ -2335,7 +2203,7 @@ async function createAdmin() {
     try {
 
         // =================================
-        // CHECK SUPABASE SESSION
+        // CHECK SUPABASE AUTH
         // =================================
 
         const {
@@ -2344,9 +2212,7 @@ async function createAdmin() {
             },
             error: userError
         } =
-            await window.supabaseClient
-                .auth
-                .getUser();
+            await supabase.auth.getUser();
 
 
         if (
@@ -2370,19 +2236,18 @@ async function createAdmin() {
 
 
         // =================================
-        // CALL EDGE FUNCTION
+        // CREATE ADMIN EDGE FUNCTION
         // =================================
 
         const {
             data,
             error
         } =
-            await window.supabaseClient
+            await supabase
                 .functions
                 .invoke(
                     "create-admin",
                     {
-
                         body: {
 
                             name:
@@ -2404,7 +2269,6 @@ async function createAdmin() {
                                 permissions
 
                         }
-
                     }
                 );
 
@@ -2425,10 +2289,6 @@ async function createAdmin() {
 
         }
 
-
-        // =================================
-        // EDGE FUNCTION ERROR
-        // =================================
 
         if (
             !data ||
@@ -2458,7 +2318,6 @@ async function createAdmin() {
 
 
         await loadAdmins();
-
 
     }
 
@@ -2494,15 +2353,836 @@ async function createAdmin() {
 
 
 // =====================================
+// REMOVE ADMIN
+// =====================================
+
+async function removeAdmin(
+    adminId,
+    adminName
+) {
+
+    const supabase = getSupabase();
+
+    if (!supabase) {
+        return;
+    }
+
+
+    console.log(
+        "🗑️ REMOVE ADMIN CLICKED",
+        {
+            adminId,
+            adminName
+        }
+    );
+
+
+    // =================================
+    // PERMISSION
+    // =================================
+
+    if (
+        !hasPermission(
+            "manage_admins"
+        )
+    ) {
+
+        alert(
+            "You do not have permission to remove admins."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // DON'T REMOVE YOURSELF
+    // =================================
+
+    if (
+        currentAdmin &&
+        String(
+            currentAdmin.id
+        ).trim() ===
+        String(
+            adminId
+        ).trim()
+    ) {
+
+        alert(
+            "You cannot remove the admin account you are currently using."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // CONFIRM
+    // =================================
+
+    const confirmed =
+        confirm(
+            `Remove ${adminName} from Valetholic Admin?\n\nTheir admin access will be disabled.`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        // =================================
+        // GET TARGET ADMIN
+        // =================================
+
+        const {
+            data: targetAdmin,
+            error: targetError
+        } =
+            await supabase
+                .from("Admins")
+                .select(
+                    "id, name, username, role, is_active"
+                )
+                .eq(
+                    "id",
+                    adminId
+                )
+                .maybeSingle();
+
+
+        if (targetError) {
+
+            console.error(
+                "Target admin lookup failed:",
+                targetError
+            );
+
+            alert(
+                "Unable to find this admin.\n\n" +
+                targetError.message
+            );
+
+            return;
+
+        }
+
+
+        if (!targetAdmin) {
+
+            alert(
+                "Admin account not found."
+            );
+
+            await loadAdmins();
+
+            return;
+
+        }
+
+
+        // =================================
+        // MASTER PROTECTION
+        // =================================
+
+        if (
+            normaliseStatus(
+                targetAdmin.role
+            ) === "MASTER"
+        ) {
+
+            alert(
+                "The MASTER admin cannot be removed."
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // ALREADY INACTIVE
+        // =================================
+
+        if (
+            targetAdmin.is_active === false
+        ) {
+
+            alert(
+                "This admin is already removed."
+            );
+
+            await loadAdmins();
+
+            return;
+
+        }
+
+
+        // =================================
+        // DEACTIVATE
+        // =================================
+
+        const {
+            error: updateError
+        } =
+            await supabase
+                .from("Admins")
+                .update({
+                    is_active: false
+                })
+                .eq(
+                    "id",
+                    adminId
+                );
+
+
+        if (updateError) {
+
+            console.error(
+                "Remove admin error:",
+                updateError
+            );
+
+            alert(
+                "ADMIN WAS NOT REMOVED.\n\n" +
+                updateError.message
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // VERIFY UPDATE
+        // =================================
+
+        const {
+            data: verifyAdmin,
+            error: verifyError
+        } =
+            await supabase
+                .from("Admins")
+                .select(
+                    "id, role, is_active"
+                )
+                .eq(
+                    "id",
+                    adminId
+                )
+                .maybeSingle();
+
+
+        if (verifyError) {
+
+            console.error(
+                "Admin verification error:",
+                verifyError
+            );
+
+            alert(
+                "The remove request was sent, but it could not be verified.\n\n" +
+                verifyError.message
+            );
+
+            return;
+
+        }
+
+
+        if (
+            verifyAdmin &&
+            verifyAdmin.is_active === true
+        ) {
+
+            alert(
+                "ADMIN WAS NOT REMOVED.\n\nThe database did not change is_active to false."
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // SUCCESS
+        // =================================
+
+        alert(
+            `${adminName} has been removed from Valetholic Admin.`
+        );
+
+
+        await loadAdmins();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unexpected remove admin error:",
+            error
+        );
+
+        alert(
+            "Something went wrong while removing the admin.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+// =====================================
+// REMOVE DRIVER
+// =====================================
+
+async function removeDriver(
+    driverId,
+    driverName
+) {
+
+    const supabase = getSupabase();
+
+    if (!supabase) {
+        return;
+    }
+
+
+    // =================================
+    // PERMISSION
+    // =================================
+
+    if (
+        !hasPermission(
+            "approve_drivers"
+        )
+    ) {
+
+        alert(
+            "You do not have permission to remove drivers."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // CONFIRM
+    // =================================
+
+    const confirmed =
+        confirm(
+            `Remove ${driverName} from Valetholic Drivers?\n\nThis will deactivate the driver and remove their approved-driver status.`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        // =================================
+        // GET DRIVER
+        // =================================
+
+        const {
+            data: driver,
+            error: driverError
+        } =
+            await supabase
+                .from("Drivers")
+                .select(
+                    "id, auth_id, name, approved, approval_status, status"
+                )
+                .eq(
+                    "id",
+                    driverId
+                )
+                .maybeSingle();
+
+
+        if (driverError) {
+
+            console.error(
+                "Driver lookup error:",
+                driverError
+            );
+
+            alert(
+                "Unable to find this driver.\n\n" +
+                driverError.message
+            );
+
+            return;
+
+        }
+
+
+        if (!driver) {
+
+            alert(
+                "Driver account not found."
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "🎯 DRIVER FOUND:",
+            driver
+        );
+
+
+        // =================================
+        // CHECK ACTIVE JOBS
+        // =================================
+        //
+        // Bookings.driver_id uses the
+        // driver's auth_id.
+        //
+        // =================================
+
+        if (driver.auth_id) {
+
+            const {
+                data: activeJobs,
+                error: activeJobsError
+            } =
+                await supabase
+                    .from("Bookings")
+                    .select(
+                        "id, status"
+                    )
+                    .eq(
+                        "driver_id",
+                        driver.auth_id
+                    )
+                    .in(
+                        "status",
+                        [
+                            "ON JOB",
+                            "ON THE WAY",
+                            "PICKED UP"
+                        ]
+                    );
+
+
+            if (activeJobsError) {
+
+                console.error(
+                    "Active job check error:",
+                    activeJobsError
+                );
+
+                alert(
+                    "Unable to check the driver's active jobs.\n\n" +
+                    activeJobsError.message
+                );
+
+                return;
+
+            }
+
+
+            if (
+                activeJobs &&
+                activeJobs.length > 0
+            ) {
+
+                alert(
+                    "This driver is currently handling an active job.\n\nComplete or reassign the job before removing the driver."
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        // =================================
+        // REMOVE DRIVER
+        // =================================
+
+        const {
+            error: updateError
+        } =
+            await supabase
+                .from("Drivers")
+                .update({
+
+                    approved:
+                        false,
+
+                    approval_status:
+                        "REJECTED",
+
+                    status:
+                        "OFF DUTY"
+
+                })
+                .eq(
+                    "id",
+                    driverId
+                );
+
+
+        if (updateError) {
+
+            console.error(
+                "Remove driver error:",
+                updateError
+            );
+
+            alert(
+                "Unable to remove driver.\n\n" +
+                updateError.message
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // VERIFY DRIVER
+        // =================================
+
+        const {
+            data: verifyDriver,
+            error: verifyError
+        } =
+            await supabase
+                .from("Drivers")
+                .select(
+                    "id, approved, approval_status, status"
+                )
+                .eq(
+                    "id",
+                    driverId
+                )
+                .maybeSingle();
+
+
+        if (verifyError) {
+
+            console.error(
+                "Driver verification error:",
+                verifyError
+            );
+
+            alert(
+                "The remove request was sent, but it could not be verified.\n\n" +
+                verifyError.message
+            );
+
+            return;
+
+        }
+
+
+        if (
+            verifyDriver &&
+            (
+                verifyDriver.approved === true ||
+                normaliseStatus(
+                    verifyDriver.approval_status
+                ) === "APPROVED"
+            )
+        ) {
+
+            alert(
+                "DRIVER WAS NOT REMOVED.\n\nThe database did not update the driver's approval status."
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // SUCCESS
+        // =================================
+
+        alert(
+            `${driverName} has been removed from Valetholic Drivers.`
+        );
+
+
+        await loadDashboard();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unexpected remove driver error:",
+            error
+        );
+
+        alert(
+            "Something went wrong while removing the driver.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+// =====================================
+// APPROVE DRIVER
+// =====================================
+
+async function approveDriver(
+    driverId
+) {
+
+    const supabase = getSupabase();
+
+    if (!supabase) {
+        return;
+    }
+
+
+    // =================================
+    // PERMISSION
+    // =================================
+
+    if (
+        !hasPermission(
+            "approve_drivers"
+        )
+    ) {
+
+        alert(
+            "You do not have permission to approve drivers."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "Approve this driver?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            error
+        } =
+            await supabase
+                .from("Drivers")
+                .update({
+
+                    approved:
+                        true,
+
+                    approval_status:
+                        "APPROVED",
+
+                    status:
+                        "OFF DUTY"
+
+                })
+                .eq(
+                    "id",
+                    driverId
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Approve driver error:",
+                error
+            );
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Driver approved successfully! 🚗"
+        );
+
+
+        await loadDashboard();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unexpected approve driver error:",
+            error
+        );
+
+        alert(
+            "Something went wrong.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+// =====================================
+// REJECT DRIVER
+// =====================================
+
+async function rejectDriver(
+    driverId
+) {
+
+    const supabase = getSupabase();
+
+    if (!supabase) {
+        return;
+    }
+
+
+    // =================================
+    // PERMISSION
+    // =================================
+
+    if (
+        !hasPermission(
+            "approve_drivers"
+        )
+    ) {
+
+        alert(
+            "You do not have permission to reject drivers."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "Reject this driver application?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            error
+        } =
+            await supabase
+                .from("Drivers")
+                .update({
+
+                    approved:
+                        false,
+
+                    approval_status:
+                        "REJECTED"
+
+                })
+                .eq(
+                    "id",
+                    driverId
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Reject driver error:",
+                error
+            );
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Driver application rejected."
+        );
+
+
+        await loadDashboard();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unexpected reject driver error:",
+            error
+        );
+
+        alert(
+            "Something went wrong.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+// =====================================
 // VIEW BOOKING
 // =====================================
 
-function viewBooking(
-    id
-) {
+function viewBooking(id) {
+
+    if (!id) {
+
+        alert(
+            "Booking ID is missing."
+        );
+
+        return;
+
+    }
+
 
     window.location.href =
-        `ops-booking.html?id=${id}`;
+        `ops-booking.html?id=${encodeURIComponent(id)}`;
 
 }
 
@@ -2510,15 +3190,24 @@ function viewBooking(
 // =====================================
 // MARK BOOKING COMPLETED
 // =====================================
+//
+// Kept for compatibility with any
+// existing page/modal that may call it.
+// It now uses currentBookingId instead
+// of the old hardcoded reference 2027.
+// =====================================
 
 async function markCompleted() {
 
-    console.log(
-        "markCompleted clicked"
-    );
+    const supabase = getSupabase();
+
+    if (!supabase) {
+        return;
+    }
 
 
     console.log(
+        "markCompleted clicked:",
         currentBookingId
     );
 
@@ -2541,59 +3230,76 @@ async function markCompleted() {
 
 
     if (!confirmComplete) {
-
         return;
-
     }
 
 
-    const {
-        error
-    } =
-        await window.supabaseClient
-            .from("Bookings")
-            .update({
+    try {
 
-                status:
-                    "Completed"
+        const {
+            error
+        } =
+            await supabase
+                .from("Bookings")
+                .update({
 
-            })
-            .eq(
-                "reference_no",
-                "2027"
+                    status:
+                        "Completed"
+
+                })
+                .eq(
+                    "id",
+                    currentBookingId
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Complete booking error:",
+                error
+            );
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        const bookingModal =
+            getElement(
+                "bookingModal"
             );
 
 
-    if (error) {
+        if (bookingModal) {
+
+            bookingModal.style.display =
+                "none";
+
+        }
+
+
+        await loadDashboard();
+
+    }
+
+    catch (error) {
 
         console.error(
+            "Unexpected complete booking error:",
             error
         );
 
         alert(
+            "Something went wrong.\n\n" +
             error.message
         );
 
-        return;
-
     }
-
-
-    const bookingModal =
-        document.getElementById(
-            "bookingModal"
-        );
-
-
-    if (bookingModal) {
-
-        bookingModal.style.display =
-            "none";
-
-    }
-
-
-    await loadDashboard();
 
 }
 
@@ -2602,11 +3308,47 @@ async function markCompleted() {
 // LOGOUT
 // =====================================
 
-function logout() {
+async function logout() {
+
+    const supabase =
+        window.supabaseClient;
+
+
+    // =================================
+    // CLEAR LOCAL SESSION
+    // =================================
 
     sessionStorage.removeItem(
         "adminLoggedIn"
     );
+
+    sessionStorage.removeItem(
+        "adminId"
+    );
+
+
+    // =================================
+    // SIGN OUT SUPABASE
+    // =================================
+
+    if (supabase) {
+
+        try {
+
+            await supabase.auth.signOut();
+
+        }
+
+        catch (error) {
+
+            console.warn(
+                "Supabase logout warning:",
+                error
+            );
+
+        }
+
+    }
 
 
     window.location.href =
@@ -2616,434 +3358,94 @@ function logout() {
 
 
 // =====================================
-// APPROVE DRIVER
+// MODAL HANDLERS
 // =====================================
 
-async function approveDriver(
-    driverId
-) {
-
-    const confirmed =
-        confirm(
-            "Approve this driver?"
-        );
-
-
-    if (!confirmed) {
-
-        return;
-
-    }
-
-
-    const {
-        error
-    } =
-        await window.supabaseClient
-            .from("Drivers")
-            .update({
-
-                approved:
-                    true,
-
-                approval_status:
-                    "APPROVED",
-
-                status:
-                    "OFF DUTY"
-
-            })
-            .eq(
-                "id",
-                driverId
-            );
-
-
-    if (error) {
-
-        console.error(
-            "Approve driver error:",
-            error
-        );
-
-        alert(
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    alert(
-        "Driver approved successfully! 🚗"
-    );
-
-
-    await loadDashboard();
-
-}
-
-
-// =====================================
-// REJECT DRIVER
-// =====================================
-
-async function rejectDriver(
-    driverId
-) {
-
-    const confirmed =
-        confirm(
-            "Reject this driver application?"
-        );
-
-
-    if (!confirmed) {
-
-        return;
-
-    }
-
-
-    const {
-        error
-    } =
-        await window.supabaseClient
-            .from("Drivers")
-            .update({
-
-                approved:
-                    false,
-
-                approval_status:
-                    "REJECTED",
-
-                status:
-                    "OFF DUTY"
-
-            })
-            .eq(
-                "id",
-                driverId
-            );
-
-
-    if (error) {
-
-        console.error(
-            "Reject driver error:",
-            error
-        );
-
-        alert(
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    alert(
-        "Driver application rejected."
-    );
-
-
-    await loadDashboard();
-
-}
-
-
-// =====================================
-// REMOVE DRIVER
-// =====================================
-
-async function removeDriver(
-    driverId
-) {
+function setupModalHandlers() {
 
     // =================================
-    // PERMISSION
+    // BOOKING MODAL CLOSE
     // =================================
 
-    if (
-        !hasPermission(
-            "view_drivers"
-        )
-    ) {
-
-        alert(
-            "You do not have permission to manage drivers."
-        );
-
-        return;
-
-    }
-
-
-    // =================================
-    // LOAD DRIVER
-    // =================================
-
-    const {
-        data: driver,
-        error: driverError
-    } =
-        await window.supabaseClient
-            .from("Drivers")
-            .select("*")
-            .eq(
-                "id",
-                driverId
-            )
-            .single();
-
-
-    if (driverError) {
-
-        console.error(
-            "Driver lookup error:",
-            driverError
-        );
-
-        alert(
-            driverError.message
-        );
-
-        return;
-
-    }
-
-
-    if (!driver) {
-
-        alert(
-            "Driver not found."
-        );
-
-        return;
-
-    }
-
-
-    // =================================
-    // LOAD BOOKINGS
-    // =================================
-
-    const {
-        data: bookings,
-        error: bookingError
-    } =
-        await window.supabaseClient
-            .from("Bookings")
-            .select(
-                "id, driver_id, status"
-            );
-
-
-    if (bookingError) {
-
-        console.error(
-            "Booking lookup error:",
-            bookingError
-        );
-
-        alert(
-            bookingError.message
-        );
-
-        return;
-
-    }
-
-
-    // =================================
-    // ACTIVE JOB CHECK
-    // =================================
-
-    if (
-        driverHasActiveJob(
-            driver,
-            bookings || []
-        )
-    ) {
-
-        alert(
-            "This driver currently has an active job.\n\nComplete the job before removing the driver."
-        );
-
-        return;
-
-    }
-
-
-    // =================================
-    // CONFIRM
-    // =================================
-
-    const confirmed =
-        confirm(
-            `Remove driver "${driver.name || "this driver"}"?\n\nThey will no longer appear as an approved Valetholic driver.`
+    const closeButton =
+        document.querySelector(
+            ".close-modal"
         );
 
 
-    if (!confirmed) {
+    if (closeButton) {
 
-        return;
-
-    }
-
-
-    // =================================
-    // REMOVE DRIVER FROM ACTIVE SYSTEM
-    // =================================
-
-    const {
-        error
-    } =
-        await window.supabaseClient
-            .from("Drivers")
-            .update({
-
-                approved:
-                    false,
-
-                approval_status:
-                    "REJECTED",
-
-                status:
-                    "OFF DUTY"
-
-            })
-            .eq(
-                "id",
-                driverId
-            );
-
-
-    if (error) {
-
-        console.error(
-            "Remove driver error:",
-            error
-        );
-
-        alert(
-            "Unable to remove driver.\n\n" +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    alert(
-        "Driver removed successfully."
-    );
-
-
-    await loadDashboard();
-
-}
-
-
-// =====================================
-// HTML ESCAPE
-// =====================================
-
-function escapeHTML(
-    value
-) {
-
-    return String(
-        value ??
-        ""
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
-
-}
-
-
-// =====================================
-// CLOSE BOOKING MODAL
-// =====================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        const closeButton =
-            document.querySelector(
-                ".close-modal"
-            );
-
-
-        if (closeButton) {
-
-            closeButton.onclick =
-                function () {
-
-                    const modal =
-                        document.getElementById(
-                            "bookingModal"
-                        );
-
-
-                    if (modal) {
-
-                        modal.style.display =
-                            "none";
-
-                    }
-
-                };
-
-        }
-
-
-        // -----------------------------
-        // CLICK OUTSIDE BOOKING MODAL
-        // -----------------------------
-
-        window.addEventListener(
-            "click",
-            event => {
+        closeButton.onclick =
+            function () {
 
                 const modal =
-                    document.getElementById(
+                    getElement(
                         "bookingModal"
                     );
 
 
-                if (
-                    modal &&
-                    event.target ===
-                    modal
-                ) {
+                if (modal) {
 
                     modal.style.display =
                         "none";
+
+                }
+
+            };
+
+    }
+
+
+    // =================================
+    // CLICK OUTSIDE BOOKING MODAL
+    // =================================
+
+    window.addEventListener(
+        "click",
+        event => {
+
+            const modal =
+                getElement(
+                    "bookingModal"
+                );
+
+
+            if (
+                modal &&
+                event.target === modal
+            ) {
+
+                modal.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+
+    // =================================
+    // CLICK OUTSIDE ADD ADMIN MODAL
+    // =================================
+
+    const addAdminModal =
+        getElement(
+            "addAdminModal"
+        );
+
+
+    if (addAdminModal) {
+
+        addAdminModal.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target ===
+                    addAdminModal
+                ) {
+
+                    closeAddAdmin();
 
                 }
 
@@ -3051,41 +3453,227 @@ document.addEventListener(
         );
 
     }
-);
+
+
+    // =================================
+    // ESCAPE KEY
+    // =================================
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key !== "Escape"
+            ) {
+
+                return;
+
+            }
+
+
+            const addAdminModal =
+                getElement(
+                    "addAdminModal"
+                );
+
+
+            if (
+                addAdminModal &&
+                addAdminModal.style.display ===
+                    "flex"
+            ) {
+
+                closeAddAdmin();
+
+            }
+
+
+            const bookingModal =
+                getElement(
+                    "bookingModal"
+                );
+
+
+            if (
+                bookingModal &&
+                bookingModal.style.display ===
+                    "flex"
+            ) {
+
+                bookingModal.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+
+    // =================================
+    // LOGOUT LINK
+    // =================================
+
+    const logoutLink =
+        getElement(
+            "logoutLink"
+        );
+
+
+    if (logoutLink) {
+
+        logoutLink.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+
+                logout();
+
+            }
+        );
+
+    }
+
+
+    // =================================
+    // ADMIN ROLE CHANGE
+    // =================================
+
+    const roleSelect =
+        getElement(
+            "newAdminRole"
+        );
+
+
+    if (roleSelect) {
+
+        roleSelect.addEventListener(
+            "change",
+            () => {
+
+                setAdminPermissions(
+                    roleSelect.value
+                );
+
+            }
+        );
+
+    }
+
+}
 
 
 // =====================================
-// CLOSE ADD ADMIN WHEN CLICKING OUTSIDE
+// SEARCH / FILTER EVENTS
 // =====================================
 
-window.addEventListener(
-    "click",
-    event => {
+function setupBookingFilters() {
 
-        const modal =
-            document.getElementById(
-                "addAdminModal"
+    const searchInput =
+        getElement(
+            "searchBooking"
+        );
+
+
+    const statusFilter =
+        getElement(
+            "statusFilter"
+        );
+
+
+    if (
+        searchInput ||
+        statusFilter
+    ) {
+
+        const refresh =
+            () => loadDashboard();
+
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "input",
+                refresh
             );
 
+        }
 
-        if (
-            modal &&
-            event.target ===
-            modal
-        ) {
 
-            closeAddAdmin();
+        if (statusFilter) {
+
+            statusFilter.addEventListener(
+                "change",
+                refresh
+            );
 
         }
 
     }
-);
+
+}
+
+
+// =====================================
+// START ADMIN PAGE
+// =====================================
+
+async function initialiseAdmin() {
+
+    const supabase =
+        getSupabase();
+
+
+    if (!supabase) {
+        return;
+    }
+
+
+    setupModalHandlers();
+
+    setupBookingFilters();
+
+
+    // =================================
+    // LOAD ADMIN FIRST
+    // =================================
+    //
+    // This is important because
+    // permissions determine what the
+    // current admin can see/do.
+    // =================================
+
+    await loadCurrentAdmin();
+
+
+    // =================================
+    // THEN LOAD DASHBOARD
+    // =================================
+
+    await loadDashboard();
+
+}
 
 
 // =====================================
 // START
 // =====================================
 
-loadCurrentAdmin();
+if (
+    document.readyState ===
+    "loading"
+) {
 
-loadDashboard();
+    document.addEventListener(
+        "DOMContentLoaded",
+        initialiseAdmin
+    );
+
+}
+
+else {
+
+    initialiseAdmin();
+
+}

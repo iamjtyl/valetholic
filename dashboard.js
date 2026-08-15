@@ -2,6 +2,11 @@
 // VALETHOLIC DRIVER DASHBOARD
 // =====================================
 
+
+// =====================================
+// GLOBAL VARIABLES
+// =====================================
+
 let currentDriver = null;
 
 let bookings = [];
@@ -9,8 +14,16 @@ let bookings = [];
 let status = "OFF DUTY";
 
 let knownBookingIds = new Set();
+
 let firstBookingLoad = true;
+
 let refreshTimer = null;
+
+let gpsWatchId = null;
+
+let notificationAudioContext = null;
+
+let isRefreshingBookings = false;
 
 
 // =====================================
@@ -18,19 +31,52 @@ let refreshTimer = null;
 // =====================================
 
 const statusIcon =
-    document.getElementById("statusIcon");
+    document.getElementById(
+        "statusIcon"
+    );
+
 
 const statusTitle =
-    document.getElementById("statusTitle");
+    document.getElementById(
+        "statusTitle"
+    );
+
 
 const statusMessage =
-    document.getElementById("statusMessage");
+    document.getElementById(
+        "statusMessage"
+    );
+
 
 const dutyBtn =
-    document.getElementById("dutyBtn");
+    document.getElementById(
+        "dutyBtn"
+    );
+
 
 const jobList =
-    document.getElementById("jobList");
+    document.getElementById(
+        "jobList"
+    );
+
+
+// =====================================
+// BASIC ELEMENT CHECK
+// =====================================
+
+if (
+    !statusIcon ||
+    !statusTitle ||
+    !statusMessage ||
+    !dutyBtn ||
+    !jobList
+) {
+
+    console.error(
+        "❌ Driver dashboard elements are missing."
+    );
+
+}
 
 
 // =====================================
@@ -46,148 +92,271 @@ loadDriver();
 
 async function loadDriver() {
 
-    const {
-        data: { user },
-        error
-    } =
-        await window.supabaseClient.auth.getUser();
+    try {
+
+        const {
+            data: {
+                user
+            },
+            error
+        } =
+            await window.supabaseClient
+                .auth
+                .getUser();
 
 
-    if (error) {
+        if (error) {
 
-        console.error(error);
+            console.error(
+                "Auth error:",
+                error
+            );
 
-        return;
+            alert(
+                "Unable to verify your login.\n\n" +
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // NOT LOGGED IN
+        // =================================
+
+        if (!user) {
+
+            window.location.href =
+                "driver-portal.html";
+
+            return;
+
+        }
+
+
+        currentDriver =
+            user;
+
+        // =====================================
+// DRIVER GREETING
+// =====================================
+
+const driverGreeting =
+    document.getElementById("driverGreeting");
+
+if (driverGreeting) {
+
+    const loginName =
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.username ||
+        user.email?.split("@")[0] ||
+        "Driver";
+
+    driverGreeting.textContent =
+        `Hi, ${loginName} 👋`;
+
+}
+
+        console.log(
+            "👤 Logged in driver:",
+            user.id,
+            user.email
+        );
+
+
+        // =================================
+        // GET DRIVER
+        // =================================
+
+        const {
+            data: driver,
+            error: driverError
+        } =
+            await window.supabaseClient
+                .from("Drivers")
+                .select("*")
+                .eq(
+                    "auth_id",
+                    user.id
+                )
+                .single();
+
+
+        if (driverError) {
+
+            console.error(
+                "❌ Driver lookup error:",
+                driverError
+            );
+
+            alert(
+                driverError.message
+            );
+
+            return;
+
+        }
+
+
+        if (!driver) {
+
+            alert(
+                "Driver account not found."
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "🚗 Driver record:",
+            driver
+        );
+
+
+        // =================================
+        // APPROVAL
+        // =================================
+
+        const approvalStatus =
+            String(
+                driver.approval_status ||
+                ""
+            )
+            .trim()
+            .toUpperCase();
+
+
+        if (
+            approvalStatus ===
+            "PENDING"
+        ) {
+
+            showPendingApproval();
+
+            return;
+
+        }
+
+
+        if (
+            approvalStatus ===
+            "REJECTED"
+        ) {
+
+            showRejectedApplication();
+
+            return;
+
+        }
+
+
+        // =================================
+        // APPROVED SAFETY CHECK
+        // =================================
+
+        if (
+            approvalStatus !==
+                "APPROVED"
+            ||
+            driver.approved !== true
+        ) {
+
+            showPendingApproval();
+
+            return;
+
+        }
+
+
+        // =================================
+        // APPROVED DRIVER
+        // =================================
+
+        status =
+            normaliseStatus(
+                driver.status
+            ) ||
+            "OFF DUTY";
+
+
+        // =================================
+        // SAFETY
+        // =================================
+
+        if (
+            status === "PENDING" ||
+            status === "APPROVED"
+        ) {
+
+            status =
+                "OFF DUTY";
+
+        }
+
+
+        updateDashboard();
+
+
+        // =================================
+        // LOAD ACTIVE BOOKINGS
+        // =================================
+
+        await loadActiveBookings();
+
+
+        // =================================
+        // START AUTO REFRESH
+        // =================================
+
+        startBookingAutoRefresh();
+
+
+        // =================================
+        // START GPS
+        // =================================
+
+        startGPS();
+
+
+        // =================================
+        // NOTIFICATION PERMISSION
+        // =================================
+
+        requestNotificationPermission();
+
 
     }
 
-
-    // =================================
-    // NOT LOGGED IN
-    // =================================
-
-    if (!user) {
-
-        window.location.href =
-            "driver-portal.html";
-
-        return;
-
-    }
-
-
-    currentDriver =
-        user;
-
-
-    console.log(
-        "Logged in user:",
-        user.id
-    );
-
-
-    // =================================
-    // GET DRIVER
-    // =================================
-
-    const {
-        data: driver,
-        error: driverError
-    } =
-        await window.supabaseClient
-        .from("Drivers")
-        .select("*")
-        .eq(
-            "auth_id",
-            user.id
-        )
-        .single();
-
-
-    if (driverError) {
+    catch (error) {
 
         console.error(
-            driverError
+            "❌ Unexpected driver loading error:",
+            error
         );
 
-        alert(
-            driverError.message
-        );
-
-        return;
-
     }
 
-
-    console.log(
-        "Driver:",
-        driver
-    );
+}
 
 
-    // =================================
-    // APPROVAL
-    // =================================
+// =====================================
+// NORMALISE STATUS
+// =====================================
 
-    if (
-        driver.approval_status ===
-        "PENDING"
-    ) {
+function normaliseStatus(
+    value
+) {
 
-        showPendingApproval();
-
-        return;
-
-    }
-
-
-    if (
-        driver.approval_status ===
-        "REJECTED"
-    ) {
-
-        showRejectedApplication();
-
-        return;
-
-    }
-
-
-    // =================================
-    // APPROVED SAFETY CHECK
-    // =================================
-
-    if (
-        driver.approval_status !==
-            "APPROVED"
-        ||
-        driver.approved !== true
-    ) {
-
-        showPendingApproval();
-
-        return;
-
-    }
-
-
-    // =================================
-    // APPROVED DRIVER
-    // =================================
-
-    status =
-        driver.status ||
-        "OFF DUTY";
-
-
-    updateDashboard();
-
-
-    // =================================
-    // LOAD ALL ACTIVE BOOKINGS
-    // =================================
-
-    await loadActiveBookings();
+    return String(
+        value ?? ""
+    )
+    .trim()
+    .toUpperCase();
 
 }
 
@@ -260,44 +429,9 @@ function showRejectedApplication() {
 
 async function loadActiveBookings() {
 
-    if (!currentDriver) {
-
-        return;
-
-    }
-
-
-    const {
-        data,
-        error
-    } =
-        await window.supabaseClient
-        .from("Bookings")
-        .select("*")
-        .eq(
-            "driver_id",
-            currentDriver.id
-        )
-        .neq(
-            "status",
-            "COMPLETED"
-        )
-        .neq(
-            "status",
-            "CANCELLED"
-        );
-
-
-    // =================================
-    // QUERY ERROR
-    // =================================
-
-    if (error) {
-
-        console.error(
-            "Booking refresh error:",
-            error
-        );
+    if (
+        !currentDriver
+    ) {
 
         return;
 
@@ -305,18 +439,15 @@ async function loadActiveBookings() {
 
 
     // =================================
-    // IMPORTANT:
-    // DON'T WIPE A WORKING QUEUE
-    // IF A REFRESH TEMPORARILY RETURNS 0
+    // PREVENT OVERLAPPING REFRESHES
     // =================================
 
     if (
-        !data ||
-        data.length === 0
+        isRefreshingBookings
     ) {
 
-        console.warn(
-            "⚠️ Booking refresh returned 0 bookings. Keeping existing queue."
+        console.log(
+            "⏳ Booking refresh already running."
         );
 
         return;
@@ -324,83 +455,245 @@ async function loadActiveBookings() {
     }
 
 
-    const newBookings =
-        data;
+    isRefreshingBookings =
+        true;
 
 
-    // =================================
-    // CHECK FOR NEWLY ASSIGNED JOBS
-    // =================================
+    try {
 
-    if (!firstBookingLoad) {
+        const {
+            data,
+            error
+        } =
+            await window.supabaseClient
+                .from("Bookings")
+                .select("*")
+                .eq(
+                    "driver_id",
+                    currentDriver.id
+                )
+                .not(
+                    "status",
+                    "in",
+                    "(COMPLETED,CANCELLED)"
+                );
 
-        const newlyAssigned =
-            newBookings.filter(
-                booking =>
-                    !knownBookingIds.has(
-                        booking.id
-                    )
+
+        // =================================
+        // QUERY ERROR
+        // =================================
+
+        if (error) {
+
+            console.error(
+                "❌ Booking refresh error:",
+                error
             );
 
-
-        if (
-            newlyAssigned.length > 0
-        ) {
-
-            newlyAssigned.forEach(
-                booking => {
-
-                    showNewBookingNotification(
-                        booking
-                    );
-
-                }
-            );
+            return;
 
         }
+
+
+        const newBookings =
+            data || [];
+
+
+        console.log(
+            "📦 Assigned bookings:",
+            newBookings
+        );
+
+
+        // =================================
+        // DETECT NEWLY ASSIGNED JOBS
+        // =================================
+
+        if (
+            !firstBookingLoad
+        ) {
+
+            const newlyAssigned =
+                newBookings.filter(
+                    booking =>
+                        !knownBookingIds.has(
+                            booking.id
+                        )
+                );
+
+
+            if (
+                newlyAssigned.length > 0
+            ) {
+
+                console.log(
+                    "🔔 NEW ASSIGNMENTS:",
+                    newlyAssigned
+                );
+
+
+                newlyAssigned.forEach(
+                    booking => {
+
+                        showNewBookingNotification(
+                            booking
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+
+
+        // =================================
+        // UPDATE KNOWN BOOKING IDS
+        // =================================
+
+        knownBookingIds =
+            new Set(
+                newBookings.map(
+                    booking =>
+                        booking.id
+                )
+            );
+
+
+        firstBookingLoad =
+            false;
+
+
+        // =================================
+        // SAVE BOOKINGS
+        // =================================
+
+        bookings =
+            newBookings;
+
+
+        // =================================
+        // SORT QUEUE
+        // =================================
+
+        bookings.sort(
+            sortBookings
+        );
+
+
+        // =================================
+        // DISPLAY
+        // =================================
+
+        renderBookings();
+
+
+        // =================================
+        // KEEP DRIVER STATUS IN SYNC
+        // =================================
+
+        syncDriverStatusFromBookings();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Unexpected booking refresh error:",
+            error
+        );
+
+    }
+
+    finally {
+
+        isRefreshingBookings =
+            false;
+
+    }
+
+}
+
+
+// =====================================
+// SYNC DRIVER STATUS
+// =====================================
+//
+// Only changes the visual status when
+// the driver already has an active
+// non-pending job.
+// =====================================
+
+function syncDriverStatusFromBookings() {
+
+    if (
+        !bookings ||
+        bookings.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const currentBooking =
+        bookings[0];
+
+
+    const bookingStatus =
+        normaliseStatus(
+            currentBooking.status
+        );
+
+
+    // =================================
+    // PENDING DOES NOT START JOB
+    // =================================
+
+    if (
+        bookingStatus ===
+        "PENDING"
+    ) {
+
+        if (
+            status !== "ON JOB" &&
+            status !== "ON THE WAY" &&
+            status !== "PICKED UP"
+        ) {
+
+            status =
+                "ON DUTY";
+
+            updateDashboard();
+
+        }
+
+        return;
 
     }
 
 
     // =================================
-    // UPDATE KNOWN BOOKINGS
+    // ACTIVE JOB
     // =================================
 
-    knownBookingIds =
-        new Set(
-            newBookings.map(
-                booking =>
-                    booking.id
-            )
-        );
+    if (
+        bookingStatus ===
+            "ON JOB"
+        ||
+        bookingStatus ===
+            "ON THE WAY"
+        ||
+        bookingStatus ===
+            "PICKED UP"
+    ) {
 
+        status =
+            bookingStatus;
 
-    firstBookingLoad =
-        false;
+        updateDashboard();
 
-
-    // =================================
-    // SAVE BOOKINGS
-    // =================================
-
-    bookings =
-        newBookings;
-
-
-    // =================================
-    // SORT
-    // =================================
-
-    bookings.sort(
-        sortBookings
-    );
-
-
-    // =================================
-    // DISPLAY
-    // =================================
-
-    renderBookings();
+    }
 
 }
 
@@ -414,16 +707,16 @@ function sortBookings(
     b
 ) {
 
-    // -------------------------------
-    // DATE + TIME
-    // -------------------------------
-
     const aDate =
-        getBookingDateTime(a);
+        getBookingDateTime(
+            a
+        );
 
 
     const bDate =
-        getBookingDateTime(b);
+        getBookingDateTime(
+            b
+        );
 
 
     if (
@@ -435,10 +728,6 @@ function sortBookings(
 
     }
 
-
-    // -------------------------------
-    // FALLBACK
-    // -------------------------------
 
     return (
         new Date(
@@ -453,7 +742,7 @@ function sortBookings(
 
 
 // =====================================
-// GET BOOKING DATE/TIME
+// GET BOOKING DATE / TIME
 // =====================================
 
 function getBookingDateTime(
@@ -484,7 +773,9 @@ function getBookingDateTime(
 
 
     const date =
-        new Date(value);
+        new Date(
+            value
+        );
 
 
     if (
@@ -509,6 +800,13 @@ function getBookingDateTime(
 
 function renderBookings() {
 
+    if (!jobList) {
+
+        return;
+
+    }
+
+
     jobList.innerHTML =
         "";
 
@@ -527,7 +825,7 @@ function renderBookings() {
 
 
     jobList.style.display =
-        "block";
+        "flex";
 
 
     bookings.forEach(
@@ -652,7 +950,9 @@ function createBookingCard(
     ) {
 
         bookingTimeText =
-            booking.booking_date;
+            escapeHTML(
+                booking.booking_date
+            );
 
     }
 
@@ -662,7 +962,9 @@ function createBookingCard(
     ) {
 
         bookingTimeText +=
-            ` • ${booking.booking_time}`;
+            ` • ${escapeHTML(
+                booking.booking_time
+            )}`;
 
     }
 
@@ -686,13 +988,23 @@ function createBookingCard(
 
 
     // =================================
-    // CARD HTML
+    // STATUS
+    // =================================
+
+    const bookingStatus =
+        normaliseStatus(
+            booking.status
+        );
+
+
+    // =================================
+    // CARD
     // =================================
 
     card.innerHTML = `
 
         <h2>
-            ${queueLabel}
+            ${escapeHTML(queueLabel)}
         </h2>
 
 
@@ -707,9 +1019,11 @@ function createBookingCard(
                             opacity:.7;
                         "
                     >
+
                         🕐 ${bookingTimeText}
+
                     </div>
-                  `
+                `
                 : ""
         }
 
@@ -720,6 +1034,7 @@ function createBookingCard(
                 PICKUP
             </small>
 
+
             <p>
                 📍 ${escapeHTML(pickup)}
             </p>
@@ -728,16 +1043,22 @@ function createBookingCard(
             <div class="nav-buttons">
 
                 <button
+                    type="button"
                     class="google-btn pickup-google"
                 >
+
                     Google Maps
+
                 </button>
 
 
                 <button
+                    type="button"
                     class="waze-btn pickup-waze"
                 >
+
                     Waze
+
                 </button>
 
             </div>
@@ -745,11 +1066,13 @@ function createBookingCard(
         </div>
 
 
+
         <div class="job-section">
 
             <small>
                 DESTINATION
             </small>
+
 
             <p>
                 📍 ${escapeHTML(destination)}
@@ -759,16 +1082,22 @@ function createBookingCard(
             <div class="nav-buttons">
 
                 <button
+                    type="button"
                     class="google-btn destination-google"
                 >
+
                     Google Maps
+
                 </button>
 
 
                 <button
+                    type="button"
                     class="waze-btn destination-waze"
                 >
+
                     Waze
+
                 </button>
 
             </div>
@@ -776,11 +1105,13 @@ function createBookingCard(
         </div>
 
 
+
         <div class="job-section">
 
             <small>
                 CUSTOMER
             </small>
+
 
             <p>
                 ${escapeHTML(
@@ -792,11 +1123,13 @@ function createBookingCard(
         </div>
 
 
+
         <div class="job-section">
 
             <small>
                 VEHICLE
             </small>
+
 
             <p>
                 ${escapeHTML(
@@ -807,25 +1140,37 @@ function createBookingCard(
         </div>
 
 
+
         <button
+            type="button"
             class="gold-btn status-job-btn"
             data-action="status"
         >
-            ${getStatusButtonText(booking.status)}
+
+            ${getStatusButtonText(
+                bookingStatus
+            )}
+
         </button>
 
     `;
 
 
     // =================================
-    // NAVIGATION BUTTONS
+    // GOOGLE MAPS
     // =================================
 
-    card
-        .querySelector(
+    const pickupGoogle =
+        card.querySelector(
             ".pickup-google"
-        )
-        .addEventListener(
+        );
+
+
+    if (
+        pickupGoogle
+    ) {
+
+        pickupGoogle.addEventListener(
             "click",
             () => {
 
@@ -836,12 +1181,20 @@ function createBookingCard(
             }
         );
 
+    }
 
-    card
-        .querySelector(
+
+    const destinationGoogle =
+        card.querySelector(
             ".destination-google"
-        )
-        .addEventListener(
+        );
+
+
+    if (
+        destinationGoogle
+    ) {
+
+        destinationGoogle.addEventListener(
             "click",
             () => {
 
@@ -852,12 +1205,24 @@ function createBookingCard(
             }
         );
 
+    }
 
-    card
-        .querySelector(
+
+    // =================================
+    // WAZE
+    // =================================
+
+    const pickupWaze =
+        card.querySelector(
             ".pickup-waze"
-        )
-        .addEventListener(
+        );
+
+
+    if (
+        pickupWaze
+    ) {
+
+        pickupWaze.addEventListener(
             "click",
             () => {
 
@@ -868,12 +1233,20 @@ function createBookingCard(
             }
         );
 
+    }
 
-    card
-        .querySelector(
+
+    const destinationWaze =
+        card.querySelector(
             ".destination-waze"
-        )
-        .addEventListener(
+        );
+
+
+    if (
+        destinationWaze
+    ) {
+
+        destinationWaze.addEventListener(
             "click",
             () => {
 
@@ -883,6 +1256,8 @@ function createBookingCard(
 
             }
         );
+
+    }
 
 
     // =================================
@@ -895,71 +1270,25 @@ function createBookingCard(
         );
 
 
-    statusButton.addEventListener(
-        "click",
-        () => {
+    if (
+        statusButton
+    ) {
 
-            updateJobStatus(
-                booking.id
-            );
+        statusButton.addEventListener(
+            "click",
+            () => {
 
-        }
-    );
+                updateJobStatus(
+                    booking.id
+                );
+
+            }
+        );
+
+    }
 
 
     return card;
-
-}
-
-
-// =====================================
-// LOCATION HELPER
-// =====================================
-
-function getLocation(
-    value
-) {
-
-    if (!value) {
-
-        return "-";
-
-    }
-
-
-    if (
-        Array.isArray(value)
-    ) {
-
-        return value[0] || "-";
-
-    }
-
-
-    try {
-
-        const parsed =
-            JSON.parse(value);
-
-
-        if (
-            Array.isArray(parsed)
-        ) {
-
-            return parsed[0] || "-";
-
-        }
-
-
-        return parsed || "-";
-
-    }
-
-    catch {
-
-        return value;
-
-    }
 
 }
 
@@ -973,12 +1302,9 @@ function getStatusButtonText(
 ) {
 
     const statusValue =
-        String(
-            bookingStatus ||
-            ""
-        )
-        .trim()
-        .toUpperCase();
+        normaliseStatus(
+            bookingStatus
+        );
 
 
     if (
@@ -1037,8 +1363,8 @@ async function updateJobStatus(
     const booking =
         bookings.find(
             item =>
-                item.id ===
-                bookingId
+                String(item.id) ===
+                String(bookingId)
         );
 
 
@@ -1054,8 +1380,21 @@ async function updateJobStatus(
     }
 
 
+    if (
+        !currentDriver
+    ) {
+
+        alert(
+            "Driver session is not ready."
+        );
+
+        return;
+
+    }
+
+
     console.log(
-        "🚗 START/STATUS BUTTON CLICKED",
+        "🚗 STATUS BUTTON CLICKED",
         {
             bookingId:
                 booking.id,
@@ -1075,15 +1414,15 @@ async function updateJobStatus(
         error: driverError
     } =
         await window.supabaseClient
-        .from("Drivers")
-        .select(
-            "approved, approval_status"
-        )
-        .eq(
-            "auth_id",
-            currentDriver.id
-        )
-        .single();
+            .from("Drivers")
+            .select(
+                "approved, approval_status"
+            )
+            .eq(
+                "auth_id",
+                currentDriver.id
+            )
+            .single();
 
 
     if (
@@ -1096,7 +1435,8 @@ async function updateJobStatus(
         );
 
         alert(
-            "Unable to verify driver approval."
+            "Unable to verify driver approval.\n\n" +
+            driverError.message
         );
 
         return;
@@ -1107,8 +1447,9 @@ async function updateJobStatus(
     if (
         !driver ||
         driver.approved !== true ||
-        driver.approval_status !==
-            "APPROVED"
+        normaliseStatus(
+            driver.approval_status
+        ) !== "APPROVED"
     ) {
 
         alert(
@@ -1125,16 +1466,13 @@ async function updateJobStatus(
     // =================================
 
     const currentStatus =
-        String(
-            booking.status ||
-            ""
-        )
-        .trim()
-        .toUpperCase();
+        normaliseStatus(
+            booking.status
+        );
 
 
     console.log(
-        "📌 Normalised booking status:",
+        "📌 Current status:",
         currentStatus
     );
 
@@ -1194,7 +1532,7 @@ async function updateJobStatus(
         );
 
         alert(
-            `Cannot start this job.\n\nCurrent status: ${booking.status}`
+            `Cannot update this job.\n\nCurrent status: ${booking.status}`
         );
 
         return;
@@ -1203,11 +1541,56 @@ async function updateJobStatus(
 
 
     console.log(
-        "➡️ Changing status:",
-        currentStatus,
-        "→",
+        "➡️ Next status:",
         nextStatus
     );
+
+
+    // =================================
+    // PREPARE UPDATE
+    // =================================
+
+    const updateData = {
+
+        status:
+            nextStatus
+
+    };
+
+
+    // =================================
+    // COMPLETION
+    // =================================
+
+    if (
+        nextStatus ===
+        "COMPLETED"
+    ) {
+
+        /*
+         * Customer tracking link stays
+         * usable for 6 hours after
+         * the job is completed.
+         */
+
+        updateData.tracking_expires_at =
+            new Date(
+                Date.now() +
+                (
+                    6 *
+                    60 *
+                    60 *
+                    1000
+                )
+            ).toISOString();
+
+
+        console.log(
+            "📍 Tracking expires at:",
+            updateData.tracking_expires_at
+        );
+
+    }
 
 
     // =================================
@@ -1219,27 +1602,24 @@ async function updateJobStatus(
         error
     } =
         await window.supabaseClient
-        .from("Bookings")
-        .update({
-
-            status:
-                nextStatus
-
-        })
-        .eq(
-            "id",
-            booking.id
-        )
-        .select(
-            "id, status"
-        )
-        .single();
+            .from("Bookings")
+            .update(
+                updateData
+            )
+            .eq(
+                "id",
+                booking.id
+            )
+            .select(
+                "id, status, tracking_expires_at"
+            )
+            .single();
 
 
     if (error) {
 
         console.error(
-            "❌ BOOKING STATUS UPDATE FAILED:",
+            "❌ BOOKING UPDATE FAILED:",
             error
         );
 
@@ -1266,6 +1646,18 @@ async function updateJobStatus(
         nextStatus;
 
 
+    if (
+        nextStatus ===
+        "COMPLETED"
+    ) {
+
+        booking.tracking_expires_at =
+            updatedBooking
+                ?.tracking_expires_at;
+
+    }
+
+
     // =================================
     // COMPLETED
     // =================================
@@ -1276,7 +1668,7 @@ async function updateJobStatus(
     ) {
 
         alert(
-            "🎉 Job Completed!"
+            "🎉 Job Completed!\n\nCustomer tracking will remain available for 6 hours."
         );
 
 
@@ -1287,8 +1679,8 @@ async function updateJobStatus(
         bookings =
             bookings.filter(
                 item =>
-                    item.id !==
-                    booking.id
+                    String(item.id) !==
+                    String(booking.id)
             );
 
 
@@ -1301,17 +1693,17 @@ async function updateJobStatus(
                 driverUpdateError
         } =
             await window.supabaseClient
-            .from("Drivers")
-            .update({
+                .from("Drivers")
+                .update({
 
-                status:
-                    "ON DUTY"
+                    status:
+                        "ON DUTY"
 
-            })
-            .eq(
-                "auth_id",
-                currentDriver.id
-            );
+                })
+                .eq(
+                    "auth_id",
+                    currentDriver.id
+                );
 
 
         if (
@@ -1344,7 +1736,7 @@ async function updateJobStatus(
 
 
     // =================================
-    // DRIVER STATUS FOLLOWS CURRENT JOB
+    // DRIVER STATUS FOLLOWS JOB
     // =================================
 
     status =
@@ -1362,13 +1754,43 @@ async function updateJobStatus(
 // DUTY BUTTON
 // =====================================
 
-dutyBtn.addEventListener(
-    "click",
-    toggleDuty
-);
+if (
+    dutyBtn
+) {
 
+    dutyBtn.addEventListener(
+        "click",
+        toggleDuty
+    );
+
+}
+
+
+// =====================================
+// TOGGLE DUTY
+// =====================================
 
 async function toggleDuty() {
+
+    if (
+        !currentDriver
+    ) {
+
+        alert(
+            "Driver session is not ready."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // UNLOCK AUDIO ON USER GESTURE
+    // =================================
+
+    await unlockNotificationAudio();
+
 
     // =================================
     // APPROVAL CHECK
@@ -1379,23 +1801,42 @@ async function toggleDuty() {
         error: driverError
     } =
         await window.supabaseClient
-        .from("Drivers")
-        .select(
-            "approved, approval_status"
-        )
-        .eq(
-            "auth_id",
-            currentDriver.id
-        )
-        .single();
+            .from("Drivers")
+            .select(
+                "approved, approval_status"
+            )
+            .eq(
+                "auth_id",
+                currentDriver.id
+            )
+            .single();
 
 
     if (
-        driverError ||
+        driverError
+    ) {
+
+        console.error(
+            "❌ Approval check failed:",
+            driverError
+        );
+
+        alert(
+            "Unable to verify driver approval.\n\n" +
+            driverError.message
+        );
+
+        return;
+
+    }
+
+
+    if (
         !driver ||
         driver.approved !== true ||
-        driver.approval_status !==
-            "APPROVED"
+        normaliseStatus(
+            driver.approval_status
+        ) !== "APPROVED"
     ) {
 
         alert(
@@ -1447,31 +1888,36 @@ async function toggleDuty() {
     }
 
 
+    // =================================
+    // UPDATE DATABASE
+    // =================================
+
     const {
         error
     } =
         await window.supabaseClient
-        .from("Drivers")
-        .update({
+            .from("Drivers")
+            .update({
 
-            status:
-                newStatus
+                status:
+                    newStatus
 
-        })
-        .eq(
-            "auth_id",
-            currentDriver.id
-        );
+            })
+            .eq(
+                "auth_id",
+                currentDriver.id
+            );
 
 
     if (error) {
 
-        alert(
-            error.message
+        console.error(
+            "Duty update error:",
+            error
         );
 
-        console.error(
-            error
+        alert(
+            error.message
         );
 
         return;
@@ -1479,11 +1925,22 @@ async function toggleDuty() {
     }
 
 
+    // =================================
+    // UPDATE LOCAL STATUS
+    // =================================
+
     status =
         newStatus;
 
 
     updateDashboard();
+
+
+    // =================================
+    // REFRESH JOBS
+    // =================================
+
+    await loadActiveBookings();
 
 }
 
@@ -1494,12 +1951,18 @@ async function toggleDuty() {
 
 function updateDashboard() {
 
+    const currentStatus =
+        normaliseStatus(
+            status
+        );
+
+
     // =================================
     // OFF DUTY
     // =================================
 
     if (
-        status ===
+        currentStatus ===
         "OFF DUTY"
     ) {
 
@@ -1533,7 +1996,7 @@ function updateDashboard() {
     // =================================
 
     if (
-        status ===
+        currentStatus ===
         "ON DUTY"
     ) {
 
@@ -1550,7 +2013,7 @@ function updateDashboard() {
 
 
         dutyBtn.innerHTML =
-            "Byebye";
+            "BYEBYE";
 
 
         dutyBtn.style.display =
@@ -1567,7 +2030,7 @@ function updateDashboard() {
     // =================================
 
     if (
-        status ===
+        currentStatus ===
         "ON JOB"
     ) {
 
@@ -1597,20 +2060,20 @@ function updateDashboard() {
     // =================================
 
     if (
-        status ===
+        currentStatus ===
         "ON THE WAY"
     ) {
 
         statusIcon.innerHTML =
-            "🚗 OTW LIAO";
+            "🚗";
 
 
         statusTitle.innerHTML =
-            "Money waiting leh";
+            "MONEY WAITING LEH";
 
 
         statusMessage.innerHTML =
-            "";
+            "Driver on the way.";
 
 
         dutyBtn.style.display =
@@ -1627,7 +2090,7 @@ function updateDashboard() {
     // =================================
 
     if (
-        status ===
+        currentStatus ===
         "PICKED UP"
     ) {
 
@@ -1640,7 +2103,7 @@ function updateDashboard() {
 
 
         statusMessage.innerHTML =
-            "Handle with care";
+            "Handle with care.";
 
 
         dutyBtn.style.display =
@@ -1662,7 +2125,10 @@ function openGoogleMaps(
     address
 ) {
 
-    if (!address) {
+    if (
+        !address ||
+        address === "-"
+    ) {
 
         return;
 
@@ -1671,7 +2137,9 @@ function openGoogleMaps(
 
     window.open(
 
-        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`,
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+            address
+        )}`,
 
         "_blank"
 
@@ -1688,7 +2156,10 @@ function openWaze(
     address
 ) {
 
-    if (!address) {
+    if (
+        !address ||
+        address === "-"
+    ) {
 
         return;
 
@@ -1697,7 +2168,9 @@ function openWaze(
 
     window.open(
 
-        `https://waze.com/ul?q=${encodeURIComponent(address)}&navigate=yes`,
+        `https://waze.com/ul?q=${encodeURIComponent(
+            address
+        )}&navigate=yes`,
 
         "_blank"
 
@@ -1710,17 +2183,23 @@ function openWaze(
 // LIVE GPS
 // =====================================
 
-startGPS();
-
-
 function startGPS() {
+
+    if (
+        gpsWatchId !== null
+    ) {
+
+        return;
+
+    }
+
 
     if (
         !navigator.geolocation
     ) {
 
         console.log(
-            "GPS not supported."
+            "📍 GPS not supported."
         );
 
         return;
@@ -1728,25 +2207,31 @@ function startGPS() {
     }
 
 
-    navigator.geolocation.watchPosition(
+    gpsWatchId =
+        navigator.geolocation.watchPosition(
 
-        updateLocation,
+            updateLocation,
 
-        gpsError,
+            gpsError,
 
-        {
+            {
 
-            enableHighAccuracy:
-                true,
+                enableHighAccuracy:
+                    true,
 
-            maximumAge:
-                5000,
+                maximumAge:
+                    5000,
 
-            timeout:
-                10000
+                timeout:
+                    10000
 
-        }
+            }
 
+        );
+
+
+    console.log(
+        "📍 Live GPS started."
     );
 
 }
@@ -1760,7 +2245,9 @@ async function updateLocation(
     position
 ) {
 
-    if (!currentDriver) {
+    if (
+        !currentDriver
+    ) {
 
         return;
 
@@ -1776,7 +2263,7 @@ async function updateLocation(
 
 
     console.log(
-        "GPS:",
+        "📍 GPS:",
         latitude,
         longitude
     );
@@ -1786,26 +2273,26 @@ async function updateLocation(
         error
     } =
         await window.supabaseClient
-        .from("Drivers")
-        .update({
+            .from("Drivers")
+            .update({
 
-            latitude:
-                latitude,
+                latitude:
+                    latitude,
 
-            longitude:
-                longitude
+                longitude:
+                    longitude
 
-        })
-        .eq(
-            "auth_id",
-            currentDriver.id
-        );
+            })
+            .eq(
+                "auth_id",
+                currentDriver.id
+            );
 
 
     if (error) {
 
         console.error(
-            "GPS update error:",
+            "❌ GPS update error:",
             error
         );
 
@@ -1823,12 +2310,84 @@ function gpsError(
 ) {
 
     console.error(
-        "GPS Error:",
+        "📍 GPS Error:",
         error
     );
 
 }
 
+// =====================================
+// GET LOCATION
+// =====================================
+
+function getLocation(value) {
+
+    if (!value) {
+        return "-";
+    }
+
+    // Already a normal string
+    if (typeof value === "string") {
+        return value.trim() || "-";
+    }
+
+    // Array of locations
+    if (Array.isArray(value)) {
+
+        return value
+            .map(item => getLocation(item))
+            .filter(item => item && item !== "-")
+            .join(", ") || "-";
+
+    }
+
+    // Object containing common address fields
+    if (typeof value === "object") {
+
+        const possibleFields = [
+            "address",
+            "location",
+            "name",
+            "formatted_address",
+            "full_address",
+            "pickup",
+            "destination"
+        ];
+
+        for (const field of possibleFields) {
+
+            if (
+                value[field] !== undefined &&
+                value[field] !== null &&
+                String(value[field]).trim() !== ""
+            ) {
+
+                return String(
+                    value[field]
+                ).trim();
+
+            }
+
+        }
+
+        // Last resort
+        try {
+
+            return JSON.stringify(value);
+
+        }
+
+        catch {
+
+            return "-";
+
+        }
+
+    }
+
+    return String(value);
+
+}
 
 // =====================================
 // HTML ESCAPE
@@ -1871,7 +2430,9 @@ function escapeHTML(
 
 function startBookingAutoRefresh() {
 
-    if (refreshTimer) {
+    if (
+        refreshTimer
+    ) {
 
         clearInterval(
             refreshTimer
@@ -1888,16 +2449,88 @@ function startBookingAutoRefresh() {
                     "🔄 Checking for booking updates..."
                 );
 
+
                 await loadActiveBookings();
 
             },
             10000
         );
 
+
+    console.log(
+        "🔄 10-second booking refresh started."
+    );
+
 }
 
 
-startBookingAutoRefresh();
+// =====================================
+// STOP AUTO REFRESH
+// =====================================
+
+function stopBookingAutoRefresh() {
+
+    if (
+        refreshTimer
+    ) {
+
+        clearInterval(
+            refreshTimer
+        );
+
+        refreshTimer =
+            null;
+
+    }
+
+}
+
+
+// =====================================
+// NOTIFICATION PERMISSION
+// =====================================
+
+async function requestNotificationPermission() {
+
+    if (
+        !("Notification" in window)
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        Notification.permission ===
+        "default"
+    ) {
+
+        try {
+
+            const permission =
+                await Notification.requestPermission();
+
+
+            console.log(
+                "🔔 Notification permission:",
+                permission
+            );
+
+        }
+
+        catch (error) {
+
+            console.warn(
+                "Notification permission request failed:",
+                error
+            );
+
+        }
+
+    }
+
+}
 
 
 // =====================================
@@ -1907,6 +2540,10 @@ startBookingAutoRefresh();
 function showNewBookingNotification(
     booking
 ) {
+
+    // =================================
+    // SOUND
+    // =================================
 
     playBookingNotificationSound();
 
@@ -1941,22 +2578,37 @@ function showNewBookingNotification(
             "granted"
     ) {
 
-        new Notification(
-            "🚗 New Valetholic Booking",
-            {
-                body:
-                    message,
+        try {
 
-                icon:
-                    "logo.png"
-            }
-        );
+            new Notification(
+                "🚗 New Valetholic Booking",
+                {
+
+                    body:
+                        message,
+
+                    icon:
+                        "images/logo.png"
+
+                }
+            );
+
+        }
+
+        catch (error) {
+
+            console.warn(
+                "Browser notification failed:",
+                error
+            );
+
+        }
 
     }
 
 
     // =================================
-    // ON-SCREEN NOTIFICATION
+    // ON-SCREEN TOAST
     // =================================
 
     showBookingToast(
@@ -1967,10 +2619,10 @@ function showNewBookingNotification(
 
 
 // =====================================
-// NEW BOOKING SOUND
+// UNLOCK NOTIFICATION AUDIO
 // =====================================
 
-function playBookingNotificationSound() {
+async function unlockNotificationAudio() {
 
     const AudioContext =
         window.AudioContext ||
@@ -1984,128 +2636,228 @@ function playBookingNotificationSound() {
     }
 
 
-    const audioContext =
-        new AudioContext();
+    try {
+
+        if (
+            !notificationAudioContext
+        ) {
+
+            notificationAudioContext =
+                new AudioContext();
+
+        }
 
 
-    const now =
-        audioContext.currentTime;
+        if (
+            notificationAudioContext.state ===
+            "suspended"
+        ) {
+
+            await notificationAudioContext.resume();
+
+        }
 
 
-    // =================================
-    // FIRST DING
-    // =================================
+        console.log(
+            "🔊 Notification audio ready."
+        );
 
-    const oscillator1 =
-        audioContext.createOscillator();
+    }
 
+    catch (error) {
 
-    const gain1 =
-        audioContext.createGain();
+        console.warn(
+            "Audio unlock failed:",
+            error
+        );
 
+    }
 
-    oscillator1.type =
-        "sine";
-
-
-    oscillator1.frequency.value =
-        880;
+}
 
 
-    gain1.gain.setValueAtTime(
-        0.0001,
-        now
-    );
+// =====================================
+// NEW BOOKING SOUND
+// =====================================
+
+async function playBookingNotificationSound() {
+
+    const AudioContext =
+        window.AudioContext ||
+        window.webkitAudioContext;
 
 
-    gain1.gain.exponentialRampToValueAtTime(
-        0.25,
-        now + 0.02
-    );
+    if (!AudioContext) {
+
+        return;
+
+    }
 
 
-    gain1.gain.exponentialRampToValueAtTime(
-        0.0001,
-        now + 0.25
-    );
+    try {
+
+        // =================================
+        // CREATE / RESUME CONTEXT
+        // =================================
+
+        if (
+            !notificationAudioContext
+        ) {
+
+            notificationAudioContext =
+                new AudioContext();
+
+        }
 
 
-    oscillator1.connect(
-        gain1
-    );
+        if (
+            notificationAudioContext.state ===
+            "suspended"
+        ) {
+
+            await notificationAudioContext.resume();
+
+        }
 
 
-    gain1.connect(
-        audioContext.destination
-    );
+        const audioContext =
+            notificationAudioContext;
 
 
-    oscillator1.start(
-        now
-    );
+        const now =
+            audioContext.currentTime;
 
 
-    oscillator1.stop(
-        now + 0.25
-    );
+        // =================================
+        // FIRST DING
+        // =================================
+
+        const oscillator1 =
+            audioContext.createOscillator();
 
 
-    // =================================
-    // SECOND DING
-    // =================================
-
-    const oscillator2 =
-        audioContext.createOscillator();
+        const gain1 =
+            audioContext.createGain();
 
 
-    const gain2 =
-        audioContext.createGain();
+        oscillator1.type =
+            "sine";
 
 
-    oscillator2.type =
-        "sine";
+        oscillator1.frequency.value =
+            880;
 
 
-    oscillator2.frequency.value =
-        1175;
+        gain1.gain.setValueAtTime(
+            0.0001,
+            now
+        );
 
 
-    gain2.gain.setValueAtTime(
-        0.0001,
-        now + 0.18
-    );
+        gain1.gain.exponentialRampToValueAtTime(
+            0.25,
+            now + 0.02
+        );
 
 
-    gain2.gain.exponentialRampToValueAtTime(
-        0.25,
-        now + 0.20
-    );
+        gain1.gain.exponentialRampToValueAtTime(
+            0.0001,
+            now + 0.25
+        );
 
 
-    gain2.gain.exponentialRampToValueAtTime(
-        0.0001,
-        now + 0.45
-    );
+        oscillator1.connect(
+            gain1
+        );
 
 
-    oscillator2.connect(
-        gain2
-    );
+        gain1.connect(
+            audioContext.destination
+        );
 
 
-    gain2.connect(
-        audioContext.destination
-    );
+        oscillator1.start(
+            now
+        );
 
 
-    oscillator2.start(
-        now + 0.18
-    );
+        oscillator1.stop(
+            now + 0.25
+        );
 
 
-    oscillator2.stop(
-        now + 0.45
-    );
+        // =================================
+        // SECOND DING
+        // =================================
+
+        const oscillator2 =
+            audioContext.createOscillator();
+
+
+        const gain2 =
+            audioContext.createGain();
+
+
+        oscillator2.type =
+            "sine";
+
+
+        oscillator2.frequency.value =
+            1175;
+
+
+        gain2.gain.setValueAtTime(
+            0.0001,
+            now + 0.18
+        );
+
+
+        gain2.gain.exponentialRampToValueAtTime(
+            0.25,
+            now + 0.20
+        );
+
+
+        gain2.gain.exponentialRampToValueAtTime(
+            0.0001,
+            now + 0.45
+        );
+
+
+        oscillator2.connect(
+            gain2
+        );
+
+
+        gain2.connect(
+            audioContext.destination
+        );
+
+
+        oscillator2.start(
+            now + 0.18
+        );
+
+
+        oscillator2.stop(
+            now + 0.45
+        );
+
+
+        console.log(
+            "🔔 Booking notification sound played."
+        );
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "🔇 Notification sound could not play:",
+            error
+        );
+
+    }
 
 }
 
@@ -2124,7 +2876,9 @@ function showBookingToast(
         );
 
 
-    if (oldToast) {
+    if (
+        oldToast
+    ) {
 
         oldToast.remove();
 
@@ -2142,42 +2896,68 @@ function showBookingToast(
 
 
     toast.innerHTML = `
+
         <strong>
             🔔 NEW BOOKING
         </strong>
 
         <br>
 
-        ${escapeHTML(message)}
+        ${escapeHTML(
+            message
+        )}
+
     `;
 
 
     toast.style.cssText = `
+
         position: fixed;
+
         top: 20px;
+
         left: 50%;
-        transform: translateX(-50%);
+
+        transform:
+            translateX(-50%);
+
         z-index: 99999;
 
-        background: #d9b52f;
-        color: #111;
+        background:
+            #d9b52f;
 
-        padding: 14px 22px;
+        color:
+            #111;
 
-        border-radius: 12px;
+        padding:
+            14px 22px;
 
-        font-size: 14px;
-        font-weight: 600;
+        border-radius:
+            12px;
+
+        font-size:
+            14px;
+
+        font-weight:
+            600;
 
         box-shadow:
-            0 8px 25px rgba(0,0,0,.35);
+            0 8px 25px
+            rgba(0,0,0,.35);
 
-        text-align: center;
+        text-align:
+            center;
 
-        min-width: 220px;
+        min-width:
+            220px;
+
+        max-width:
+            calc(100vw - 30px);
 
         animation:
-            bookingToastIn .3s ease;
+            bookingToastIn
+            .3s ease;
+
     `;
 
 
@@ -2189,10 +2969,43 @@ function showBookingToast(
     setTimeout(
         () => {
 
-            toast.remove();
+            if (
+                toast &&
+                toast.parentNode
+            ) {
+
+                toast.remove();
+
+            }
 
         },
         5000
     );
 
 }
+
+
+// =====================================
+// PAGE CLEANUP
+// =====================================
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        stopBookingAutoRefresh();
+
+
+        if (
+            gpsWatchId !== null &&
+            navigator.geolocation
+        ) {
+
+            navigator.geolocation.clearWatch(
+                gpsWatchId
+            );
+
+        }
+
+    }
+);

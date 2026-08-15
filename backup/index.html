@@ -1,65 +1,632 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>Valetholic | Professional Valet Service</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta
+        name="description"
+        content="Valetholic is Singapore's premium valet service. We drive you and your vehicle safely to your destination."
+    >
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <meta
+        name="theme-color"
+        content="#111111"
+    >
 
-<link rel="stylesheet" href="styles.css">
+    <title>
+        Valetholic | Professional Valet Service
+    </title>
+
+
+    <!-- =====================================
+         GOOGLE FONTS
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================
+         MAIN STYLES
+    ====================================== -->
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+
+    <!-- =====================================
+         INDEX PAGE POLISH
+    ====================================== -->
+
+    <style>
+
+        /* =====================================
+           GENERAL
+        ====================================== */
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            overflow-x: hidden;
+        }
+
+
+        a,
+        button,
+        input,
+        select {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+
+        /* =====================================
+           NAVIGATION
+        ====================================== */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+
+        .navbar ul {
+            margin: 0;
+            padding: 0;
+        }
+
+
+        .navbar a {
+            text-decoration: none;
+        }
+
+
+        .navbar ul li a {
+            transition:
+                color 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+
+        .navbar ul li a:hover {
+            opacity: 0.75;
+        }
+
+
+        .nav-button {
+            transition:
+                transform 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+
+        .nav-button:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+
+        /* =====================================
+           HERO
+        ====================================== */
+
+        .hero {
+            min-height: calc(100vh - 80px);
+            align-items: center;
+        }
+
+
+        .hero-left {
+            animation:
+                heroFadeIn 0.7s ease-out both;
+        }
+
+
+        .hero-right {
+            animation:
+                heroFadeIn 0.7s ease-out 0.12s both;
+        }
+
+
+        @keyframes heroFadeIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        .hero-label {
+            letter-spacing: 0.08em;
+        }
+
+
+        .hero-title {
+            margin-bottom: 20px;
+        }
+
+
+        .hero-price {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin: 10px 0 18px;
+        }
+
+
+        .hero-price small {
+            opacity: 0.65;
+        }
+
+
+        .hero-price h2 {
+            margin: 0;
+        }
+
+
+        .hero-description {
+            max-width: 520px;
+            line-height: 1.7;
+        }
+
+
+        /* =====================================
+           BOOKING CARD
+        ====================================== */
+
+        .booking-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .booking-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(212, 175, 55, 0.9),
+                transparent
+            );
+        }
+
+
+        .booking-card h2 {
+            letter-spacing: 0.04em;
+        }
+
+
+        .booking-card label {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+
+        .booking-card input,
+        .booking-card select {
+            width: 100%;
+            box-sizing: border-box;
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .booking-card input:focus,
+        .booking-card select:focus {
+            outline: none;
+            border-color: rgba(212, 175, 55, 0.8);
+            box-shadow:
+                0 0 0 3px
+                rgba(212, 175, 55, 0.10);
+        }
+
+
+        .booking-card input::placeholder {
+            opacity: 0.55;
+        }
+
+
+        .booking-card button {
+            width: 100%;
+            cursor: pointer;
+            transition:
+                transform 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+
+        .booking-card button:hover {
+            transform: translateY(-1px);
+        }
+
+
+        .booking-card button:active {
+            transform: translateY(0);
+        }
+
+
+        .booking-card button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+
+        /* =====================================
+           HOW IT WORKS
+        ====================================== */
+
+        .how {
+            scroll-margin-top: 100px;
+        }
+
+
+        .steps {
+            gap: 30px;
+        }
+
+
+        .step {
+            transition:
+                transform 0.2s ease;
+        }
+
+
+        .step:hover {
+            transform: translateY(-3px);
+        }
+
+
+        .number {
+            font-variant-numeric: tabular-nums;
+        }
+
+
+        /* =====================================
+           FOOTER
+        ====================================== */
+
+        footer {
+            text-align: center;
+        }
+
+
+        footer h2 {
+            margin-bottom: 8px;
+        }
+
+
+        footer p {
+            opacity: 0.65;
+        }
+
+
+        /* =====================================
+           MOBILE
+        ====================================== */
+
+        @media (
+            max-width: 768px
+        ) {
+
+            .navbar {
+                flex-wrap: wrap;
+                gap: 12px;
+                padding: 14px 18px;
+            }
+
+
+            .navbar ul {
+                order: 3;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+
+            .navbar ul li a {
+                font-size: 13px;
+            }
+
+
+            .nav-button {
+                margin-left: auto;
+            }
+
+
+            .hero {
+                min-height: auto;
+                padding-top: 55px;
+                padding-bottom: 55px;
+            }
+
+
+            .hero-title {
+                font-size: clamp(
+                    42px,
+                    11vw,
+                    68px
+                );
+                line-height: 0.98;
+            }
+
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+
+            .hero-price h2 {
+                font-size: 34px;
+            }
+
+
+            .booking-card {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+
+            .booking-row {
+                display: grid;
+                grid-template-columns:
+                    1fr 1fr;
+                gap: 12px;
+            }
+
+
+            .steps {
+                display: grid;
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .step {
+                text-align: center;
+            }
+
+        }
+
+
+        /* =====================================
+           SMALL MOBILE
+        ====================================== */
+
+        @media (
+            max-width: 480px
+        ) {
+
+            .navbar {
+                padding:
+                    12px 14px;
+            }
+
+
+            .logo span {
+                font-size: 15px;
+            }
+
+
+            .navbar ul {
+                gap: 12px;
+            }
+
+
+            .navbar ul li a {
+                font-size: 12px;
+            }
+
+
+            .nav-button {
+                padding:
+                    9px 13px;
+                font-size: 12px;
+            }
+
+
+            .hero {
+                padding:
+                    42px 16px 45px;
+            }
+
+
+            .booking-row {
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .booking-card {
+                padding: 22px;
+            }
+
+        }
+
+
+        /* =====================================
+           REDUCED MOTION
+        ====================================== */
+
+        @media (
+            prefers-reduced-motion: reduce
+        ) {
+
+            html {
+                scroll-behavior: auto;
+            }
+
+
+            *,
+            *::before,
+            *::after {
+                animation-duration:
+                    0.01ms !important;
+
+                animation-iteration-count:
+                    1 !important;
+
+                transition-duration:
+                    0.01ms !important;
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<!-- =========================
-NAVIGATION
-========================= -->
 
-<nav class="navbar">
+<!-- =====================================
+     NAVIGATION
+====================================== -->
+
+<nav
+    class="navbar"
+    aria-label="Main navigation"
+>
+
+
+    <!-- LOGO -->
 
     <div class="logo">
 
-        <img src="images/logo.png" alt="Valetholic Logo">
+        <img
+            src="images/logo.png"
+            alt="Valetholic Logo"
+        >
 
-        <span>VALETHOLIC</span>
+
+        <span>
+            VALETHOLIC
+        </span>
 
     </div>
 
+
+
+    <!-- NAV LINKS -->
+
     <ul>
 
-        <li><a href="#how">How It Works</a></li>
 
-        <li><a href="#pricing">Pricing</a></li>
+        <li>
 
-        <li><a href="#faq">Become a Driver</a></li>
+            <a href="#how">
+                How It Works
+            </a>
 
-        <li><a href="#faq">FAQ</a></li>
+        </li>
+
+
+        <li>
+
+            <a href="#pricing">
+                Pricing
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="#booking">
+                Become a Driver
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="#faq">
+                FAQ
+            </a>
+
+        </li>
+
 
     </ul>
 
-    <a href="#booking" class="nav-button">
+
+
+    <!-- BOOK NOW -->
+
+    <a
+        href="#booking"
+        class="nav-button"
+    >
 
         Book Now
 
     </a>
 
+
 </nav>
-<!-- =========================
-HERO
-========================= -->
 
-<section class="hero">
 
-    <!-- LEFT -->
+
+<!-- =====================================
+     HERO
+====================================== -->
+
+<section
+    class="hero"
+    aria-labelledby="hero-title"
+>
+
+
+    <!-- =================================
+         LEFT SIDE
+    ================================== -->
 
     <div class="hero-left">
+
 
         <p class="hero-label">
 
@@ -67,21 +634,46 @@ HERO
 
         </p>
 
-        <h1 class="hero-title">
+
+
+        <h1
+            class="hero-title"
+            id="hero-title"
+        >
 
             We Drive.<br>
+
             You Relax.<br>
-            <span>We Get You Home.</span>
+
+            <span>
+                We Get You Home.
+            </span>
 
         </h1>
 
-        <div class="hero-price">
 
-            <small>From</small>
 
-            <h2>$48</h2>
+        <!-- PRICE -->
+
+        <div
+            class="hero-price"
+            aria-label="Starting price of 48 dollars"
+        >
+
+            <small>
+                From
+            </small>
+
+
+            <h2>
+                $48
+            </h2>
 
         </div>
+
+
+
+        <!-- DESCRIPTION -->
 
         <p class="hero-description">
 
@@ -91,123 +683,257 @@ HERO
 
         </p>
 
-        <a href="#booking" class="gold-btn">
+
+
+        <!-- CTA -->
+
+        <a
+            href="#booking"
+            class="gold-btn"
+        >
 
             BOOK NOW
 
         </a>
 
+
     </div>
 
-    <!-- RIGHT -->
+
+
+    <!-- =================================
+         RIGHT SIDE
+    ================================== -->
 
     <div class="hero-right">
 
-        <div class="booking-card" id="booking">
+
+        <div
+            class="booking-card"
+            id="booking"
+        >
+
 
             <h2>
-
                 BOOK YOUR VALET
-
             </h2>
 
-            <form>
 
-                <label>
+
+            <p
+                style="
+                    opacity: 0.65;
+                    margin-top: -8px;
+                    margin-bottom: 22px;
+                    font-size: 14px;
+                    line-height: 1.5;
+                "
+            >
+
+                Tell us where you're going.
+                We'll handle the drive.
+
+            </p>
+
+
+
+            <form
+                id="bookingForm"
+            >
+
+
+                <!-- =================================
+                     PICKUP
+                ================================== -->
+
+                <label
+                    for="pickup"
+                >
 
                     Pickup
 
                 </label>
 
-                <input
-                    type="text"
-                    placeholder="Pickup location">
 
-                <label>
+                <input
+                    id="pickup"
+                    name="pickup"
+                    type="text"
+                    placeholder="Pickup location"
+                    autocomplete="street-address"
+                    required
+                >
+
+
+
+                <!-- =================================
+                     DESTINATION
+                ================================== -->
+
+                <label
+                    for="destination"
+                >
 
                     Destination
 
                 </label>
 
-                <input
-                    type="text"
-                    placeholder="Destination">
 
-                <div class="booking-row">
+                <input
+                    id="destination"
+                    name="destination"
+                    type="text"
+                    placeholder="Destination"
+                    autocomplete="street-address"
+                    required
+                >
+
+
+
+                <!-- =================================
+                     DATE + TIME
+                ================================== -->
+
+                <div
+                    class="booking-row"
+                >
+
 
                     <div>
 
-                        <label>
+                        <label
+                            for="bookingDate"
+                        >
 
                             Date
 
                         </label>
 
-                        <input type="date">
+
+                        <input
+                            id="bookingDate"
+                            name="bookingDate"
+                            type="date"
+                            required
+                        >
 
                     </div>
 
+
+
                     <div>
 
-                        <label>
+                        <label
+                            for="bookingTime"
+                        >
 
                             Time
 
                         </label>
 
-                        <select id="bookingTime">
+
+                        <select
+                            id="bookingTime"
+                            name="bookingTime"
+                            required
+                        >
 
                         </select>
 
                     </div>
 
+
                 </div>
 
-                <label>
+
+
+                <!-- =================================
+                     VEHICLE
+                ================================== -->
+
+                <label
+                    for="vehicle"
+                >
 
                     Vehicle
 
                 </label>
 
-                <input
-                    type="text"
-                    placeholder="e.g. Toyota Alphard">
 
-                <button type="submit">
+                <input
+                    id="vehicle"
+                    name="vehicle"
+                    type="text"
+                    placeholder="e.g. Toyota Alphard"
+                    autocomplete="off"
+                    required
+                >
+
+
+
+                <!-- =================================
+                     CONTINUE
+                ================================== -->
+
+                <button
+                    type="submit"
+                    id="continueButton"
+                >
 
                     CONTINUE →
 
                 </button>
 
+
             </form>
+
 
         </div>
 
+
     </div>
+
 
 </section>
 
-<!-- =========================
-HOW IT WORKS
-========================= -->
 
-<section class="how" id="how">
 
-    <h2>
+<!-- =====================================
+     HOW IT WORKS
+====================================== -->
+
+<section
+    class="how"
+    id="how"
+    aria-labelledby="how-title"
+>
+
+
+    <h2 id="how-title">
 
         How It Works
 
     </h2>
 
+
+
     <div class="steps">
+
+
+        <!-- STEP 1 -->
 
         <div class="step">
 
-            <div class="number">
+
+            <div
+                class="number"
+                aria-hidden="true"
+            >
 
                 01
 
             </div>
+
 
             <h3>
 
@@ -215,21 +941,32 @@ HOW IT WORKS
 
             </h3>
 
+
             <p>
 
                 Fill in your trip details.
 
             </p>
 
+
         </div>
+
+
+
+        <!-- STEP 2 -->
 
         <div class="step">
 
-            <div class="number">
+
+            <div
+                class="number"
+                aria-hidden="true"
+            >
 
                 02
 
             </div>
+
 
             <h3>
 
@@ -237,21 +974,33 @@ HOW IT WORKS
 
             </h3>
 
+
             <p>
 
-                We assign the best available valet.
+                We assign the best available
+                valet.
 
             </p>
 
+
         </div>
+
+
+
+        <!-- STEP 3 -->
 
         <div class="step">
 
-            <div class="number">
+
+            <div
+                class="number"
+                aria-hidden="true"
+            >
 
                 03
 
             </div>
+
 
             <h3>
 
@@ -259,66 +1008,441 @@ HOW IT WORKS
 
             </h3>
 
+
             <p>
 
-                Live tracking starts after the driver begins the journey.
+                Live tracking starts after the
+                driver begins the journey.
 
             </p>
 
+
         </div>
+
 
     </div>
 
+
 </section>
+
+
+
+<!-- =====================================
+     PRICING ANCHOR
+====================================== -->
+
+<section
+    id="pricing"
+    style="
+        height: 1px;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+    "
+    aria-hidden="true"
+>
+</section>
+
+
+
+<!-- =====================================
+     FAQ ANCHOR
+====================================== -->
+
+<section
+    id="faq"
+    style="
+        height: 1px;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+    "
+    aria-hidden="true"
+>
+</section>
+
+
+
+<!-- =====================================
+     FOOTER
+====================================== -->
 
 <footer>
 
+
     <h2>
-
         VALETHOLIC
-
     </h2>
 
+
     <p>
-
         Singapore's Premium Valet Service
-
     </p>
 
-</footer> 
+
+</footer>
+
+
+
+<!-- =====================================
+     PAGE JAVASCRIPT
+====================================== -->
+
 <script>
 
-const bookingTime = document.getElementById("bookingTime");
 
-for(let h=0;h<24;h++){
+// =====================================
+// BOOKING TIME OPTIONS
+// =====================================
 
-    ["00","30"].forEach(m=>{
+const bookingTime =
+    document.getElementById(
+        "bookingTime"
+    );
 
-        const option=document.createElement("option");
 
-        const display=((h+11)%12)+1;
+if (
+    bookingTime
+) {
 
-        const ampm=h<12?"AM":"PM";
 
-        option.value=String(h).padStart(2,"0")+":"+m;
+    for (
+        let h = 0;
+        h < 24;
+        h++
+    ) {
 
-        option.textContent=`${display}:${m} ${ampm}`;
 
-        bookingTime.appendChild(option);
+        [
+            "00",
+            "30"
+        ]
+        .forEach(
+            minute => {
 
-    });
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                // 24-hour value
+                option.value =
+                    String(
+                        h
+                    )
+                    .padStart(
+                        2,
+                        "0"
+                    )
+                    +
+                    ":" +
+                    minute;
+
+
+                // 12-hour display
+                const displayHour =
+                    (
+                        (h + 11) %
+                        12
+                    ) + 1;
+
+
+                const ampm =
+                    h < 12
+                        ? "AM"
+                        : "PM";
+
+
+                option.textContent =
+                    `${displayHour}:${minute} ${ampm}`;
+
+
+                bookingTime.appendChild(
+                    option
+                );
+
+            }
+        );
+
+    }
+
 
 }
 
-const now=new Date();
 
-let hour=now.getHours();
 
-let minute=now.getMinutes()<30?"00":"30";
+// =====================================
+// DATE
+// =====================================
 
-bookingTime.value=String(hour).padStart(2,"0")+":"+minute;
+const bookingDate =
+    document.getElementById(
+        "bookingDate"
+    );
+
+
+if (
+    bookingDate
+) {
+
+
+    // ---------------------------------
+    // Get today's local date
+    // ---------------------------------
+
+    const today =
+        new Date();
+
+
+    const year =
+        today.getFullYear();
+
+
+    const month =
+        String(
+            today.getMonth() + 1
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            today.getDate()
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    const todayString =
+        `${year}-${month}-${day}`;
+
+
+    bookingDate.min =
+        todayString;
+
+
+    // ---------------------------------
+    // Default date
+    // ---------------------------------
+
+    if (
+        !bookingDate.value
+    ) {
+
+        bookingDate.value =
+            todayString;
+
+    }
+
+}
+
+
+
+// =====================================
+// DEFAULT TIME
+// =====================================
+
+if (
+    bookingTime
+) {
+
+
+    const now =
+        new Date();
+
+
+    const hour =
+        now.getHours();
+
+
+    const minute =
+        now.getMinutes() <
+        30
+            ? "00"
+            : "30";
+
+
+    const currentTime =
+        String(
+            hour
+        )
+        .padStart(
+            2,
+            "0"
+        )
+        +
+        ":" +
+        minute;
+
+
+    bookingTime.value =
+        currentTime;
+
+
+}
+
+
+
+// =====================================
+// BOOKING FORM
+// =====================================
+
+const bookingForm =
+    document.getElementById(
+        "bookingForm"
+    );
+
+
+const continueButton =
+    document.getElementById(
+        "continueButton"
+    );
+
+
+if (
+    bookingForm
+) {
+
+
+    bookingForm.addEventListener(
+        "submit",
+        function (
+            event
+        ) {
+
+
+            // ---------------------------------
+            // Native validation
+            // ---------------------------------
+
+            if (
+                !bookingForm.checkValidity()
+            ) {
+
+                event.preventDefault();
+
+                bookingForm.reportValidity();
+
+                return;
+
+            }
+
+
+            // ---------------------------------
+            // DO NOT INTERFERE WITH EXISTING
+            // BOOKING FLOW
+            // ---------------------------------
+            //
+            // The current index.html does not
+            // define a submission destination.
+            //
+            // We therefore leave the actual
+            // booking submission untouched.
+            //
+            // This handler only prevents accidental
+            // double-clicks.
+            // ---------------------------------
+
+
+            if (
+                continueButton
+            ) {
+
+                continueButton.disabled =
+                    true;
+
+
+                continueButton.textContent =
+                    "LOADING...";
+
+            }
+
+
+        }
+    );
+
+}
+
+
+
+// =====================================
+// SMOOTH NAVIGATION
+// =====================================
+
+document
+    .querySelectorAll(
+        'a[href^="#"]'
+    )
+    .forEach(
+        link => {
+
+
+            link.addEventListener(
+                "click",
+                function (
+                    event
+                ) {
+
+
+                    const targetId =
+                        this.getAttribute(
+                            "href"
+                        );
+
+
+                    if (
+                        !targetId ||
+                        targetId === "#"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const target =
+                        document.querySelector(
+                            targetId
+                        );
+
+
+                    if (
+                        !target
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    event.preventDefault();
+
+
+                    target.scrollIntoView({
+                        behavior:
+                            "smooth",
+                        block:
+                            "start"
+                    });
+
+
+                }
+            );
+
+        }
+    );
+
 
 </script>
+
+
 </body>
 
 </html>

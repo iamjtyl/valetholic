@@ -1,291 +1,1230 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+/* =====================================
+   VALETHOLIC DRIVER DASHBOARD
+===================================== */
 
-body{
+:root {
 
-    font-family:'Inter',sans-serif;
+    --black: #0F0F0F;
+    --black-deep: #090909;
 
-    background:#0f0f0f;
+    --card: #171717;
+    --card-dark: #131313;
+    --card-hover: #1C1C1C;
 
-    color:white;
+    --border: rgba(255,255,255,.08);
+    --border-gold: rgba(212,175,55,.18);
 
-}
+    --gold: #D4AF37;
+    --gold-light: #E1BF59;
+    --gold-dark: #C49F2F;
 
-.dashboard{
+    --text: #FFFFFF;
+    --text-soft: #BCBCBC;
+    --text-muted: #888888;
 
-    width:100%;
-    max-width:650px;
+    --success: #4CAF78;
+    --danger: #D64545;
 
-    margin:50px auto;
-
-    padding:25px;
-
-}
-
-.status-card,
-.job-card{
-
-    background:#171717;
-
-    border:1px solid rgba(212,175,55,.18);
-
-    border-radius:24px;
-
-    padding:35px;
-
-    margin-bottom:25px;
-
-    box-shadow:0 20px 50px rgba(0,0,0,.35);
+    --radius: 24px;
 
 }
 
-.status-icon{
 
-    font-size:62px;
+/* =====================================
+   RESET
+===================================== */
 
-    text-align:center;
+* {
 
-    margin-bottom:15px;
+    margin: 0;
+    padding: 0;
 
-}
-
-.status-card h1{
-
-    text-align:center;
-
-    font-size:46px;
-
-    margin-bottom:20px;
+    box-sizing: border-box;
 
 }
 
-.status-card p{
 
-    text-align:center;
+html {
 
-    color:#bcbcbc;
-
-    line-height:1.8;
-
-    font-size:17px;
-
-    margin-bottom:30px;
+    scroll-behavior: smooth;
 
 }
 
-.gold-btn{
 
-    width:100%;
+body {
 
-    padding:18px;
+    min-height: 100vh;
 
-    border:none;
+    margin: 0;
 
-    border-radius:16px;
+    background:
+        radial-gradient(
+            circle at top,
+            #171717 0%,
+            var(--black) 45%,
+            var(--black-deep) 100%
+        );
 
-    background:#D4AF37;
+    color: var(--text);
 
-    color:#111;
+    font-family:
+        "Inter",
+        sans-serif;
 
-    font-weight:700;
+    -webkit-font-smoothing: antialiased;
 
-    font-size:18px;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-}
-
-.gold-btn:hover{
-
-    transform:translateY(-2px);
-
-    box-shadow:0 15px 35px rgba(212,175,55,.35);
+    text-rendering: optimizeLegibility;
 
 }
 
-.job-card{
 
-    display:none;
+/* =====================================
+   MAIN DASHBOARD
+===================================== */
 
-}
+.dashboard {
 
-.job-card h2{
+    width: min(100%, 650px);
 
-    text-align:center;
+    margin: 50px auto;
 
-    margin-bottom:30px;
-
-    color:#D4AF37;
-
-}
-
-.job-section{
-
-    margin-bottom:28px;
+    padding: 25px;
 
 }
 
-.job-section small{
 
-    display:block;
+/* =====================================
+   DRIVER TOP BAR
+===================================== */
 
-    color:#999;
+.driver-topbar {
 
-    margin-bottom:8px;
+    position: fixed;
 
-    text-transform:uppercase;
+    top: 18px;
+    right: 25px;
 
-    letter-spacing:2px;
+    z-index: 99999;
 
-}
-
-.job-section p{
-
-    font-size:18px;
-
-    line-height:1.6;
-
-}
-
-.nav-buttons{
-
-    display:flex;
-
-    gap:12px;
-
-    margin-top:15px;
-
-}
-
-.nav-buttons button{
-
-    flex:1;
-
-    border:none;
-
-    border-radius:14px;
-
-    padding:15px;
-
-    cursor:pointer;
-
-    font-weight:700;
-
-    transition:.25s;
-
-}
-
-.google-btn{
-
-    background:#F4B400;
-
-    color:#111;
-
-}
-
-.google-btn:hover{
-
-    transform:translateY(-2px);
-
-}
-
-.waze-btn{
-
-    background:#33C7FF;
-
-    color:white;
-
-}
-
-.waze-btn:hover{
-
-    transform:translateY(-2px);
-
-}
-
-@media(max-width:650px){
-
-.dashboard{
-
-    margin:20px auto;
-
-    padding:15px;
-
-}
-
-.status-card,
-.job-card{
-
-    padding:25px;
-
-}
-
-.status-card h1{
-
-    font-size:36px;
-
-}
-
-}
-/* ================================
-   DRIVER JOB QUEUE
-================================ */
-
-.job-list {
-    width: 100%;
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 14px;
+
 }
 
-.job-list .job-card {
+
+/* =====================================
+   DRIVER GREETING
+===================================== */
+
+.driver-topbar .driver-greeting {
+
+    position: relative;
+
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    width: auto;
+    min-width: max-content;
+
+    height: 48px;
+
+    margin: 0;
+
+    padding: 0 18px;
+
+    white-space: nowrap;
+
+    color: var(--gold);
+
+    background:
+        rgba(20,20,20,.96);
+
+    border:
+        1px solid
+        rgba(212,175,55,.25);
+
+    border-radius: 14px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    letter-spacing: .2px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.30);
+
+    backdrop-filter: blur(10px);
+
+}
+
+
+/* =====================================
+   LOG OUT BUTTON
+===================================== */
+
+.driver-topbar .logout-btn {
+
+    position: relative;
+
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    width: auto;
+
+    min-width: 105px;
+
+    height: 48px;
+
+    margin: 0;
+
+    padding: 0 18px;
+
+    white-space: nowrap;
+
+    border:
+        1px solid
+        var(--gold);
+
+    border-radius: 14px;
+
+    background: #1A1A1A;
+
+    color: #FFFFFF;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: .7px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.driver-topbar .logout-btn:hover {
+
+    background: var(--gold);
+
+    color: #111;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 10px 28px
+        rgba(212,175,55,.25);
+
+}
+
+
+.driver-topbar .logout-btn:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+/* =====================================
+   STATUS CARD
+===================================== */
+
+.status-card {
+
+    position: relative;
+
+    margin-bottom: 25px;
+
+    padding: 35px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1A1A1A,
+            var(--card-dark)
+        );
+
+    border:
+        1px solid
+        var(--border-gold);
+
+    border-radius:
+        var(--radius);
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.35);
+
+}
+
+
+/* =====================================
+   STATUS CARD GOLD GLOW
+===================================== */
+
+.status-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -100px;
+    right: -100px;
+
+    width: 220px;
+    height: 220px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(212,175,55,.10),
+            transparent 70%
+        );
+
+    pointer-events: none;
+
+}
+
+
+/* =====================================
+   STATUS ICON
+===================================== */
+
+.status-icon {
+
+    position: relative;
+
+    margin-bottom: 18px;
+
+    font-size: 62px;
+
+    line-height: 1;
+
+    text-align: center;
+
+}
+
+
+/* =====================================
+   STATUS TITLE
+===================================== */
+
+.status-card h1 {
+
+    position: relative;
+
+    margin-bottom: 18px;
+
+    color: var(--text);
+
+    font-size: 46px;
+
+    font-weight: 700;
+
+    line-height: 1.05;
+
+    text-align: center;
+
+}
+
+
+/* =====================================
+   STATUS DESCRIPTION
+===================================== */
+
+.status-card p {
+
+    position: relative;
+
+    max-width: 520px;
+
+    margin:
+        0 auto 30px;
+
+    color: var(--text-soft);
+
+    font-size: 16px;
+
+    line-height: 1.8;
+
+    text-align: center;
+
+}
+
+
+/* =====================================
+   GOLD DUTY BUTTON
+===================================== */
+
+.gold-btn {
+
     width: 100%;
-    box-sizing: border-box;
+
+    min-height: 56px;
+
+    padding: 16px 20px;
+
+    border: none;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold),
+            var(--gold-dark)
+        );
+
+    color: #111;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    letter-spacing: .4px;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease,
+        opacity .2s ease;
+
 }
 
-.job-list .job-card + .job-card {
-    margin-top: 0;
+
+.gold-btn:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold-light),
+            var(--gold)
+        );
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 15px 35px
+        rgba(212,175,55,.30);
+
 }
-/* ================================
-   DRIVER JOB QUEUE
-================================ */
+
+
+.gold-btn:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+.gold-btn:disabled {
+
+    opacity: .55;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+
+}
+
+
+/* =====================================
+   JOB LIST
+===================================== */
 
 .job-list {
+
     width: 100%;
-    display: flex !important;
+
+    display: flex;
+
     flex-direction: column;
+
     gap: 16px;
+
 }
+
+
+/* =====================================
+   JOB CARD
+===================================== */
+
+.job-card {
+
+    position: relative;
+
+    display: none;
+
+    width: 100%;
+
+    margin-bottom: 0;
+
+    padding: 30px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            #191919,
+            #141414
+        );
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        var(--radius);
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.30);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+
+}
+
+
+/*
+    Assigned jobs inside the queue
+    remain visible and stack vertically.
+*/
 
 .job-list .job-card {
+
     display: block !important;
+
     width: 100%;
+
     box-sizing: border-box;
+
 }
 
+
 .job-list .job-card + .job-card {
+
     margin-top: 0;
+
 }
+
+
+/* =====================================
+   JOB CARD HOVER
+===================================== */
+
+.job-card:hover {
+
+    border-color:
+        rgba(212,175,55,.22);
+
+    box-shadow:
+        0 24px 55px
+        rgba(0,0,0,.38);
+
+}
+
+
+/* =====================================
+   JOB CARD HEADER
+===================================== */
+
+.job-card h2 {
+
+    margin-bottom: 28px;
+
+    color: var(--gold);
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    text-align: center;
+
+}
+
+
+/* =====================================
+   JOB SECTIONS
+===================================== */
+
+.job-section {
+
+    margin-bottom: 25px;
+
+}
+
+
+.job-section:last-child {
+
+    margin-bottom: 0;
+
+}
+
+
+.job-section small {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--text-muted);
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    line-height: 1.3;
+
+    text-transform: uppercase;
+
+}
+
+
+.job-section p {
+
+    color: var(--text);
+
+    font-size: 17px;
+
+    line-height: 1.65;
+
+    word-break: break-word;
+
+}
+
+
+/* =====================================
+   PICKUP / DESTINATION
+===================================== */
+
+.job-section.pickup p,
+.job-section.destination p {
+
+    font-weight: 500;
+
+}
+
+
+/* =====================================
+   NAVIGATION BUTTONS
+===================================== */
+
+.nav-buttons {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 18px;
+
+}
+
+
+.nav-buttons button {
+
+    flex: 1;
+
+    min-height: 50px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        opacity .2s ease;
+
+}
+
+
+.nav-buttons button:hover {
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+.nav-buttons button:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+/* =====================================
+   GOOGLE MAPS
+===================================== */
+
+.google-btn {
+
+    background: #F4B400;
+
+    color: #111;
+
+}
+
+
+.google-btn:hover {
+
+    box-shadow:
+        0 10px 25px
+        rgba(244,180,0,.25);
+
+}
+
+
+/* =====================================
+   WAZE
+===================================== */
+
+.waze-btn {
+
+    background: #33C7FF;
+
+    color: #FFFFFF;
+
+}
+
+
+.waze-btn:hover {
+
+    box-shadow:
+        0 10px 25px
+        rgba(51,199,255,.25);
+
+}
+
+
+/* =====================================
+   GENERIC JOB ACTIONS
+===================================== */
+
+.job-actions {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-top: 25px;
+
+}
+
+
+.job-actions button {
+
+    width: 100%;
+
+}
+
+
+/* =====================================
+   START JOB
+===================================== */
+
+.start-job-btn {
+
+    width: 100%;
+
+    min-height: 54px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: var(--gold);
+
+    color: #111;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.start-job-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 14px 30px
+        rgba(212,175,55,.25);
+
+}
+
+
+.start-job-btn:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+/* =====================================
+   COMPLETE JOB
+===================================== */
+
+.complete-job-btn {
+
+    width: 100%;
+
+    min-height: 54px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: var(--success);
+
+    color: #FFFFFF;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.complete-job-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 28px
+        rgba(76,175,120,.20);
+
+}
+
+
+.complete-job-btn:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+/* =====================================
+   BOOKING TOAST
+===================================== */
+
+.booking-toast {
+
+    position: fixed;
+
+    top: 25px;
+    left: 50%;
+
+    z-index: 99999;
+
+    min-width:
+        min(320px, calc(100vw - 30px));
+
+    max-width: 500px;
+
+    padding:
+        15px 20px;
+
+    background: #1C1C1C;
+
+    color: #FFFFFF;
+
+    border:
+        1px solid
+        rgba(212,175,55,.30);
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 18px 45px
+        rgba(0,0,0,.45);
+
+    text-align: center;
+
+    animation:
+        bookingToastIn
+        .3s ease
+        forwards;
+
+}
+
+
+/* =====================================
+   TOAST ANIMATION
+===================================== */
 
 @keyframes bookingToastIn {
 
     from {
+
         opacity: 0;
+
         transform:
             translateX(-50%)
             translateY(-15px);
+
     }
 
     to {
+
         opacity: 1;
+
         transform:
             translateX(-50%)
             translateY(0);
+
+    }
+
+}
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 650px) {
+
+
+    /* TOP BAR */
+
+    .driver-topbar {
+
+        top: 12px;
+
+        right: 12px;
+
+        gap: 8px;
+
+        max-width:
+            calc(100vw - 24px);
+
+    }
+
+
+    .driver-topbar .driver-greeting {
+
+        height: 42px;
+
+        min-height: 42px;
+
+        padding: 0 12px;
+
+        font-size: 14px;
+
+    }
+
+
+    .driver-topbar .logout-btn {
+
+        min-width: 82px;
+
+        height: 42px;
+
+        padding: 0 12px;
+
+        font-size: 11px;
+
+    }
+
+
+    /* DASHBOARD */
+
+    .dashboard {
+
+        width: 100%;
+
+        margin: 20px auto;
+
+        padding: 15px;
+
+    }
+
+
+    /* CARDS */
+
+    .status-card,
+    .job-card {
+
+        padding: 25px;
+
+        border-radius: 20px;
+
+    }
+
+
+    /* STATUS */
+
+    .status-icon {
+
+        font-size: 54px;
+
+    }
+
+
+    .status-card h1 {
+
+        font-size: 36px;
+
+    }
+
+
+    .status-card p {
+
+        font-size: 15px;
+
+        line-height: 1.7;
+
+    }
+
+
+    .gold-btn {
+
+        min-height: 54px;
+
+        font-size: 16px;
+
+    }
+
+
+    /* JOB */
+
+    .job-card h2 {
+
+        font-size: 22px;
+
+        margin-bottom: 25px;
+
+    }
+
+
+    .job-section {
+
+        margin-bottom: 22px;
+
+    }
+
+
+    .job-section p {
+
+        font-size: 16px;
+
+    }
+
+
+    /* NAVIGATION */
+
+    .nav-buttons {
+
+        flex-direction: column;
+
+        gap: 10px;
+
+    }
+
+
+    .nav-buttons button {
+
+        width: 100%;
+
+        min-height: 50px;
+
+    }
+
+}
+
+
+/* =====================================
+   SMALL MOBILE
+===================================== */
+
+@media (max-width: 400px) {
+
+
+    .driver-topbar {
+
+        right: 10px;
+
+        gap: 6px;
+
+    }
+
+
+    .driver-topbar .driver-greeting {
+
+        font-size: 13px;
+
+        padding: 0 10px;
+
+    }
+
+
+    .driver-topbar .logout-btn {
+
+        min-width: 76px;
+
+        padding: 0 10px;
+
+        font-size: 10px;
+
+    }
+
+
+    .dashboard {
+
+        padding: 12px;
+
+    }
+
+
+    .status-card,
+    .job-card {
+
+        padding: 20px;
+
+        border-radius: 18px;
+
+    }
+
+
+    .status-card h1 {
+
+        font-size: 32px;
+
+    }
+
+
+    .status-card p {
+
+        font-size: 14px;
+
+    }
+
+
+    .job-card h2 {
+
+        font-size: 20px;
+
+    }
+
+
+    .job-section p {
+
+        font-size: 15px;
+
+    }
+
+}
+
+
+/* =====================================
+   REDUCED MOTION
+===================================== */
+
+@media (
+    prefers-reduced-motion: reduce
+) {
+
+    html {
+
+        scroll-behavior: auto;
+
+    }
+
+
+    *,
+    *::before,
+    *::after {
+
+        animation: none !important;
+
+        transition: none !important;
+
     }
 
 }
