@@ -3,10 +3,6 @@
 
 <head>
 
-    <!-- =========================================
-         BASIC SETTINGS
-    ========================================== -->
-
     <meta charset="UTF-8">
 
     <meta
@@ -19,19 +15,11 @@
     </title>
 
 
-    <!-- =========================================
-         MAIN WEBSITE CSS
-    ========================================== -->
-
     <link
         rel="stylesheet"
         href="styles.css"
     >
 
-
-    <!-- =========================================
-         LEAFLET CSS
-    ========================================== -->
 
     <link
         rel="stylesheet"
@@ -39,25 +27,15 @@
     >
 
 
-    <!-- =========================================
-         TRACKING PAGE STYLES
-    ========================================== -->
-
     <style>
-
-        /* =========================
-           PAGE
-        ========================== */
 
         body {
 
             margin: 0;
 
-            background:
-                #111;
+            background: #111;
 
-            color:
-                #fff;
+            color: #fff;
 
             font-family:
                 Inter,
@@ -69,14 +47,9 @@
 
         .tracking-page {
 
-            width:
-                100%;
+            max-width: 900px;
 
-            max-width:
-                900px;
-
-            margin:
-                0 auto;
+            margin: 0 auto;
 
             padding:
                 25px 18px 40px;
@@ -84,149 +57,122 @@
         }
 
 
-        /* =========================
-           HEADER
-        ========================== */
-
         .tracking-header {
 
-            text-align:
-                center;
+            text-align: center;
 
-            margin-bottom:
-                25px;
+            margin-bottom: 25px;
 
         }
 
 
         .tracking-header h1 {
 
-            margin:
-                0 0 8px;
+            margin-bottom: 8px;
 
         }
 
 
         .reference {
 
-            opacity:
-                .7;
+            opacity: .7;
+
+            font-size: 16px;
 
         }
 
 
-        /* =========================
-           STATUS CARD
-        ========================== */
-
         .status-card {
 
-            background:
-                #1d1d1d;
+            background: #1d1d1d;
 
-            border-radius:
-                16px;
+            border-radius: 16px;
 
-            padding:
-                20px;
+            padding: 20px;
 
-            margin-bottom:
-                20px;
+            margin-bottom: 20px;
 
-            text-align:
-                center;
+            text-align: center;
 
         }
 
 
         .status-icon {
 
-            font-size:
-                40px;
+            font-size: 40px;
 
-            margin-bottom:
-                8px;
+            margin-bottom: 8px;
 
         }
 
 
         .status-title {
 
-            font-size:
-                22px;
+            font-size: 22px;
 
-            font-weight:
-                700;
+            font-weight: 700;
 
         }
 
 
         .status-message {
 
-            margin-top:
-                8px;
+            margin-top: 8px;
 
-            opacity:
-                .7;
+            opacity: .7;
 
         }
 
-
-        /* =========================
-           MAP
-        ========================== */
 
         #map {
 
-            width:
-                100%;
+            width: 100%;
 
-            height:
-                60vh;
+            height: 60vh;
 
-            min-height:
-                350px;
+            min-height: 350px;
 
-            border-radius:
-                18px;
+            border-radius: 18px;
 
-            overflow:
-                hidden;
+            overflow: hidden;
+
+            margin-top: 20px;
 
         }
 
-
-        /* =========================
-           DRIVER CARD
-        ========================== */
 
         .driver-card {
 
-            background:
-                #1d1d1d;
+            background: #1d1d1d;
 
-            border-radius:
-                16px;
+            border-radius: 16px;
 
-            padding:
-                18px;
+            padding: 18px;
 
-            margin-top:
-                20px;
+            margin-top: 20px;
 
         }
 
-
-        /* =========================
-           UTILITY
-        ========================== */
 
         .hidden {
 
-            display:
-                none;
+            display: none;
 
         }
+
+
+        .gps-waiting {
+
+            text-align: center;
+
+            margin-top: 10px;
+
+            opacity: .65;
+
+            font-size: 13px;
+
+        }
+
 
     </style>
 
@@ -236,22 +182,19 @@
 <body>
 
 
-<!-- =========================================
-     TRACKING PAGE
-========================================== -->
-
 <div class="tracking-page">
 
 
-    <!-- =========================================
+    <!-- =========================
          HEADER
-    ========================================== -->
+    ========================== -->
 
-    <header class="tracking-header">
+    <div class="tracking-header">
 
         <h1>
             🚗 Track Your Valetholic Driver
         </h1>
+
 
         <div
             id="reference"
@@ -260,14 +203,15 @@
             Loading...
         </div>
 
-    </header>
+    </div>
 
 
-    <!-- =========================================
+
+    <!-- =========================
          STATUS
-    ========================================== -->
+    ========================== -->
 
-    <section
+    <div
         id="statusCard"
         class="status-card"
     >
@@ -279,12 +223,14 @@
             📍
         </div>
 
+
         <div
             id="statusTitle"
             class="status-title"
         >
             Finding your booking...
         </div>
+
 
         <div
             id="statusMessage"
@@ -293,12 +239,13 @@
             Please wait.
         </div>
 
-    </section>
+    </div>
 
 
-    <!-- =========================================
+
+    <!-- =========================
          MAP
-    ========================================== -->
+    ========================== -->
 
     <div
         id="map"
@@ -306,11 +253,20 @@
     ></div>
 
 
-    <!-- =========================================
-         DRIVER
-    ========================================== -->
+    <div
+        id="gpsWaiting"
+        class="gps-waiting hidden"
+    >
+        📍 Waiting for driver's GPS location...
+    </div>
 
-    <section
+
+
+    <!-- =========================
+         DRIVER
+    ========================== -->
+
+    <div
         id="driverCard"
         class="driver-card hidden"
     >
@@ -319,386 +275,273 @@
             Driver
         </strong>
 
+
         <div
             id="driverName"
-            style="margin-top: 8px;"
+            style="margin-top:8px;"
         >
             -
         </div>
 
-    </section>
+    </div>
 
 
 </div>
 
 
-<!-- =========================================
+
+<!-- =========================
      SUPABASE
-========================================== -->
+========================== -->
 
 <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
 ></script>
 
-<script src="supabase.js"></script>
+
+<script
+    src="supabase.js"
+></script>
 
 
-<!-- =========================================
+<!-- =========================
      LEAFLET
-========================================== -->
+========================== -->
 
 <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 ></script>
 
 
+
 <script>
 
-    // =========================================
-    // TRACKING STATE
-    // =========================================
+let map = null;
 
-    let map = null;
+let driverMarker = null;
 
-    let driverMarker = null;
+let refreshTimer = null;
 
-    let refreshTimer = null;
-
-    let firstLocation = true;
+let firstLocation = true;
 
 
-    // =========================================
-    // GET TRACKING TOKEN
-    // =========================================
+// =====================================
+// TOKEN
+// =====================================
 
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
 
 
-    const trackingToken =
-        params.get("token");
+const trackingToken =
+    params.get(
+        "token"
+    );
 
+
+if (!trackingToken) {
+
+    showError(
+        "This tracking link is invalid."
+    );
+
+}
+
+
+// =====================================
+// ELEMENTS
+// =====================================
+
+const reference =
+    document.getElementById(
+        "reference"
+    );
+
+
+const statusIcon =
+    document.getElementById(
+        "statusIcon"
+    );
+
+
+const statusTitle =
+    document.getElementById(
+        "statusTitle"
+    );
+
+
+const statusMessage =
+    document.getElementById(
+        "statusMessage"
+    );
+
+
+const mapElement =
+    document.getElementById(
+        "map"
+    );
+
+
+const gpsWaiting =
+    document.getElementById(
+        "gpsWaiting"
+    );
+
+
+const driverCard =
+    document.getElementById(
+        "driverCard"
+    );
+
+
+const driverName =
+    document.getElementById(
+        "driverName"
+    );
+
+
+// =====================================
+// LOAD TRACKING
+// =====================================
+
+async function loadTracking() {
 
     if (!trackingToken) {
 
-        showError(
-            "This tracking link is invalid."
-        );
+        return;
 
     }
 
 
-    // =========================================
-    // DOM ELEMENTS
-    // =========================================
-
-    const reference =
-        document.getElementById(
-            "reference"
-        );
-
-
-    const statusIcon =
-        document.getElementById(
-            "statusIcon"
-        );
+    const {
+        data,
+        error
+    } =
+        await window.supabaseClient
+            .rpc(
+                "get_driver_tracking",
+                {
+                    p_tracking_token:
+                        trackingToken
+                }
+            );
 
 
-    const statusTitle =
-        document.getElementById(
-            "statusTitle"
-        );
+    if (error) {
 
-
-    const statusMessage =
-        document.getElementById(
-            "statusMessage"
-        );
-
-
-    const mapElement =
-        document.getElementById(
-            "map"
-        );
-
-
-    const driverCard =
-        document.getElementById(
-            "driverCard"
-        );
-
-
-    const driverName =
-        document.getElementById(
-            "driverName"
-        );
-
-
-    // =========================================
-    // LOAD TRACKING DATA
-    // =========================================
-
-    async function loadTracking() {
-
-        if (!trackingToken) {
-
-            return;
-
-        }
-
-
-        const {
-            data,
+        console.error(
+            "Tracking error:",
             error
-        } =
-            await window.supabaseClient
-                .rpc(
-                    "get_driver_tracking",
-                    {
-                        p_tracking_token:
-                            trackingToken
-                    }
-                );
-
-
-        if (error) {
-
-            console.error(
-                "Tracking error:",
-                error
-            );
-
-            showError(
-                "Unable to load tracking."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            !data ||
-            data.length === 0
-        ) {
-
-            showError(
-                "This tracking link has expired or is invalid."
-            );
-
-            stopTracking();
-
-            return;
-
-        }
-
-
-        const booking =
-            data[0];
-
-
-        updateTracking(
-            booking
         );
+
+        showError(
+            "Unable to load tracking."
+        );
+
+        return;
 
     }
 
 
-    // =========================================
-    // UPDATE TRACKING DISPLAY
-    // =========================================
-
-    function updateTracking(
-        booking
+    if (
+        !data ||
+        data.length === 0
     ) {
 
-        // -----------------------------------------
-        // REFERENCE
-        // -----------------------------------------
+        showError(
+            "This tracking link has expired or is invalid."
+        );
 
-        reference.textContent =
-            booking.reference_no
-                ? `Booking VH-${booking.reference_no}`
-                : "Valetholic Booking";
+        stopTracking();
 
+        return;
 
-        // -----------------------------------------
-        // STATUS
-        // -----------------------------------------
-
-        const currentStatus =
-            String(
-                booking.status || ""
-            )
-                .trim()
-                .toUpperCase();
+    }
 
 
-        // =========================================
-        // COMPLETED
-        // =========================================
-
-        if (
-            currentStatus === "COMPLETED"
-        ) {
-
-            statusIcon.textContent =
-                "✅";
+    const booking =
+        data[0];
 
 
-            statusTitle.textContent =
-                "Journey Completed";
+    console.log(
+        "📍 Tracking data:",
+        booking
+    );
 
 
-            statusMessage.textContent =
-                "Your journey is complete. " +
-                "This tracking link remains available for 6 hours.";
+    updateTracking(
+        booking
+    );
+
+}
 
 
-            /*
-             * Keep displaying the driver's
-             * final known location.
-             */
+// =====================================
+// UPDATE TRACKING
+// =====================================
 
-            if (
-                booking.latitude !== null &&
-                booking.longitude !== null
-            ) {
+function updateTracking(
+    booking
+) {
 
-                driverCard.classList.remove(
-                    "hidden"
-                );
+    // =================================
+    // REFERENCE
+    // =================================
 
-
-                driverName.textContent =
-                    booking.driver_name ||
-                    "Valetholic Driver";
+    reference.textContent =
+        booking.reference_no
+            ? `Booking VH-${booking.reference_no}`
+            : "Valetholic Booking";
 
 
-                showDriverLocation(
-                    Number(
-                        booking.latitude
-                    ),
-                    Number(
-                        booking.longitude
-                    )
-                );
+    // =================================
+    // STATUS
+    // =================================
 
-            }
-
-
-            /*
-             * Do not stop tracking here.
-             *
-             * The SQL function determines
-             * when the 6-hour link expires.
-             */
-
-            return;
-
-        }
+    const currentStatus =
+        String(
+            booking.status ||
+            ""
+        )
+        .trim()
+        .toUpperCase();
 
 
-        // =========================================
-        // CANCELLED
-        // =========================================
+    // =================================
+    // COMPLETED
+    // =================================
+
+    if (
+        currentStatus ===
+        "COMPLETED"
+    ) {
+
+        statusIcon.textContent =
+            "✅";
+
+
+        statusTitle.textContent =
+            "Journey Completed";
+
+
+        statusMessage.textContent =
+            "Your journey is complete. " +
+            "This tracking link remains available for 6 hours.";
+
+
+        gpsWaiting.classList.add(
+            "hidden"
+        );
+
+
+        // Keep final known GPS
 
         if (
-            currentStatus === "CANCELLED"
+            booking.latitude !== null &&
+            booking.longitude !== null
         ) {
-
-            statusIcon.textContent =
-                "❌";
-
-
-            statusTitle.textContent =
-                "Booking Cancelled";
-
-
-            statusMessage.textContent =
-                "Live tracking is no longer available.";
-
-
-            mapElement.classList.add(
-                "hidden"
-            );
-
-
-            driverCard.classList.add(
-                "hidden"
-            );
-
-
-            stopTracking();
-
-            return;
-
-        }
-
-
-        // =========================================
-        // NOT STARTED
-        // =========================================
-
-        if (
-            currentStatus === "PENDING" ||
-            currentStatus === "ON JOB"
-        ) {
-
-            statusIcon.textContent =
-                "🕐";
-
-
-            statusTitle.textContent =
-                "Driver Not On The Way Yet";
-
-
-            statusMessage.textContent =
-                "Live tracking will begin when your driver starts the journey.";
-
-
-            mapElement.classList.add(
-                "hidden"
-            );
-
-
-            driverCard.classList.add(
-                "hidden"
-            );
-
-
-            return;
-
-        }
-
-
-        // =========================================
-        // LIVE TRACKING
-        // =========================================
-
-        if (
-            currentStatus === "ON THE WAY" ||
-            currentStatus === "PICKED UP"
-        ) {
-
-            statusIcon.textContent =
-                "🚗";
-
-
-            statusTitle.textContent =
-                currentStatus === "PICKED UP"
-                    ? "Customer On Board"
-                    : "Your Driver Is On The Way";
-
-
-            statusMessage.textContent =
-                booking.latitude !== null &&
-                booking.longitude !== null
-                    ? "Live location updating."
-                    : "Waiting for driver's GPS location.";
-
 
             driverCard.classList.remove(
                 "hidden"
@@ -710,199 +553,51 @@
                 "Valetholic Driver";
 
 
-            // -----------------------------------------
-            // DRIVER LOCATION
-            // -----------------------------------------
-
-            if (
-                booking.latitude !== null &&
-                booking.longitude !== null
-            ) {
-
-                showDriverLocation(
-                    Number(
-                        booking.latitude
-                    ),
-                    Number(
-                        booking.longitude
-                    )
-                );
-
-            }
-
-            else {
-
-                mapElement.classList.add(
-                    "hidden"
-                );
-
-            }
-
-        }
-
-    }
-
-
-    // =========================================
-    // INITIALISE MAP
-    // =========================================
-
-    function initialiseMap(
-        latitude,
-        longitude
-    ) {
-
-        if (map) {
-
-            return;
-
-        }
-
-
-        map =
-            L.map(
-                "map"
+            showDriverLocation(
+                Number(
+                    booking.latitude
+                ),
+                Number(
+                    booking.longitude
+                )
             );
 
-
-        L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                maxZoom:
-                    19,
-
-                attribution:
-                    "&copy; OpenStreetMap contributors"
-            }
-        ).addTo(
-            map
-        );
+        }
 
 
-        map.setView(
-            [
-                latitude,
-                longitude
-            ],
-            15
-        );
-
-
-        driverMarker =
-            L.marker(
-                [
-                    latitude,
-                    longitude
-                ]
-            )
-                .addTo(
-                    map
-                )
-                .bindPopup(
-                    "🚗 Your Valetholic Driver"
-                );
+        return;
 
     }
 
 
-    // =========================================
-    // SHOW / UPDATE DRIVER LOCATION
-    // =========================================
 
-    function showDriverLocation(
-        latitude,
-        longitude
+    // =================================
+    // CANCELLED
+    // =================================
+
+    if (
+        currentStatus ===
+        "CANCELLED"
     ) {
 
-        if (
-            Number.isNaN(latitude) ||
-            Number.isNaN(longitude)
-        ) {
-
-            return;
-
-        }
+        statusIcon.textContent =
+            "❌";
 
 
-        mapElement.classList.remove(
+        statusTitle.textContent =
+            "Booking Cancelled";
+
+
+        statusMessage.textContent =
+            "Live tracking is no longer available.";
+
+
+        mapElement.classList.add(
             "hidden"
         );
 
 
-        // -----------------------------------------
-        // FIRST LOCATION
-        // -----------------------------------------
-
-        if (!map) {
-
-            initialiseMap(
-                latitude,
-                longitude
-            );
-
-            firstLocation =
-                false;
-
-            return;
-
-        }
-
-
-        // -----------------------------------------
-        // UPDATE EXISTING MARKER
-        // -----------------------------------------
-
-        const position = [
-            latitude,
-            longitude
-        ];
-
-
-        driverMarker.setLatLng(
-            position
-        );
-
-
-        // -----------------------------------------
-        // CENTRE MAP ON FIRST UPDATE
-        // -----------------------------------------
-
-        if (firstLocation) {
-
-            map.setView(
-                position,
-                15
-            );
-
-            firstLocation =
-                false;
-
-        }
-
-    }
-
-
-    // =========================================
-    // ERROR STATE
-    // =========================================
-
-    function showError(
-        message
-    ) {
-
-        statusIcon.textContent =
-            "⚠️";
-
-
-        statusTitle.textContent =
-            "Tracking Unavailable";
-
-
-        statusMessage.textContent =
-            message;
-
-
-        mapElement.classList.add(
+        gpsWaiting.classList.add(
             "hidden"
         );
 
@@ -911,21 +606,381 @@
             "hidden"
         );
 
+
+        stopTracking();
+
+        return;
+
     }
 
 
-    // =========================================
-    // STOP REFRESH
-    // =========================================
 
-    function stopTracking() {
+    // =================================
+    // NOT STARTED
+    // =================================
 
-        if (!refreshTimer) {
+    if (
+        currentStatus ===
+            "PENDING" ||
+        currentStatus ===
+            "ON JOB"
+    ) {
 
-            return;
+        statusIcon.textContent =
+            "🕐";
+
+
+        statusTitle.textContent =
+            "Driver Not On The Way Yet";
+
+
+        statusMessage.textContent =
+            "Live tracking will begin when your driver starts the journey.";
+
+
+        mapElement.classList.add(
+            "hidden"
+        );
+
+
+        gpsWaiting.classList.add(
+            "hidden"
+        );
+
+
+        driverCard.classList.add(
+            "hidden"
+        );
+
+
+        return;
+
+    }
+
+
+
+    // =================================
+    // LIVE
+    // ON THE WAY / PICKED UP
+    // =================================
+
+    if (
+        currentStatus ===
+            "ON THE WAY" ||
+        currentStatus ===
+            "PICKED UP"
+    ) {
+
+        statusIcon.textContent =
+            "🚗";
+
+
+        statusTitle.textContent =
+            currentStatus ===
+                "PICKED UP"
+                ? "Customer On Board"
+                : "Your Driver Is On The Way";
+
+
+        driverCard.classList.remove(
+            "hidden"
+        );
+
+
+        driverName.textContent =
+            booking.driver_name ||
+            "Valetholic Driver";
+
+
+        // =================================
+        // ALWAYS SHOW MAP
+        // =================================
+
+        showTrackingMap();
+
+
+        // =================================
+        // GPS AVAILABLE
+        // =================================
+
+        if (
+            booking.latitude !== null &&
+            booking.longitude !== null
+        ) {
+
+            statusMessage.textContent =
+                "Live location updating.";
+
+
+            gpsWaiting.classList.add(
+                "hidden"
+            );
+
+
+            showDriverLocation(
+                Number(
+                    booking.latitude
+                ),
+                Number(
+                    booking.longitude
+                )
+            );
 
         }
 
+
+        // =================================
+        // GPS NOT AVAILABLE YET
+        // =================================
+
+        else {
+
+            statusMessage.textContent =
+                "Your driver is active. " +
+                "Waiting for GPS location.";
+
+
+            gpsWaiting.classList.remove(
+                "hidden"
+            );
+
+        }
+
+    }
+
+}
+
+
+// =====================================
+// SHOW TRACKING MAP
+// =====================================
+
+function showTrackingMap() {
+
+    mapElement.classList.remove(
+        "hidden"
+    );
+
+
+    if (!map) {
+
+        initialiseMap();
+
+    }
+
+
+    // Leaflet needs this when a
+    // previously hidden map becomes visible.
+
+    setTimeout(
+        () => {
+
+            if (map) {
+
+                map.invalidateSize();
+
+            }
+
+        },
+        100
+    );
+
+}
+
+
+// =====================================
+// INITIALISE MAP
+// =====================================
+
+function initialiseMap(
+    latitude = 1.3521,
+    longitude = 103.8198
+) {
+
+    if (map) {
+
+        return;
+
+    }
+
+
+    map =
+        L.map(
+            "map"
+        );
+
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+
+            maxZoom:
+                19,
+
+            attribution:
+                "&copy; OpenStreetMap contributors"
+
+        }
+    )
+    .addTo(
+        map
+    );
+
+
+    // Start with Singapore view.
+
+    map.setView(
+        [
+            latitude,
+            longitude
+        ],
+        12
+    );
+
+}
+
+
+// =====================================
+// UPDATE DRIVER LOCATION
+// =====================================
+
+function showDriverLocation(
+    latitude,
+    longitude
+) {
+
+    if (
+        Number.isNaN(latitude) ||
+        Number.isNaN(longitude)
+    ) {
+
+        return;
+
+    }
+
+
+    // Make sure map is visible.
+
+    showTrackingMap();
+
+
+    const position =
+        [
+            latitude,
+            longitude
+        ];
+
+
+    // =================================
+    // CREATE MARKER
+    // =================================
+
+    if (!driverMarker) {
+
+        driverMarker =
+            L.marker(
+                position
+            )
+            .addTo(
+                map
+            )
+            .bindPopup(
+                "🚗 Your Valetholic Driver"
+            );
+
+
+        map.setView(
+            position,
+            15
+        );
+
+
+        firstLocation =
+            false;
+
+
+        return;
+
+    }
+
+
+    // =================================
+    // MOVE MARKER
+    // =================================
+
+    driverMarker.setLatLng(
+        position
+    );
+
+
+    // =================================
+    // FIRST GPS POSITION
+    // =================================
+
+    if (
+        firstLocation
+    ) {
+
+        map.setView(
+            position,
+            15
+        );
+
+
+        firstLocation =
+            false;
+
+    }
+
+}
+
+
+// =====================================
+// ERROR
+// =====================================
+
+function showError(
+    message
+) {
+
+    statusIcon.textContent =
+        "⚠️";
+
+
+    statusTitle.textContent =
+        "Tracking Unavailable";
+
+
+    statusMessage.textContent =
+        message;
+
+
+    mapElement.classList.add(
+        "hidden"
+    );
+
+
+    gpsWaiting.classList.add(
+        "hidden"
+    );
+
+
+    driverCard.classList.add(
+        "hidden"
+    );
+
+}
+
+
+// =====================================
+// STOP TRACKING
+// =====================================
+
+function stopTracking() {
+
+    if (
+        refreshTimer
+    ) {
 
         clearInterval(
             refreshTimer
@@ -937,21 +992,24 @@
 
     }
 
-
-    // =========================================
-    // START TRACKING
-    // =========================================
-
-    loadTracking();
+}
 
 
-    refreshTimer =
-        setInterval(
-            loadTracking,
-            5000
-        );
+// =====================================
+// START
+// =====================================
+
+loadTracking();
+
+
+refreshTimer =
+    setInterval(
+        loadTracking,
+        5000
+    );
 
 </script>
+
 
 </body>
 
