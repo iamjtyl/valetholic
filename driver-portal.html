@@ -3,197 +3,479 @@
 
 <head>
 
+    <!-- =====================================
+         BASIC SETTINGS
+    ====================================== -->
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Valetholic Driver Hub</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta
+        name="theme-color"
+        content="#0B0B0B"
+    >
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <meta
+        name="description"
+        content="Valetholic Driver Hub"
+    >
 
-    <link rel="stylesheet" href="driver-portal.css">
-    <script>
-console.log("Supabase library:", window.supabase);
-</script>
+    <title>
+        Valetholic Driver Hub
+    </title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-console.log("After loading:", window.supabase);
-</script>
+    <!-- =====================================
+         FONTS
+    ====================================== -->
 
-    <script src="supabase.js"></script>
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================
+         DRIVER PORTAL CSS
+    ====================================== -->
+
+    <link
+        rel="stylesheet"
+        href="driver-portal.css"
+    >
+
+
+    <!-- =====================================
+         SUPABASE
+    ====================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <!-- =====================================
+         SUPABASE CONFIG
+    ====================================== -->
+
+    <script
+        src="supabase.js"
+    ></script>
 
 </head>
 
+
 <body>
 
-<div class="portal-container">
 
-<div class="portal-card">
+    <!-- =====================================
+         DRIVER PORTAL
+    ====================================== -->
 
-    <div class="logo">
+    <main
+        class="portal-container"
+        aria-label="Valetholic Driver Hub"
+    >
 
-        <img src="images/logo.png" alt="Valetholic Logo">
 
-        <h1>VALETHOLIC</h1>
+        <section
+            class="portal-card"
+        >
 
-        <p>I'm ready to earn big bucks</p><br>
-       
 
-    </div>
+            <!-- =================================
+                 LOGO / BRANDING
+            ================================== -->
 
-    <div class="switch">
+            <div class="logo">
 
-        <button class="switch-btn active" id="loginTab">
+                <img
+                    src="images/logo.png"
+                    alt="Valetholic Logo"
+                >
 
-            Login
 
-        </button>
+                <h1>
+                    VALETHOLIC
+                </h1>
 
-        <button class="switch-btn" id="registerTab">
 
-            Register
+                <p>
+                    I'm ready to earn big bucks
+                </p>
 
-        </button>
+            </div>
 
-    </div>
 
-    <!-- LOGIN -->
 
-    <div id="loginForm">
+            <!-- =================================
+                 LOGIN / REGISTER SWITCH
+            ================================== -->
 
-        <div class="input-group">
+            <div
+                class="switch"
+                role="tablist"
+                aria-label="Driver account options"
+            >
 
-            <label>Email</label>
 
-            <input
-    id="loginEmail"
-    type="email"
-    placeholder="Enter your email">
+                <button
+                    type="button"
+                    class="switch-btn active"
+                    id="loginTab"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="loginForm"
+                >
 
-        </div>
+                    Login
 
-        <div class="input-group">
+                </button>
 
-            <label>Password</label>
 
-            <input
-    id="loginPassword"
-    type="password"
-    placeholder="Enter your password">
+                <button
+                    type="button"
+                    class="switch-btn"
+                    id="registerTab"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="registerForm"
+                >
 
-        </div>
+                    Register
 
-        <div class="login-options">
+                </button>
 
-            <label>
 
-                <input type="checkbox">
+            </div>
 
-                Remember Me
 
-            </label>
 
-            <a href="#">
+            <!-- =================================
+                 LOGIN FORM
+            ================================== -->
 
-                Forgot Password?
+            <div
+                id="loginForm"
+                role="tabpanel"
+            >
 
-            </a>
 
-        </div>
+                <!-- EMAIL -->
 
-       <button id="loginBtn" class="gold-btn">
+                <div class="input-group">
 
-    LOGIN
+                    <label
+                        for="loginEmail"
+                    >
+                        Email
+                    </label>
 
-</button>
 
-    </div>
+                    <input
+                        id="loginEmail"
+                        type="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                    >
 
-    <!-- REGISTER -->
+                </div>
 
-    <div id="registerForm" style="display:none;">
 
-        <div class="input-group">
 
-            <label>Full Name</label>
+                <!-- PASSWORD -->
 
-            <input id="regName" type="text" placeholder="Your full name">
+                <div class="input-group">
 
-        </div>
+                    <label
+                        for="loginPassword"
+                    >
+                        Password
+                    </label>
 
-        <div class="input-group">
 
-            <label>Mobile Number</label>
+                    <input
+                        id="loginPassword"
+                        type="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                    >
 
-            <input id="regMobile" type="tel" placeholder="+65">
+                </div>
 
-        </div>
 
-         <div class="input-group">
 
-            <label>Email Address</label>
+                <!-- LOGIN OPTIONS -->
 
-            <input id="regEmail" type="email" placeholder="Email address">
+                <div class="login-options">
 
-        </div>
 
-        <div class="input-group">
+                    <label>
 
-            <label>Licence Type</label>
+                        <input
+                            id="rememberMe"
+                            type="checkbox"
+                        >
 
-            <select id="regLicence">
+                        Remember Me
 
-                <option>Class 3</option>
-                <option>Class 3A</option>
+                    </label>
 
-            </select>
 
-        </div>
+                    <a
+                        href="#"
+                        id="forgotPassword"
+                    >
+                        Forgot Password?
+                    </a>
 
-        <div class="input-group">
 
-            <label>Own Vehicle?</label>
+                </div>
 
-            <select id="regVehicle">
 
-                <option>No</option>
-                <option>Yes</option>
 
-            </select>
+                <!-- LOGIN BUTTON -->
 
-        </div>
+                <button
+                    id="loginBtn"
+                    class="gold-btn"
+                    type="button"
+                >
 
-        <div class="input-group">
+                    LOGIN
 
-            <label>Password</label>
+                </button>
 
-            <input id="regPassword" type="password" placeholder="Create password">
 
-        </div>
+            </div>
 
-        <div class="input-group">
 
-            <label>Confirm Password</label>
 
-            <input id="regConfirmPassword" type="password" placeholder="Confirm password">
+            <!-- =================================
+                 REGISTER FORM
+            ================================== -->
 
-        </div>
+            <div
+                id="registerForm"
+                role="tabpanel"
+                style="display:none;"
+            >
 
-        <button id="registerBtn" class="gold-btn">
 
-            CREATE ACCOUNT
+                <!-- FULL NAME -->
 
-        </button>
+                <div class="input-group">
 
-    </div>
-</div>
-</div>
+                    <label
+                        for="regName"
+                    >
+                        Full Name
+                    </label>
 
-<script src="driver-portal.js"></script>
+
+                    <input
+                        id="regName"
+                        type="text"
+                        placeholder="Your full name"
+                        autocomplete="name"
+                    >
+
+                </div>
+
+
+
+                <!-- MOBILE -->
+
+                <div class="input-group">
+
+                    <label
+                        for="regMobile"
+                    >
+                        Mobile Number
+                    </label>
+
+
+                    <input
+                        id="regMobile"
+                        type="tel"
+                        placeholder="+65"
+                        autocomplete="tel"
+                    >
+
+                </div>
+
+
+
+                <!-- EMAIL -->
+
+                <div class="input-group">
+
+                    <label
+                        for="regEmail"
+                    >
+                        Email Address
+                    </label>
+
+
+                    <input
+                        id="regEmail"
+                        type="email"
+                        placeholder="Email address"
+                        autocomplete="email"
+                    >
+
+                </div>
+
+
+
+                <!-- LICENCE -->
+
+                <div class="input-group">
+
+                    <label
+                        for="regLicence"
+                    >
+                        Licence Type
+                    </label>
+
+
+                    <select
+                        id="regLicence"
+                    >
+
+                        <option value="Class 3">
+                            Class 3
+                        </option>
+
+                        <option value="Class 3A">
+                            Class 3A
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- OWN VEHICLE -->
+
+                <div class="input-group">
+
+                    <label
+                        for="regVehicle"
+                    >
+                        Own Vehicle?
+                    </label>
+
+
+                    <select
+                        id="regVehicle"
+                    >
+
+                        <option value="No">
+                            No
+                        </option>
+
+                        <option value="Yes">
+                            Yes
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="input-group">
+
+                    <label
+                        for="regPassword"
+                    >
+                        Password
+                    </label>
+
+
+                    <input
+                        id="regPassword"
+                        type="password"
+                        placeholder="Create password"
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="input-group">
+
+                    <label
+                        for="regConfirmPassword"
+                    >
+                        Confirm Password
+                    </label>
+
+
+                    <input
+                        id="regConfirmPassword"
+                        type="password"
+                        placeholder="Confirm password"
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+
+
+                <!-- REGISTER BUTTON -->
+
+                <button
+                    id="registerBtn"
+                    class="gold-btn"
+                    type="button"
+                >
+
+                    CREATE ACCOUNT
+
+                </button>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================
+         DRIVER PORTAL LOGIC
+    ====================================== -->
+
+    <script
+        src="driver-portal.js"
+    ></script>
+
 
 </body>
 

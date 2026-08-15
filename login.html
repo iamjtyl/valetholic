@@ -3,49 +3,184 @@
 
 <head>
 
+    <!-- =====================================
+         BASIC SETTINGS
+    ====================================== -->
+
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>Valetholic Admin Login</title>
+    <meta
+        name="theme-color"
+        content="#0B0B0B"
+    >
 
-    <link rel="stylesheet" href="login.css">
+    <meta
+        name="description"
+        content="Valetholic Admin Login"
+    >
+
+    <title>
+        Valetholic Admin Login
+    </title>
+
+
+    <!-- =====================================
+         FONTS
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================
+         LOGIN CSS
+    ====================================== -->
+
+    <link
+        rel="stylesheet"
+        href="login.css"
+    >
 
 </head>
 
+
 <body>
 
-<div class="login-box">
 
-    <img src="images/logo.png" class="logo">
+    <!-- =====================================
+         ADMIN LOGIN
+    ====================================== -->
 
-    <h1>VALETHOLIC</h1>
+    <main
+        class="login-box"
+        aria-labelledby="loginTitle"
+    >
 
-    <p>Secure Login</p>
 
-    <input
-        id="username"
-        type="text"
-        placeholder="Username">
+        <!-- LOGO -->
 
-    <input
-        id="password"
-        type="password"
-        placeholder="Password">
+        <img
+            src="images/logo.png"
+            class="logo"
+            alt="Valetholic Logo"
+        >
 
-    <button onclick="login()">
 
-        LOGIN
+        <!-- TITLE -->
 
-    </button>
+        <h1 id="loginTitle">
+            VALETHOLIC
+        </h1>
 
-    <p id="error"></p>
 
-</div>
+        <p>
+            Secure Login
+        </p>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script src="login.js"></script>
+
+
+        <!-- USERNAME -->
+
+        <label
+            for="username"
+            class="sr-only"
+        >
+            Username
+        </label>
+
+        <input
+            id="username"
+            type="text"
+            placeholder="Username"
+            autocomplete="username"
+        >
+
+
+
+        <!-- PASSWORD -->
+
+        <label
+            for="password"
+            class="sr-only"
+        >
+            Password
+        </label>
+
+        <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            autocomplete="current-password"
+        >
+
+
+
+        <!-- LOGIN -->
+
+        <button
+            type="button"
+            onclick="login()"
+        >
+
+            LOGIN
+
+        </button>
+
+
+
+        <!-- ERROR -->
+
+        <p
+            id="error"
+            role="alert"
+            aria-live="polite"
+        ></p>
+
+
+    </main>
+
+
+
+    <!-- =====================================
+         SUPABASE
+    ====================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <script
+        src="supabase.js"
+    ></script>
+
+
+    <!-- =====================================
+         LOGIN LOGIC
+    ====================================== -->
+
+    <script
+        src="login.js"
+    ></script>
+
 
 </body>
 

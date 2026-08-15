@@ -1,107 +1,71 @@
-function getRoughLocation(latitude, longitude) {
+// =====================================
+// VALETHOLIC OPS
+// OPERATIONS DASHBOARD
+// =====================================
 
-    if (
-        latitude === null ||
-        longitude === null
-    ) {
-        return "Location unavailable";
-    }
-
-    const lat = Number(latitude);
-    const lon = Number(longitude);
-
-    // Tampines
-    if (
-        lat >= 1.325 &&
-        lat <= 1.365 &&
-        lon >= 103.90 &&
-        lon <= 103.97
-    ) {
-        return "Tampines";
-    }
-
-    // Bedok
-    if (
-        lat >= 1.305 &&
-        lat <= 1.335 &&
-        lon >= 103.90 &&
-        lon <= 103.95
-    ) {
-        return "Bedok";
-    }
-
-    // Pasir Ris
-    if (
-        lat >= 1.365 &&
-        lat <= 1.395 &&
-        lon >= 103.93 &&
-        lon <= 103.98
-    ) {
-        return "Pasir Ris";
-    }
-
-    // Changi
-    if (
-        lat >= 1.34 &&
-        lat <= 1.40 &&
-        lon >= 103.95 &&
-        lon <= 104.05
-    ) {
-        return "Changi";
-    }
-
-    // Woodlands
-    if (
-        lat >= 1.42 &&
-        lat <= 1.48 &&
-        lon >= 103.75 &&
-        lon <= 103.82
-    ) {
-        return "Woodlands";
-    }
-
-    // Jurong
-    if (
-        lat >= 1.30 &&
-        lat <= 1.36 &&
-        lon >= 103.68 &&
-        lon <= 103.75
-    ) {
-        return "Jurong";
-    }
-
-    // City
-    if (
-        lat >= 1.27 &&
-        lat <= 1.32 &&
-        lon >= 103.82 &&
-        lon <= 103.87
-    ) {
-        return "City";
-    }
-
-    return "Singapore";
-}
-
-let map;
+let map = null;
 
 let markers = {};
 
-console.log("OPS JS Loaded");
+console.log(
+    "OPS JS Loaded"
+);
 
 
-// ==========================
+// =====================================
 // START
-// ==========================
+// =====================================
 
-initMap();
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-loadDashboard();
+        console.log(
+            "OPS Dashboard starting..."
+        );
 
 
-// ==========================
+        // =================================
+        // LOGOUT BUTTON
+        // =================================
+
+        const logoutButton =
+            document.querySelector(
+                ".logout-btn"
+            );
+
+
+        if (logoutButton) {
+
+            logoutButton.addEventListener(
+                "click",
+                logout
+            );
+
+        }
+
+
+        // =================================
+        // MAP
+        // =================================
+
+        initMap();
+
+
+        // =================================
+        // LOAD DASHBOARD
+        // =================================
+
+        await loadDashboard();
+
+    }
+);
+
+
+
+// =====================================
 // DASHBOARD
-// ==========================
+// =====================================
 
 async function loadDashboard() {
 
@@ -112,345 +76,610 @@ async function loadDashboard() {
 }
 
 
-// ==========================
+
+// =====================================
 // DRIVERS
-// ==========================
+// =====================================
 
 async function loadDrivers() {
 
-    const { data, error } =
+    console.log(
+        "Loading approved drivers..."
+    );
+
+
+    const {
+        data,
+        error
+    } =
         await window.supabaseClient
-        .from("Drivers")
-        .select("*");
+            .from("Drivers")
+            .select("*")
+            .eq(
+                "approved",
+                true
+            )
+            .eq(
+                "approval_status",
+                "APPROVED"
+            );
+
+
+    // =================================
+    // DATABASE ERROR
+    // =================================
 
     if (error) {
 
-        alert(error.message);
+        console.error(
+            "Driver loading error:",
+            error
+        );
 
-        console.error(error);
+        alert(
+            error.message
+        );
 
         return;
 
     }
 
 
-    // ==========================
+    const drivers =
+        data || [];
+
+
+    console.log(
+        "APPROVED DRIVERS:",
+        drivers
+    );
+
+
+    // =================================
     // DRIVER COUNT
-    // ==========================
+    // =================================
 
-    document.getElementById("dutyCount").textContent =
-        data.filter(
-            driver => driver.status === "ON DUTY"
-        ).length;
+    const dutyCount =
+        document.getElementById(
+            "dutyCount"
+        );
 
+
+    if (dutyCount) {
+
+        dutyCount.textContent =
+            drivers.filter(
+                driver =>
+                    driver.status ===
+                    "ON DUTY"
+            ).length;
+
+    }
+
+
+    // =================================
+    // DRIVER LIST
+    // =================================
 
     const driverList =
-        document.getElementById("driverList");
+        document.getElementById(
+            "driverList"
+        );
+
+
+    if (!driverList) {
+
+        return;
+
+    }
+
 
     driverList.innerHTML = "";
 
 
-    // ==========================
-    // DRIVER LIST
-    // ==========================
-
-    data.forEach(driver => {
-
-        let statusClass = "off-duty";
-
-        if (driver.status === "ON DUTY") {
-
-            statusClass = "on-duty";
-
-        } else if (
-            driver.status === "ON THE WAY"
-        ) {
-
-            statusClass = "on-way";
-
-        } else if (
-            driver.status === "CUSTOMER ON BOARD"
-        ) {
-
-            statusClass = "on-board";
-
-        } else if (
-            driver.status === "ON JOB"
-        ) {
-
-            statusClass = "on-job";
-
-        }
-
-
-        driverList.innerHTML += `
-
-    <div class="driver-card">
-
-        <div class="driver-name">
-            ${driver.name}
-        </div>
-
-        <div class="driver-location">
-            ${getRoughLocation(
-                driver.latitude,
-                driver.longitude
-            )}
-        </div>
-
-        <div class="
-            driver-status
-            ${statusClass}
-        ">
-            ${driver.status}
-        </div>
-
-    </div>
-
-`;
-
-
-        // ==========================
-        // DRIVER GPS MARKER
-        // ==========================
-
-        const activeDriver =
-            driver.status === "ON DUTY" ||
-            driver.status === "ON THE WAY" ||
-            driver.status === "CUSTOMER ON BOARD" ||
-            driver.status === "ON JOB";
-
-
-        // ==========================
-        // OFF DUTY
-        // ==========================
-
-        if (!activeDriver) {
-
-            if (markers[driver.auth_id]) {
-
-                map.removeLayer(
-                    markers[driver.auth_id]
-                );
-
-                delete markers[driver.auth_id];
-
-            }
-
-            return;
-
-        }
-
-
-        // ==========================
-        // NO GPS
-        // ==========================
-
-        if (
-            driver.latitude === null ||
-            driver.longitude === null
-        ) {
-
-            return;
-
-        }
-
-
-        // ==========================
-        // MARKER COLOUR
-        // ==========================
-
-        let markerColor = "green";
-
-
-        if (
-            driver.status === "ON THE WAY"
-        ) {
-
-            markerColor = "orange";
-
-        } else if (
-            driver.status === "CUSTOMER ON BOARD"
-        ) {
-
-            markerColor = "red";
-
-        } else if (
-            driver.status === "ON JOB"
-        ) {
-
-            markerColor = "orange";
-
-        }
-
-
-        // ==========================
-        // MARKER ICON
-        // ==========================
-
-        const markerIcon = L.divIcon({
-
-            className: "",
-
-            html: `
-
-                <div style="
-                    width: 20px;
-                    height: 20px;
-                    background: ${markerColor};
-                    border: 3px solid white;
-                    border-radius: 50%;
-                    box-shadow:
-                        0 2px 8px rgba(0,0,0,0.4);
-                "></div>
-
-            `,
-
-            iconSize: [26, 26],
-
-            iconAnchor: [13, 13]
-
-        });
-
-
-        // ==========================
-        // POPUP
-        // ==========================
-
-        const popupContent = `
-
-            <strong>
-                🚗 ${driver.name}
-            </strong>
-
-            <br><br>
-
-            <strong>
-                Status:
-            </strong>
-
-            ${driver.status}
-
-            <br>
-
-            <strong>
-                GPS:
-            </strong>
-
-            ${Number(driver.latitude).toFixed(5)},
-            ${Number(driver.longitude).toFixed(5)}
-
-        `;
-
-
-        // ==========================
-        // UPDATE EXISTING MARKER
-        // ==========================
-
-        if (markers[driver.auth_id]) {
-
-            markers[driver.auth_id]
-                .setLatLng([
-                    driver.latitude,
-                    driver.longitude
-                ]);
-
-            markers[driver.auth_id]
-                .setIcon(markerIcon);
-
-            markers[driver.auth_id]
-                .setPopupContent(
-                    popupContent
-                );
-
-        }
-
-
-        // ==========================
-        // CREATE MARKER
-        // ==========================
-
-        else {
-
-            markers[driver.auth_id] =
-                L.marker(
-
-                    [
-                        driver.latitude,
-                        driver.longitude
-                    ],
-
-                    {
-                        icon: markerIcon
-                    }
-
+    // =================================
+    // CURRENT DRIVER IDS
+    // =================================
+    //
+    // Used to remove stale map markers
+    // if a driver was removed/deleted.
+    //
+
+    const currentDriverAuthIds =
+        new Set(
+            drivers
+                .map(
+                    driver =>
+                        driver.auth_id
                 )
-                .addTo(map)
-                .bindPopup(
-                    popupContent
-                );
-
-        }
-
-    });
-
-}
-
-
-// ==========================
-// BOOKINGS
-// ==========================
-
-async function loadBookings() {
-
-    const { data, error } =
-        await window.supabaseClient
-        .from("Bookings")
-        .select("*")
-        .order(
-            "created_at",
-            {
-                ascending: false
-            }
+                .filter(Boolean)
         );
 
 
-    if (error) {
+    // =================================
+    // REMOVE STALE MARKERS
+    // =================================
 
-        alert(error.message);
+    Object.keys(
+        markers
+    ).forEach(
+        authId => {
 
-        console.error(error);
+            if (
+                !currentDriverAuthIds.has(
+                    authId
+                )
+            ) {
+
+                console.log(
+                    "Removing stale driver marker:",
+                    authId
+                );
+
+
+                if (
+                    map &&
+                    markers[authId]
+                ) {
+
+                    map.removeLayer(
+                        markers[authId]
+                    );
+
+                }
+
+
+                delete markers[
+                    authId
+                ];
+
+            }
+
+        }
+    );
+
+
+    // =================================
+    // NO APPROVED DRIVERS
+    // =================================
+
+    if (
+        drivers.length === 0
+    ) {
+
+        driverList.innerHTML = `
+
+            <div class="driver-card">
+
+                <div>
+                    No approved drivers.
+                </div>
+
+                <div class="driver-status off-duty">
+
+                    NONE
+
+                </div>
+
+            </div>
+
+        `;
 
         return;
 
     }
 
 
-    // ==========================
-    // PENDING / ACTIVE / COMPLETED
-    // ==========================
+    // =================================
+    // RENDER DRIVERS
+    // =================================
 
-    const pendingJobs =
-        data.filter(b =>
-            String(b.status).toUpperCase() === "PENDING"
+    drivers.forEach(
+        driver => {
+
+            const status =
+                driver.status ||
+                "OFF DUTY";
+
+
+            const statusClass =
+                status === "ON DUTY"
+                    ? "on-duty"
+                    : status === "ON JOB"
+                        ? "on-job"
+                        : "off-duty";
+
+
+            driverList.innerHTML += `
+
+                <div class="driver-card">
+
+                    <div>
+
+                        ${escapeHTML(
+                            driver.name ||
+                            "Driver"
+                        )}
+
+                    </div>
+
+
+                    <div class="
+                        driver-status
+                        ${statusClass}
+                    ">
+
+                        ${escapeHTML(
+                            status
+                        )}
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            // =================================
+            // DRIVER GPS MARKER
+            // =================================
+
+            updateDriverMarker(
+                driver
+            );
+
+        }
+    );
+
+}
+
+
+
+// =====================================
+// UPDATE DRIVER MARKER
+// =====================================
+
+function updateDriverMarker(
+    driver
+) {
+
+    if (
+        !driver ||
+        !driver.auth_id
+    ) {
+
+        return;
+
+    }
+
+
+    const authId =
+        driver.auth_id;
+
+
+    const activeDriver =
+        driver.status === "ON DUTY" ||
+        driver.status === "ON JOB";
+
+
+    // =================================
+    // DRIVER NOT ACTIVE
+    // =================================
+
+    if (!activeDriver) {
+
+        removeDriverMarker(
+            authId
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // NO GPS
+    // =================================
+
+    if (
+        driver.latitude === null ||
+        driver.latitude === undefined ||
+        driver.longitude === null ||
+        driver.longitude === undefined
+    ) {
+
+        return;
+
+    }
+
+
+    const latitude =
+        Number(
+            driver.latitude
         );
 
 
-    const activeJobs =
-        data.filter(b => {
+    const longitude =
+        Number(
+            driver.longitude
+        );
 
-            const status =
-                String(b.status).toUpperCase();
 
-            return (
-                status === "ON JOB" ||
-                status === "ON THE WAY" ||
-                status === "PICKED UP" ||
-                status === "CUSTOMER ON BOARD"
-            );
+    if (
+        !Number.isFinite(latitude) ||
+        !Number.isFinite(longitude)
+    ) {
+
+        return;
+
+    }
+
+
+    // =================================
+    // MARKER COLOUR
+    // =================================
+
+    const markerColor =
+        driver.status === "ON DUTY"
+            ? "green"
+            : "orange";
+
+
+    // =================================
+    // MARKER ICON
+    // =================================
+
+    const markerIcon =
+        L.divIcon({
+
+            className:
+                "",
+
+            html: `
+
+                <div style="
+                    width:20px;
+                    height:20px;
+                    background:${markerColor};
+                    border:3px solid white;
+                    border-radius:50%;
+                    box-shadow:
+                        0 2px 8px
+                        rgba(0,0,0,.4);
+                "></div>
+
+            `,
+
+            iconSize:
+                [26, 26],
+
+            iconAnchor:
+                [13, 13]
 
         });
 
+
+    // =================================
+    // POPUP
+    // =================================
+
+    const popupContent = `
+
+        <strong>
+            🚗 ${escapeHTML(
+                driver.name ||
+                "Driver"
+            )}
+        </strong>
+
+        <br><br>
+
+        <strong>
+            Status:
+        </strong>
+
+        ${escapeHTML(
+            driver.status ||
+            "OFF DUTY"
+        )}
+
+        <br>
+
+        <strong>
+            GPS:
+        </strong>
+
+        ${latitude.toFixed(5)},
+        ${longitude.toFixed(5)}
+
+    `;
+
+
+    // =================================
+    // UPDATE EXISTING MARKER
+    // =================================
+
+    if (
+        markers[authId]
+    ) {
+
+        markers[authId]
+            .setLatLng([
+                latitude,
+                longitude
+            ]);
+
+
+        markers[authId]
+            .setIcon(
+                markerIcon
+            );
+
+
+        markers[authId]
+            .setPopupContent(
+                popupContent
+            );
+
+
+        return;
+
+    }
+
+
+    // =================================
+    // CREATE NEW MARKER
+    // =================================
+
+    markers[authId] =
+        L.marker(
+
+            [
+                latitude,
+                longitude
+            ],
+
+            {
+                icon:
+                    markerIcon
+            }
+
+        )
+        .addTo(map)
+        .bindPopup(
+            popupContent
+        );
+
+}
+
+
+
+// =====================================
+// REMOVE DRIVER MARKER
+// =====================================
+
+function removeDriverMarker(
+    authId
+) {
+
+    if (
+        !authId
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        markers[authId]
+    ) {
+
+        if (map) {
+
+            map.removeLayer(
+                markers[authId]
+            );
+
+        }
+
+
+        delete markers[
+            authId
+        ];
+
+    }
+
+}
+
+
+
+// =====================================
+// BOOKINGS
+// =====================================
+
+async function loadBookings() {
+
+    const {
+        data,
+        error
+    } =
+        await window.supabaseClient
+            .from("Bookings")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+    // =================================
+    // ERROR
+    // =================================
+
+    if (error) {
+
+        console.error(
+            "Booking loading error:",
+            error
+        );
+
+        alert(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    const bookings =
+        data || [];
+
+
+    // =================================
+    // PENDING
+    // =================================
+
+    const pendingJobs =
+        bookings.filter(
+            booking =>
+                String(
+                    booking.status
+                ).toUpperCase() ===
+                "PENDING"
+        );
+
+
+    // =================================
+    // ACTIVE
+    // =================================
+
+    const activeJobs =
+        bookings.filter(
+            booking => {
+
+                const status =
+                    String(
+                        booking.status
+                    ).toUpperCase();
+
+
+                return (
+                    status === "ON JOB" ||
+                    status === "ON THE WAY" ||
+                    status === "PICKED UP"
+                );
+
+            }
+        );
+
+
+    // =================================
+    // COMPLETED TODAY
+    // =================================
 
     const today =
         new Date()
@@ -459,123 +688,187 @@ async function loadBookings() {
 
 
     const completedJobs =
-        data.filter(b => {
+        bookings.filter(
+            booking => {
 
-            const status =
-                String(b.status).toUpperCase();
-
-            return (
-                status === "COMPLETED" &&
-                b.booking_date === today
-            );
-
-        });
+                const status =
+                    String(
+                        booking.status
+                    ).toUpperCase();
 
 
-    document.getElementById(
-        "pendingCount"
-    ).textContent =
-        pendingJobs.length;
+                return (
+                    status === "COMPLETED" &&
+                    booking.booking_date ===
+                        today
+                );
+
+            }
+        );
 
 
-    document.getElementById(
-        "activeCount"
-    ).textContent =
-        activeJobs.length;
+    // =================================
+    // UPDATE COUNTERS
+    // =================================
+
+    const pendingCount =
+        document.getElementById(
+            "pendingCount"
+        );
 
 
-    document.getElementById(
-        "completeCount"
-    ).textContent =
-        completedJobs.length;
+    const activeCount =
+        document.getElementById(
+            "activeCount"
+        );
 
 
-    // ==========================
+    const completeCount =
+        document.getElementById(
+            "completeCount"
+        );
+
+
+    if (pendingCount) {
+
+        pendingCount.textContent =
+            pendingJobs.length;
+
+    }
+
+
+    if (activeCount) {
+
+        activeCount.textContent =
+            activeJobs.length;
+
+    }
+
+
+    if (completeCount) {
+
+        completeCount.textContent =
+            completedJobs.length;
+
+    }
+
+
+    // =================================
     // DISPATCH LIST
-    // ==========================
+    // =================================
 
     const dispatchList =
         document.getElementById(
             "dispatchList"
         );
 
+
+    if (!dispatchList) {
+
+        return;
+
+    }
+
+
     dispatchList.innerHTML = "";
 
 
-    data
-        .filter(
-            b =>
-                String(b.status).toUpperCase() ===
-                "PENDING"
-        )
-        .forEach(b => {
+    // =================================
+    // NO PENDING JOBS
+    // =================================
 
-            let pickup = "-";
+    if (
+        pendingJobs.length === 0
+    ) {
 
-            let destination = "-";
+        dispatchList.innerHTML = `
+
+            <div class="dispatch-card">
+
+                <div class="dispatch-name">
+
+                    No pending bookings.
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
 
 
-            try {
+    // =================================
+    // RENDER PENDING BOOKINGS
+    // =================================
 
-                pickup =
-                    Array.isArray(b.pickups)
-                        ? b.pickups[0]
-                        : JSON.parse(b.pickups)[0];
+    pendingJobs.forEach(
+        booking => {
 
-            } catch {
-
-                pickup =
-                    b.pickups || "-";
-
-            }
+            const pickup =
+                getLocation(
+                    booking.pickups
+                );
 
 
-            try {
-
-                destination =
-                    Array.isArray(b.destinations)
-                        ? b.destinations[0]
-                        : JSON.parse(b.destinations)[0];
-
-            } catch {
-
-                destination =
-                    b.destinations || "-";
-
-            }
+            const destination =
+                getLocation(
+                    booking.destinations
+                );
 
 
             dispatchList.innerHTML += `
 
                 <div class="dispatch-card">
 
+
                     <div class="dispatch-top">
+
 
                         <div class="dispatch-ref">
 
-                            VH-${b.reference_no}
+                            VH-${escapeHTML(
+                                booking.reference_no ||
+                                "----"
+                            )}
 
                         </div>
+
 
                         <div class="dispatch-status">
 
-                            ${b.status}
+                            ${escapeHTML(
+                                booking.status ||
+                                "Pending"
+                            )}
 
                         </div>
 
+
                     </div>
+
 
 
                     <div class="dispatch-name">
 
-                        👤 ${b.customer_name}
+                        👤
+                        ${escapeHTML(
+                            booking.customer_name ||
+                            "Customer"
+                        )}
 
                     </div>
 
 
+
                     <div class="dispatch-route">
 
-                        📍 ${pickup}
+                        📍
+                        ${escapeHTML(
+                            pickup
+                        )}
 
                         <br>
 
@@ -583,28 +876,46 @@ async function loadBookings() {
 
                         <br>
 
-                        📍 ${destination}
+                        📍
+                        ${escapeHTML(
+                            destination
+                        )}
 
                     </div>
 
 
+
                     <div class="dispatch-bottom">
+
 
                         <div class="dispatch-time">
 
                             🕒
-                            ${b.booking_date}
+
+                            ${escapeHTML(
+                                booking.booking_date ||
+                                "-"
+                            )}
+
                             •
-                            ${b.booking_time}
+
+                            ${escapeHTML(
+                                booking.booking_time ||
+                                "-"
+                            )}
 
                         </div>
 
 
+
                         <button
+                            type="button"
                             class="open-btn"
                             onclick="
-                                location.href=
-                                'ops-booking.html?id=${b.id}'
+                                location.href =
+                                'ops-booking.html?id=${encodeURIComponent(
+                                    booking.id
+                                )}'
                             "
                         >
 
@@ -612,54 +923,229 @@ async function loadBookings() {
 
                         </button>
 
+
                     </div>
+
 
                 </div>
 
             `;
 
-        });
+        }
+    );
 
 }
 
 
-// ==========================
+
+// =====================================
+// GET LOCATION
+// =====================================
+
+function getLocation(
+    value
+) {
+
+    if (
+        !value
+    ) {
+
+        return "-";
+
+    }
+
+
+    // =================================
+    // STRING
+    // =================================
+
+    if (
+        typeof value ===
+        "string"
+    ) {
+
+        try {
+
+            const parsed =
+                JSON.parse(
+                    value
+                );
+
+
+            return getLocation(
+                parsed
+            );
+
+        }
+
+        catch {
+
+            return (
+                value.trim() ||
+                "-"
+            );
+
+        }
+
+    }
+
+
+    // =================================
+    // ARRAY
+    // =================================
+
+    if (
+        Array.isArray(value)
+    ) {
+
+        return value
+            .map(
+                item =>
+                    getLocation(
+                        item
+                    )
+            )
+            .filter(
+                item =>
+                    item &&
+                    item !== "-"
+            )
+            .join(", ")
+            || "-";
+
+    }
+
+
+    // =================================
+    // OBJECT
+    // =================================
+
+    if (
+        typeof value ===
+        "object"
+    ) {
+
+        const fields = [
+
+            "address",
+            "location",
+            "name",
+            "formatted_address",
+            "full_address",
+            "pickup",
+            "destination"
+
+        ];
+
+
+        for (
+            const field
+            of fields
+        ) {
+
+            if (
+                value[field] !==
+                    undefined &&
+                value[field] !==
+                    null &&
+                String(
+                    value[field]
+                ).trim() !== ""
+            ) {
+
+                return String(
+                    value[field]
+                ).trim();
+
+            }
+
+        }
+
+
+        try {
+
+            return JSON.stringify(
+                value
+            );
+
+        }
+
+        catch {
+
+            return "-";
+
+        }
+
+    }
+
+
+    return String(
+        value
+    );
+
+}
+
+
+
+// =====================================
 // LIVE MAP
-// ==========================
+// =====================================
 
 function initMap() {
+
+    const mapElement =
+        document.getElementById(
+            "driverMap"
+        );
+
+
+    if (!mapElement) {
+
+        console.error(
+            "driverMap element not found."
+        );
+
+        return;
+
+    }
+
 
     map =
         L.map(
             "driverMap"
         ).setView(
-            [1.3521, 103.8198],
+            [
+                1.3521,
+                103.8198
+            ],
             12
         );
 
 
-    // ==========================
-    // SINGAPORE MAP BOUNDS
-    // ==========================
+    // =================================
+    // SINGAPORE BOUNDS
+    // =================================
 
     const singaporeBounds =
         L.latLngBounds(
 
-            [1.15, 103.60],
+            [
+                1.15,
+                103.60
+            ],
 
-            [1.48, 104.08]
+            [
+                1.48,
+                104.10
+            ]
 
         );
 
-
-    // Prevent dragging far away
 
     map.setMaxBounds(
         singaporeBounds
     );
 
-
-    // Prevent zooming out too far
 
     map.setMinZoom(
         map.getBoundsZoom(
@@ -668,26 +1154,9 @@ function initMap() {
     );
 
 
-    // Keep map inside Singapore area
-
-    map.on(
-        "drag",
-        function () {
-
-            map.panInsideBounds(
-                singaporeBounds,
-                {
-                    animate: false
-                }
-            );
-
-        }
-    );
-
-
-    // ==========================
+    // =================================
     // MAP TILES
-    // ==========================
+    // =================================
 
     L.tileLayer(
 
@@ -705,9 +1174,10 @@ function initMap() {
 }
 
 
-// ==========================
-// LIVE DRIVER GPS + STATUS
-// ==========================
+
+// =====================================
+// LIVE DRIVER UPDATES
+// =====================================
 
 window.supabaseClient
 
@@ -721,252 +1191,96 @@ window.supabaseClient
 
         {
 
-            event: "UPDATE",
+            event:
+                "*",
 
-            schema: "public",
+            schema:
+                "public",
 
-            table: "Drivers"
+            table:
+                "Drivers"
 
         },
 
-        payload => {
-
-            const driver =
-                payload.new;
-
+        async payload => {
 
             console.log(
-                "Driver update:",
-                driver.name,
-                driver.status,
-                driver.latitude,
-                driver.longitude
+                "Driver realtime update:",
+                payload.eventType,
+                payload.new
             );
 
 
-            // ==========================
-            // OFF DUTY
-            // ==========================
+            // =================================
+            // DRIVER DELETED
+            // =================================
 
             if (
-                driver.status ===
-                "OFF DUTY"
+                payload.eventType ===
+                "DELETE"
             ) {
 
+                const oldDriver =
+                    payload.old;
+
+
                 if (
-                    markers[
-                        driver.auth_id
-                    ]
+                    oldDriver &&
+                    oldDriver.auth_id
                 ) {
 
-                    map.removeLayer(
-                        markers[
-                            driver.auth_id
-                        ]
+                    removeDriverMarker(
+                        oldDriver.auth_id
                     );
-
-                    delete markers[
-                        driver.auth_id
-                    ];
 
                 }
 
-                return;
 
-            }
-
-
-            // ==========================
-            // NO GPS
-            // ==========================
-
-            if (
-                driver.latitude === null ||
-                driver.longitude === null
-            ) {
+                await loadDrivers();
 
                 return;
 
             }
 
 
-            // ==========================
-            // MARKER COLOUR
-            // ==========================
-
-            let markerColor =
-                "green";
-
+            // =================================
+            // DRIVER UPDATED
+            // =================================
 
             if (
-                driver.status ===
-                "ON THE WAY"
+                payload.eventType ===
+                "UPDATE"
             ) {
 
-                markerColor =
-                    "orange";
-
-            } else if (
-                driver.status ===
-                "CUSTOMER ON BOARD"
-            ) {
-
-                markerColor =
-                    "red";
-
-            } else if (
-                driver.status ===
-                "ON JOB"
-            ) {
-
-                markerColor =
-                    "orange";
-
-            }
+                const driver =
+                    payload.new;
 
 
-            // ==========================
-            // MARKER ICON
-            // ==========================
+                // Removed / unapproved
+                if (
+                    driver.approved !== true ||
+                    driver.approval_status !==
+                        "APPROVED"
+                ) {
 
-            const markerIcon =
-                L.divIcon({
-
-                    className: "",
-
-                    html: `
-
-                        <div style="
-                            width: 20px;
-                            height: 20px;
-                            background:
-                                ${markerColor};
-                            border:
-                                3px solid white;
-                            border-radius:
-                                50%;
-                            box-shadow:
-                                0 2px 8px
-                                rgba(0,0,0,0.4);
-                        "></div>
-
-                    `,
-
-                    iconSize:
-                        [26, 26],
-
-                    iconAnchor:
-                        [13, 13]
-
-                });
-
-
-            // ==========================
-            // POPUP
-            // ==========================
-
-            const popupContent = `
-
-                <strong>
-                    🚗 ${driver.name}
-                </strong>
-
-                <br><br>
-
-                <strong>
-                    Status:
-                </strong>
-
-                ${driver.status}
-
-                <br>
-
-                <strong>
-                    GPS:
-                </strong>
-
-                ${Number(
-                    driver.latitude
-                ).toFixed(5)},
-
-                ${Number(
-                    driver.longitude
-                ).toFixed(5)}
-
-            `;
-
-
-            // ==========================
-            // EXISTING MARKER
-            // ==========================
-
-            if (
-                markers[
-                    driver.auth_id
-                ]
-            ) {
-
-                markers[
-                    driver.auth_id
-                ].setLatLng([
-
-                    driver.latitude,
-
-                    driver.longitude
-
-                ]);
-
-
-                markers[
-                    driver.auth_id
-                ].setIcon(
-                    markerIcon
-                );
-
-
-                markers[
-                    driver.auth_id
-                ].setPopupContent(
-                    popupContent
-                );
-
-            }
-
-
-            // ==========================
-            // NEW MARKER
-            // ==========================
-
-            else {
-
-                markers[
-                    driver.auth_id
-                ] =
-
-                    L.marker(
-
-                        [
-
-                            driver.latitude,
-
-                            driver.longitude
-
-                        ],
-
-                        {
-
-                            icon:
-                                markerIcon
-
-                        }
-
-                    )
-
-                    .addTo(map)
-
-                    .bindPopup(
-                        popupContent
+                    removeDriverMarker(
+                        driver.auth_id
                     );
+
+
+                    await loadDrivers();
+
+                    return;
+
+                }
+
+
+                updateDriverMarker(
+                    driver
+                );
+
+
+                await loadDrivers();
 
             }
 
@@ -974,12 +1288,22 @@ window.supabaseClient
 
     )
 
-    .subscribe();
+    .subscribe(
+        status => {
+
+            console.log(
+                "Driver realtime:",
+                status
+            );
+
+        }
+    );
 
 
-// ==========================
+
+// =====================================
 // LIVE BOOKING UPDATES
-// ==========================
+// =====================================
 
 window.supabaseClient
 
@@ -993,11 +1317,14 @@ window.supabaseClient
 
         {
 
-            event: "*",
+            event:
+                "*",
 
-            schema: "public",
+            schema:
+                "public",
 
-            table: "Bookings"
+            table:
+                "Bookings"
 
         },
 
@@ -1017,7 +1344,6 @@ window.supabaseClient
     )
 
     .subscribe(
-
         status => {
 
             console.log(
@@ -1026,5 +1352,132 @@ window.supabaseClient
             );
 
         }
-
     );
+
+
+
+// =====================================
+// LOGOUT
+// =====================================
+
+async function logout() {
+
+    console.log(
+        "OPS logout clicked."
+    );
+
+
+    try {
+
+        // =================================
+        // SIGN OUT FROM SUPABASE AUTH
+        // =================================
+
+        if (
+            window.supabaseClient
+        ) {
+
+            const {
+                error
+            } =
+                await window.supabaseClient
+                    .auth
+                    .signOut();
+
+
+            if (error) {
+
+                console.error(
+                    "Supabase logout error:",
+                    error
+                );
+
+            }
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unexpected logout error:",
+            error
+        );
+
+    }
+
+
+    // =================================
+    // CLEAR LOCAL SESSION
+    // =================================
+
+    sessionStorage.removeItem(
+        "adminLoggedIn"
+    );
+
+
+    sessionStorage.removeItem(
+        "adminId"
+    );
+
+
+    sessionStorage.removeItem(
+        "adminRole"
+    );
+
+
+    sessionStorage.removeItem(
+        "adminUsername"
+    );
+
+
+    sessionStorage.removeItem(
+        "adminName"
+    );
+
+
+    // =================================
+    // GO TO LOGIN
+    // =================================
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+// =====================================
+// HTML ESCAPE
+// =====================================
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}

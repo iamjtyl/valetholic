@@ -1,1671 +1,1675 @@
 /* ==================================================
-   VALETHOLIC V3
-   PART 1
-   RESET • VARIABLES • GLOBAL • NAVBAR
+   VALETHOLIC
+   MAIN WEBSITE STYLES
 ================================================== */
 
 
 /* ==================================================
-   01 RESET
+   01. RESET
 ================================================== */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    background:#0A0A0A;
-    color:#FFFFFF;
-    font-family:"Inter",sans-serif;
-    overflow-x:hidden;
+
+body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: "Inter", sans-serif;
+    overflow-x: hidden;
 }
 
-a{
-    text-decoration:none;
-    color:inherit;
+
+a {
+    color: inherit;
+    text-decoration: none;
 }
 
-img{
-    display:block;
-    max-width:100%;
+
+img {
+    display: block;
+    max-width: 100%;
 }
+
 
 button,
 input,
 select,
-textarea{
-    font-family:inherit;
+textarea {
+    font-family: inherit;
 }
 
 
 /* ==================================================
-   02 VARIABLES
+   02. VARIABLES
 ================================================== */
 
-:root{
+:root {
 
-    --bg:#0A0A0A;
+    --bg: #0A0A0A;
 
-    --card:#141414;
-    --card-dark:#111111;
-    --input:#1F1F1F;
+    --card: #141414;
+    --card-dark: #111111;
+    --input: #1F1F1F;
 
-    --gold:#D4AF37;
-    --gold-hover:#E0BE5A;
+    --gold: #D4AF37;
+    --gold-hover: #E0BE5A;
 
-    --white:#FFFFFF;
-    --text:#BDBDBD;
-    --muted:#8A8A8A;
+    --white: #FFFFFF;
+    --text: #BDBDBD;
+    --muted: #8A8A8A;
 
-    --border:rgba(255,255,255,.08);
+    --border: rgba(255, 255, 255, .08);
+    --gold-border: rgba(212, 175, 55, .20);
 
-    --radius:10px;
-    --radius-lg:22px;
+    --radius: 10px;
+    --radius-lg: 22px;
 
-    --transition:.25s ease;
-
-}
-
-
-/* ==================================================
-   03 GLOBAL
-================================================== */
-
-section{
-
-    width:100%;
-
-}
-
-.container{
-
-    max-width:1400px;
-
-    margin:0 auto;
-
-    padding:0 70px;
+    --transition: .25s ease;
 
 }
 
 
 /* ==================================================
-   04 NAVBAR
+   03. GLOBAL
 ================================================== */
 
-.navbar{
+section {
+    width: 100%;
+}
 
-    position:fixed;
 
-    top:0;
-    left:0;
+.container {
 
-    width:100%;
-    height:80px;
+    width: 100%;
+    max-width: 1400px;
 
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+    margin: 0 auto;
 
-    padding:0 70px;
+    padding:
+        0 70px;
 
-    background:rgba(10,10,10,.94);
+}
 
-    backdrop-filter:blur(14px);
 
-    border-bottom:1px solid var(--border);
+/* ==================================================
+   04. NAVBAR
+================================================== */
 
-    z-index:1000;
+.navbar {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 80px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+        0 70px;
+
+    background:
+        rgba(10, 10, 10, .94);
+
+    backdrop-filter:
+        blur(14px);
+
+    border-bottom:
+        1px solid var(--border);
+
+    z-index: 1000;
 
 }
 
 
 /* ---------- LOGO ---------- */
 
-.logo{
+.logo {
 
-    display:flex;
+    display: flex;
 
-    align-items:center;
+    align-items: center;
 
-    gap:15px;
-
-}
-
-.logo img{
-
-    width:42px;
-
-}
-
-.logo span{
-
-    font-size:22px;
-
-    font-weight:700;
-
-    letter-spacing:3px;
+    gap: 15px;
 
 }
 
 
-/* ---------- MENU ---------- */
+.logo img {
 
-.navbar ul{
-
-    display:flex;
-
-    list-style:none;
-
-    gap:45px;
-
-}
-
-.navbar li{
-
-    list-style:none;
-
-}
-
-.navbar a{
-
-    color:var(--text);
-
-    transition:var(--transition);
-
-}
-
-.navbar a:hover{
-
-    color:var(--gold);
+    width: 42px;
 
 }
 
 
-/* ---------- BUTTON GROUP ---------- */
+.logo span {
 
-.nav-buttons{
+    font-size: 22px;
 
-    display:flex;
+    font-weight: 700;
 
-    align-items:center;
-
-    gap:12px;
+    letter-spacing: 3px;
 
 }
 
 
-/* ---------- COMMON BUTTON ---------- */
+/* ---------- NAVIGATION ---------- */
+
+.navbar ul {
+
+    display: flex;
+
+    gap: 45px;
+
+    list-style: none;
+
+}
+
+
+.navbar li {
+    list-style: none;
+}
+
+
+.navbar ul li a {
+
+    color: var(--text);
+
+    font-size: 20px;
+
+    transition:
+        var(--transition);
+
+}
+
+
+.navbar ul li a:hover {
+
+    color: var(--gold);
+
+}
+
+
+/* ---------- NAV BUTTON GROUP ---------- */
+
+.nav-buttons {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+/* ---------- COMMON NAV BUTTON ---------- */
 
 .nav-button,
-.whatsapp-btn{
+.whatsapp-btn {
 
-    display:flex;
+    display: flex;
 
-    align-items:center;
+    align-items: center;
+    justify-content: center;
 
-    justify-content:center;
+    height: 56px;
 
-    height:56px;
+    padding:
+        0 28px;
 
-    padding:0 28px;
+    border-radius:
+        14px;
 
-    border-radius:14px;
+    font-size:
+        16px;
 
-    font-size:16px;
-
-    font-weight:600;
-
-    text-decoration:none;
-
-    transition:all .25s ease;
-
-}
-
-
-/* ---------- I'M NOT DRUNK ---------- */
-
-.nav-button{
-
-    background:var(--gold);
-
-    color:#111 !important;
-
-}
-
-.nav-button:hover{
-
-    background:var(--gold-hover);
-
-    transform:translateY(-2px);
-
-}
-
-
-/* ---------- I'VE BEEN DRINKING ---------- */
-
-.whatsapp-btn{
-
-    background:#25D366;
-
-    color:#FFFFFF !important;
-
-    gap:8px;
-
-}
-
-.whatsapp-btn:hover{
-
-    background:#1EBE5D;
-
-    transform:translateY(-2px);
-
-}
-/* ==================================================
-   05 HERO
-================================================== */
-
-.hero{
-
-    max-width:1400px;
-
-    margin:auto;
-
-    display:grid;
-
-    grid-template-columns:1.15fr .85fr;
-
-    gap:80px;
-
-    align-items:center;
-
-    padding:100px 70px 40px;
-
-    transition:grid-template-columns .6s ease;
-
-}
-
-.hero-left{
-
-    display:block;
-
-    max-width:620px;
-
-    margin:auto;
-
-    padding-right:40px;
-
-    opacity:1;
-
-    transform:none;
-
-    transition:.6s ease;
-
-    pointer-events:auto;
-
-}
-
-.hero.booking-open .hero-left{
-
-    margin:0;
-
-}
-
-.hero-right{
-
-    display:flex;
-
-    justify-content:flex-end;
-
-    opacity:0;
-
-    transform:translateX(100px);
+    font-weight:
+        600;
 
     transition:
-        opacity .5s ease,
-        transform .6s ease;
+        var(--transition);
 
-    pointer-events:none;
-
-}
-
-.hero.booking-open{
-
-    grid-template-columns:1.15fr .85fr;
-
-}
-
-.hero.booking-open .hero-right{
-
-    opacity:1;
-
-    transform:translateX(0);
-
-    pointer-events:auto;
-
-}
-
-
-/* ---------- TEXT ---------- */
-
-.hero-label{
-
-    color:var(--gold);
-
-    text-transform:uppercase;
-
-    letter-spacing:5px;
-
-    font-size:14px;
-
-    margin-bottom:28px;
-
-}
-
-.hero-title{
-
-    font-family:"Cormorant Garamond",serif;
-
-    font-size:60px;
-
-    line-height:1.05;
-
-    font-weight:600;
-
-    max-width:560px;
-
-    margin-bottom:50px;
-
-}
-
-.hero-title span{
-
-    color:var(--gold);
-
-}
-
-.hero-price small{
-
-    display:block;
-
-    color:var(--gold);
-
-    font-size:18px;
-
-    font-weight:600;
-
-    letter-spacing:2px;
-
-    text-transform:uppercase;
-
-    margin-bottom:8px;
-
-}
-
-.hero-price h2{
-
-    color:var(--gold);
-
-    font-size:54px;
-
-    line-height:1;
-
-    margin-bottom:15px;
-
-}
-
-.price-heading{
-
-    color:var(--gold);
-
-    font-size:22px;
-
-    font-weight:700;
-
-    text-transform:uppercase;
-
-    margin-bottom:8px;
-
-}
-
-.hero-description{
-
-    color:#B8B8B8;
-
-    font-size:17px;
-
-    line-height:1.8;
-
-    max-width:470px;
-
-}
-
-.hero-description small{
-
-    color:#999;
-
-}
-
-.hero-description hr{
-
-    border:0;
-
-    border-top:1px solid rgba(212,175,55,.35);
-
-    margin:20px 0;
-
-}
-
-
-/* ---------- GOLD BUTTON ---------- */
-
-.gold-btn{
-
-    display:inline-block;
-
-    background:var(--gold);
-
-    color:#111;
-
-    padding:18px 42px;
-
-    border-radius:10px;
-
-    font-weight:700;
-
-    box-shadow:0 10px 25px rgba(212,175,55,.25);
-
-    transition:.25s;
-
-}
-
-.gold-btn:hover{
-
-    background:var(--gold-hover);
-
-    transform:translateY(-2px);
-
-    box-shadow:0 16px 35px rgba(212,175,55,.35);
-
-}
-
-
-/* ==================================================
-   06 BOOKING CARD
-================================================== */
-
-.booking-card{
-
-    width:100%;
-
-    max-width:380px;
-
-    background:#111;
-
-    border:1px solid rgba(212,175,55,.20);
-
-    border-radius:22px;
-
-    padding:26px;
-
-    box-shadow:0 20px 50px rgba(0,0,0,.45);
-
-}
-
-.booking-card h2{
-
-    font-family:"Cormorant Garamond",serif;
-
-    font-size:30px;
-
-    color:#FFF;
-
-    margin-bottom:20px;
-
-}
-
-.booking-card form{
-
-    display:flex;
-
-    flex-direction:column;
-
-}
-
-.booking-card label{
-
-    margin:6px 0 5px;
-
-    font-size:14px;
-
-    color:var(--text);
-
-}
-
-
-/* ---------- INPUT ---------- */
-
-.booking-card input,
-.booking-card select{
-
-    width:100%;
-
-    height:46px;
-
-    background:var(--input);
-
-    border:1px solid #333;
-
-    border-radius:12px;
-
-    color:#FFF;
-
-    padding:0 15px;
-
-    font-size:15px;
-
-    outline:none;
-
-    transition:.25s;
-
-}
-
-.booking-card input:hover,
-.booking-card select:hover{
-
-    border-color:#555;
-
-}
-
-.booking-card input:focus,
-.booking-card select:focus{
-
-    border-color:var(--gold);
-
-    box-shadow:0 0 0 3px rgba(212,175,55,.15);
-
-}
-
-.booking-card input::placeholder{
-
-    color:#666;
-
-}
-
-
-/* ---------- TEXTAREA ---------- */
-
-.booking-card textarea{
-
-    width:100%;
-
-    min-height:140px;
-
-    background:#1E1E1E;
-
-    border:1px solid #333;
-
-    border-radius:12px;
-
-    color:#FFF;
-
-    padding:16px;
-
-    font-size:15px;
-
-    resize:none;
-
-    font-family:inherit;
-
-}
-
-.booking-card textarea:focus{
-
-    outline:none;
-
-    border-color:var(--gold);
-
-}
-
-.booking-card textarea::placeholder{
-
-    color:#777;
-
-}
-
-
-/* ---------- BUTTON ---------- */
-
-.booking-card button{
-
-    margin-top:22px;
-
-    height:48px;
-
-    border:none;
-
-    border-radius:10px;
-
-    background:var(--gold);
-
-    color:#111;
-
-    font-size:16px;
-
-    font-weight:700;
-
-    letter-spacing:1px;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-}
-
-.booking-card button:hover{
-
-    background:var(--gold-hover);
-
-    transform:translateY(-2px);
-
-}
-
-
-/* ---------- DATE & TIME ---------- */
-
-.booking-row{
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:15px;
-
-}
-
-
-/* ==================================================
-   07 BOOKING UTILITIES
-================================================== */
-
-.journey-block{
-
-    border-bottom:1px solid rgba(255,255,255,.08);
-
-    padding-bottom:8px;
-
-    margin-bottom:8px;
-
-}
-
-.journey-block h3{
-
-    color:var(--gold);
-
-    font-size:18px;
-
-    margin-bottom:15px;
-
-}
-
-.add-buttons{
-
-    display:flex;
-
-    gap:12px;
-
-    margin:15px 0 10px;
-
-}
-
-.mini-btn{
-
-    flex:1;
-
-    height:42px;
-
-    background:var(--gold);
-
-    color:#111;
-
-    border:none;
-
-    border-radius:10px;
-
-    font-size:14px;
-
-    font-weight:600;
-
-    cursor:pointer;
-
-}
-
-.mini-btn:hover{
-
-    background:var(--gold-hover);
-
-}
-
-.add-journey{
-
-    width:100%;
-
-    height:45px;
-
-    margin:15px 0;
-
-    background:transparent;
-
-    color:var(--gold);
-
-    border:1px dashed var(--gold);
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-}
-
-.add-journey:hover{
-
-    background:rgba(212,175,55,.08);
-
-}
-/* ==================================================
-   05 HERO
-================================================== */
-
-.hero{
-
-    max-width:1400px;
-
-    margin:auto;
-
-    display:grid;
-
-    grid-template-columns:1.15fr .85fr;
-
-    gap:80px;
-
-    align-items:center;
-
-    padding:100px 70px 40px;
-
-    transition:grid-template-columns .6s ease;
-
-}
-
-.hero-left{
-
-    display:block;
-
-    max-width:620px;
-
-    margin:auto;
-
-    padding-right:40px;
-
-    opacity:1;
-
-    transform:none;
-
-    transition:.6s ease;
-
-    pointer-events:auto;
-
-}
-
-.hero.booking-open .hero-left{
-
-    margin:0;
-
-}
-
-.hero-right{
-
-    display:flex;
-
-    justify-content:flex-end;
-
-    opacity:0;
-
-    transform:translateX(100px);
-
-    transition:
-        opacity .5s ease,
-        transform .6s ease;
-
-    pointer-events:none;
-
-}
-
-.hero.booking-open{
-
-    grid-template-columns:1.15fr .85fr;
-
-}
-
-.hero.booking-open .hero-right{
-
-    opacity:1;
-
-    transform:translateX(0);
-
-    pointer-events:auto;
-
-}
-
-
-/* ---------- TEXT ---------- */
-
-.hero-label{
-
-    color:var(--gold);
-
-    text-transform:uppercase;
-
-    letter-spacing:5px;
-
-    font-size:14px;
-
-    margin-bottom:28px;
-
-}
-
-.hero-title{
-
-    font-family:"Cormorant Garamond",serif;
-
-    font-size:60px;
-
-    line-height:1.05;
-
-    font-weight:600;
-
-    max-width:560px;
-
-    margin-bottom:50px;
-
-}
-
-.hero-title span{
-
-    color:var(--gold);
-
-}
-
-.hero-price small{
-
-    display:block;
-
-    color:var(--gold);
-
-    font-size:18px;
-
-    font-weight:600;
-
-    letter-spacing:2px;
-
-    text-transform:uppercase;
-
-    margin-bottom:8px;
-
-}
-
-.hero-price h2{
-
-    color:var(--gold);
-
-    font-size:54px;
-
-    line-height:1;
-
-    margin-bottom:15px;
-
-}
-
-.price-heading{
-
-    color:var(--gold);
-
-    font-size:22px;
-
-    font-weight:700;
-
-    text-transform:uppercase;
-
-    margin-bottom:8px;
-
-}
-
-.hero-description{
-
-    color:#B8B8B8;
-
-    font-size:17px;
-
-    line-height:1.8;
-
-    max-width:470px;
-
-}
-
-.hero-description small{
-
-    color:#999;
-
-}
-
-.hero-description hr{
-
-    border:0;
-
-    border-top:1px solid rgba(212,175,55,.35);
-
-    margin:20px 0;
-
-}
-
-
-/* ---------- GOLD BUTTON ---------- */
-
-.gold-btn{
-
-    display:inline-block;
-
-    background:var(--gold);
-
-    color:#111;
-
-    padding:18px 42px;
-
-    border-radius:10px;
-
-    font-weight:700;
-
-    box-shadow:0 10px 25px rgba(212,175,55,.25);
-
-    transition:.25s;
-
-}
-
-.gold-btn:hover{
-
-    background:var(--gold-hover);
-
-    transform:translateY(-2px);
-
-    box-shadow:0 16px 35px rgba(212,175,55,.35);
-
-}
-
-
-/* ==================================================
-   06 BOOKING CARD
-================================================== */
-
-.booking-card{
-
-    width:100%;
-
-    max-width:380px;
-
-    background:#111;
-
-    border:1px solid rgba(212,175,55,.20);
-
-    border-radius:22px;
-
-    padding:26px;
-
-    box-shadow:0 20px 50px rgba(0,0,0,.45);
-
-}
-
-.booking-card h2{
-
-    font-family:"Cormorant Garamond",serif;
-
-    font-size:30px;
-
-    color:#FFF;
-
-    margin-bottom:20px;
-
-}
-
-.booking-card form{
-
-    display:flex;
-
-    flex-direction:column;
-
-}
-
-.booking-card label{
-
-    margin:6px 0 5px;
-
-    font-size:14px;
-
-    color:var(--text);
-
-}
-
-
-/* ---------- INPUT ---------- */
-
-.booking-card input,
-.booking-card select{
-
-    width:100%;
-
-    height:46px;
-
-    background:var(--input);
-
-    border:1px solid #333;
-
-    border-radius:12px;
-
-    color:#FFF;
-
-    padding:0 15px;
-
-    font-size:15px;
-
-    outline:none;
-
-    transition:.25s;
-
-}
-
-.booking-card input:hover,
-.booking-card select:hover{
-
-    border-color:#555;
-
-}
-
-.booking-card input:focus,
-.booking-card select:focus{
-
-    border-color:var(--gold);
-
-    box-shadow:0 0 0 3px rgba(212,175,55,.15);
-
-}
-
-.booking-card input::placeholder{
-
-    color:#666;
-
-}
-
-
-/* ---------- TEXTAREA ---------- */
-
-.booking-card textarea{
-
-    width:100%;
-
-    min-height:140px;
-
-    background:#1E1E1E;
-
-    border:1px solid #333;
-
-    border-radius:12px;
-
-    color:#FFF;
-
-    padding:16px;
-
-    font-size:15px;
-
-    resize:none;
-
-    font-family:inherit;
-
-}
-
-.booking-card textarea:focus{
-
-    outline:none;
-
-    border-color:var(--gold);
-
-}
-
-.booking-card textarea::placeholder{
-
-    color:#777;
-
-}
-
-
-/* ---------- BUTTON ---------- */
-
-.booking-card button{
-
-    margin-top:22px;
-
-    height:48px;
-
-    border:none;
-
-    border-radius:10px;
-
-    background:var(--gold);
-
-    color:#111;
-
-    font-size:16px;
-
-    font-weight:700;
-
-    letter-spacing:1px;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-}
-
-.booking-card button:hover{
-
-    background:var(--gold-hover);
-
-    transform:translateY(-2px);
-
-}
-
-
-/* ---------- DATE & TIME ---------- */
-
-.booking-row{
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:15px;
-
-}
-
-
-/* ==================================================
-   07 BOOKING UTILITIES
-================================================== */
-
-.journey-block{
-
-    border-bottom:1px solid rgba(255,255,255,.08);
-
-    padding-bottom:8px;
-
-    margin-bottom:8px;
-
-}
-
-.journey-block h3{
-
-    color:var(--gold);
-
-    font-size:18px;
-
-    margin-bottom:15px;
-
-}
-
-.add-buttons{
-
-    display:flex;
-
-    gap:12px;
-
-    margin:15px 0 10px;
-
-}
-
-.mini-btn{
-
-    flex:1;
-
-    height:42px;
-
-    background:var(--gold);
-
-    color:#111;
-
-    border:none;
-
-    border-radius:10px;
-
-    font-size:14px;
-
-    font-weight:600;
-
-    cursor:pointer;
-
-}
-
-.mini-btn:hover{
-
-    background:var(--gold-hover);
-
-}
-
-.add-journey{
-
-    width:100%;
-
-    height:45px;
-
-    margin:15px 0;
-
-    background:transparent;
-
-    color:var(--gold);
-
-    border:1px dashed var(--gold);
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-}
-
-.add-journey:hover{
-
-    background:rgba(212,175,55,.08);
-
-}
-/* ==================================================
-   08 HOW IT WORKS
-================================================== */
-
-.how{
-
-    max-width:1400px;
-
-    margin:-20px auto 80px;
-
-    padding:0 70px;
-
-}
-
-.how h2{
-
-    text-align:center;
-
-    font-family:"Cormorant Garamond",serif;
-
-    font-size:48px;
-
-    margin-bottom:60px;
-
-}
-
-.steps{
-
-    display:grid;
-
-    grid-template-columns:repeat(3,1fr);
-
-    gap:30px;
-
-}
-
-.step{
-
-    background:#151515;
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:18px;
-
-    padding:35px;
-
-    transition:.35s;
-
 }
 
-.step:hover{
 
-    transform:translateY(-8px);
+/* ---------- GOLD NAV BUTTON ---------- */
 
-    border-color:var(--gold);
+.nav-button {
 
-    box-shadow:0 20px 40px rgba(0,0,0,.40);
+    background:
+        var(--gold);
 
-}
-
-.number{
-
-    color:var(--gold);
-
-    font-size:36px;
-
-    font-weight:700;
-
-    margin-bottom:20px;
-
-}
-
-.step h3{
-
-    font-size:24px;
-
-    margin-bottom:15px;
-
-}
-
-.step p{
-
-    color:#A8A8A8;
-
-    line-height:1.7;
-
-}
-
-
-/* ==================================================
-   09 WHAT WE DO
-================================================== */
-
-.services{
-
-    max-width:1400px;
-
-    margin:100px auto;
-
-    padding:0 70px;
-
-}
-
-.services h2{
-
-    text-align:center;
-
-    font-family:"Cormorant Garamond",serif;
-
-    font-size:48px;
-
-    margin-bottom:60px;
-
-}
-
-.service-grid{
-
-    display:grid;
-
-    grid-template-columns:repeat(3,1fr);
-
-    gap:30px;
-
-}
-
-.service-card{
-
-    background:#151515;
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:18px;
-
-    padding:35px;
-
-    transition:.3s;
-
-}
-
-.service-card:hover{
-
-    transform:translateY(-8px);
-
-    border-color:var(--gold);
-
-    box-shadow:0 20px 40px rgba(0,0,0,.40);
-
-}
-
-.service-card h3{
-
-    color:var(--gold);
-
-    font-size:24px;
-
-    margin-bottom:15px;
-
-}
-
-.service-card p{
-
-    color:#BDBDBD;
-
-    line-height:1.8;
-
-}
+    color:
+        #111 !important;
 
-
-/* ==================================================
-   10 FAQ
-================================================== */
-
-.faq{
-
-    max-width:1200px;
-
-    margin:100px auto;
-
-    padding:0 60px;
-
-}
-
-.faq h2{
-
-    text-align:center;
-
-    font-family:"Cormorant Garamond",serif;
-
-    font-size:48px;
-
-    margin-bottom:40px;
-
-}
-
-.faq-item{
-
-    background:#141414;
-
-    border:1px solid rgba(212,175,55,.15);
-
-    border-radius:16px;
-
-    padding:25px;
-
-    margin-bottom:20px;
-
-}
-
-.faq-item h3{
-
-    color:var(--gold);
-
-    font-size:22px;
-
-    margin-bottom:12px;
-
-}
-
-.faq-item p{
-
-    color:#CFCFCF;
-
-    line-height:1.8;
-
 }
 
-.faq-item ul{
 
-    margin-left:20px;
+.nav-button:hover {
 
-    color:#CFCFCF;
+    background:
+        var(--gold-hover);
 
-    line-height:2;
+    transform:
+        translateY(-2px);
 
 }
 
 
-/* ==================================================
-   11 FOOTER
-================================================== */
+/* ---------- WHATSAPP NAV BUTTON ---------- */
 
-footer{
+.whatsapp-btn {
 
-    margin-top:100px;
+    background:
+        #25D366;
 
-    padding:50px 20px;
+    color:
+        #fff !important;
 
-    border-top:1px solid rgba(255,255,255,.08);
+    gap:
+        8px;
 
-    text-align:center;
-
-}
-
-footer h2{
-
-    font-family:"Cormorant Garamond",serif;
-
-    font-size:36px;
-
-    color:var(--gold);
-
-    margin-bottom:10px;
-
-}
-
-footer p{
-
-    color:var(--muted);
-
-}
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    cursor: pointer;
-}
-/* ===========================
-   SUCCESS PAGE
-=========================== */
-
-.success-container{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:40px 20px;
-    background:#0f0f0f;
-}
-
-.success-card{
-    width:100%;
-    max-width:650px;
-    background:#1b1b1b;
-    border:1px solid rgba(212,175,55,.2);
-    border-radius:24px;
-    padding:50px;
-    text-align:center;
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
-}
-
-.success-icon{
-    width:90px;
-    height:90px;
-    margin:0 auto 25px;
-    border-radius:50%;
-    background:#27c35a;
-    color:#fff;
-    font-size:46px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.success-card h1{
-    color:#fff;
-    margin-bottom:20px;
-    font-size:38px;
-}
-
-.success-card p{
-    color:#cfcfcf;
-    line-height:1.8;
-    margin-bottom:30px;
-}
-
-.booking-id{
-    background:#252525;
-    border-radius:14px;
-    padding:18px;
-    margin-bottom:30px;
 }
 
-.booking-id small{
-    display:block;
-    color:#999;
-    margin-bottom:6px;
-}
 
-.booking-id span{
-    color:#d4af37;
-    font-size:24px;
-    font-weight:700;
-    letter-spacing:1px;
-}
+.whatsapp-btn:hover {
 
-.success-buttons{
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-}
+    background:
+        #1EBE5D;
 
-.whatsapp-btn,
-.nav-button{
-    display:block;
-    text-decoration:none;
-    padding:18px;
-    border-radius:14px;
-    font-weight:700;
-    transition:.25s;
-}
+    transform:
+        translateY(-2px);
 
-.whatsapp-btn{
-    background:#25D366;
-    color:#fff;
 }
 
-.whatsapp-btn:hover{
-    background:#1ebe5b;
-}
 
-.nav-button{
-    background:#d4af37;
-    color:#111;
-}
+/* ---------- ADMIN BUTTON ---------- */
 
-.nav-button:hover{
-    background:#c39f2e;
-}
-.navbar ul li a {
-    font-size: 20px;
-}
 .admin-btn:hover {
-    background: #d4af37;
-    color: #000;
+
+    background:
+        var(--gold);
+
+    color:
+        #000;
+
 }
+
+
+/* ==================================================
+   05. HERO
+================================================== */
+
+.hero {
+
+    width: 100%;
+    max-width: 1400px;
+
+    margin:
+        0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        1.15fr .85fr;
+
+    gap:
+        80px;
+
+    align-items:
+        center;
+
+    padding:
+        100px 70px 40px;
+
+    transition:
+        grid-template-columns .6s ease;
+
+}
+
+
+/* ---------- HERO LEFT ---------- */
+
+.hero-left {
+
+    display:
+        block;
+
+    max-width:
+        620px;
+
+    margin:
+        auto;
+
+    padding-right:
+        40px;
+
+    opacity:
+        1;
+
+    transform:
+        none;
+
+    transition:
+        .6s ease;
+
+    pointer-events:
+        auto;
+
+}
+
+
+.hero.booking-open .hero-left {
+
+    margin:
+        0;
+
+}
+
+
+/* ---------- HERO RIGHT ---------- */
+
+.hero-right {
+
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+
+    opacity:
+        0;
+
+    transform:
+        translateX(100px);
+
+    transition:
+        opacity .5s ease,
+        transform .6s ease;
+
+    pointer-events:
+        none;
+
+}
+
+
+.hero.booking-open {
+
+    grid-template-columns:
+        1.15fr .85fr;
+
+}
+
+
+.hero.booking-open .hero-right {
+
+    opacity:
+        1;
+
+    transform:
+        translateX(0);
+
+    pointer-events:
+        auto;
+
+}
+
+
+/* ---------- HERO TEXT ---------- */
+
+.hero-label {
+
+    color:
+        var(--gold);
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        5px;
+
+    font-size:
+        14px;
+
+    margin-bottom:
+        28px;
+
+}
+
+
+.hero-title {
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:
+        60px;
+
+    line-height:
+        1.05;
+
+    font-weight:
+        600;
+
+    max-width:
+        560px;
+
+    margin-bottom:
+        50px;
+
+}
+
+
+.hero-title span {
+
+    color:
+        var(--gold);
+
+}
+
+
+.hero-price small {
+
+    display:
+        block;
+
+    color:
+        var(--gold);
+
+    font-size:
+        18px;
+
+    font-weight:
+        600;
+
+    letter-spacing:
+        2px;
+
+    text-transform:
+        uppercase;
+
+    margin-bottom:
+        8px;
+
+}
+
+
+.hero-price h2 {
+
+    color:
+        var(--gold);
+
+    font-size:
+        54px;
+
+    line-height:
+        1;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+.price-heading {
+
+    color:
+        var(--gold);
+
+    font-size:
+        22px;
+
+    font-weight:
+        700;
+
+    text-transform:
+        uppercase;
+
+    margin-bottom:
+        8px;
+
+}
+
+
+.hero-description {
+
+    color:
+        #B8B8B8;
+
+    font-size:
+        17px;
+
+    line-height:
+        1.8;
+
+    max-width:
+        470px;
+
+}
+
+
+.hero-description small {
+
+    color:
+        #999;
+
+}
+
+
+.hero-description hr {
+
+    border:
+        0;
+
+    border-top:
+        1px solid
+        rgba(212, 175, 55, .35);
+
+    margin:
+        20px 0;
+
+}
+
+
+/* ==================================================
+   06. GOLD BUTTON
+================================================== */
+
+.gold-btn {
+
+    display:
+        inline-block;
+
+    background:
+        var(--gold);
+
+    color:
+        #111;
+
+    padding:
+        18px 42px;
+
+    border-radius:
+        var(--radius);
+
+    font-weight:
+        700;
+
+    box-shadow:
+        0 10px 25px
+        rgba(212, 175, 55, .25);
+
+    transition:
+        var(--transition);
+
+}
+
+
+.gold-btn:hover {
+
+    background:
+        var(--gold-hover);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 16px 35px
+        rgba(212, 175, 55, .35);
+
+}
+
+
+/* ==================================================
+   07. BOOKING CARD
+================================================== */
+
+.booking-card {
+
+    width:
+        100%;
+
+    max-width:
+        380px;
+
+    background:
+        var(--card-dark);
+
+    border:
+        1px solid var(--gold-border);
+
+    border-radius:
+        var(--radius-lg);
+
+    padding:
+        26px;
+
+    box-shadow:
+        0 20px 50px
+        rgba(0, 0, 0, .45);
+
+}
+
+
+.booking-card h2 {
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:
+        30px;
+
+    color:
+        var(--white);
+
+    margin-bottom:
+        20px;
+
+}
+
+
+.booking-card form {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+}
+
+
+.booking-card label {
+
+    margin:
+        6px 0 5px;
+
+    font-size:
+        14px;
+
+    color:
+        var(--text);
+
+}
+
+
+/* ---------- INPUTS ---------- */
+
+.booking-card input,
+.booking-card select {
+
+    width:
+        100%;
+
+    height:
+        46px;
+
+    background:
+        var(--input);
+
+    border:
+        1px solid #333;
+
+    border-radius:
+        12px;
+
+    color:
+        var(--white);
+
+    padding:
+        0 15px;
+
+    font-size:
+        15px;
+
+    outline:
+        none;
+
+    transition:
+        var(--transition);
+
+}
+
+
+.booking-card input:hover,
+.booking-card select:hover {
+
+    border-color:
+        #555;
+
+}
+
+
+.booking-card input:focus,
+.booking-card select:focus {
+
+    border-color:
+        var(--gold);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(212, 175, 55, .15);
+
+}
+
+
+.booking-card input::placeholder {
+
+    color:
+        #666;
+
+}
+
+
+/* ---------- DATE ICON ---------- */
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+
+    filter:
+        invert(1);
+
+    cursor:
+        pointer;
+
+}
+
+
+/* ---------- TEXTAREA ---------- */
+
+.booking-card textarea {
+
+    width:
+        100%;
+
+    min-height:
+        140px;
+
+    background:
+        #1E1E1E;
+
+    border:
+        1px solid #333;
+
+    border-radius:
+        12px;
+
+    color:
+        var(--white);
+
+    padding:
+        16px;
+
+    font-size:
+        15px;
+
+    resize:
+        none;
+
+    font-family:
+        inherit;
+
+}
+
+
+.booking-card textarea:focus {
+
+    outline:
+        none;
+
+    border-color:
+        var(--gold);
+
+}
+
+
+.booking-card textarea::placeholder {
+
+    color:
+        #777;
+
+}
+
+
+/* ---------- BOOKING SUBMIT BUTTON ---------- */
+
+.booking-card button {
+
+    margin-top:
+        22px;
+
+    height:
+        48px;
+
+    border:
+        none;
+
+    border-radius:
+        var(--radius);
+
+    background:
+        var(--gold);
+
+    color:
+        #111;
+
+    font-size:
+        16px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        1px;
+
+    cursor:
+        pointer;
+
+    transition:
+        var(--transition);
+
+}
+
+
+.booking-card button:hover {
+
+    background:
+        var(--gold-hover);
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+/* ---------- DATE / TIME ---------- */
+
+.booking-row {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        15px;
+
+}
+
+
+/* ==================================================
+   08. BOOKING UTILITIES
+================================================== */
+
+.journey-block {
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, .08);
+
+    padding-bottom:
+        8px;
+
+    margin-bottom:
+        8px;
+
+}
+
+
+.journey-block h3 {
+
+    color:
+        var(--gold);
+
+    font-size:
+        18px;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+.add-buttons {
+
+    display:
+        flex;
+
+    gap:
+        12px;
+
+    margin:
+        15px 0 10px;
+
+}
+
+
+.mini-btn {
+
+    flex:
+        1;
+
+    height:
+        42px;
+
+    background:
+        var(--gold);
+
+    color:
+        #111;
+
+    border:
+        none;
+
+    border-radius:
+        var(--radius);
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        var(--transition);
+
+}
+
+
+.mini-btn:hover {
+
+    background:
+        var(--gold-hover);
+
+}
+
+
+.add-journey {
+
+    width:
+        100%;
+
+    height:
+        45px;
+
+    margin:
+        15px 0;
+
+    background:
+        transparent;
+
+    color:
+        var(--gold);
+
+    border:
+        1px dashed
+        var(--gold);
+
+    border-radius:
+        var(--radius);
+
+    cursor:
+        pointer;
+
+    transition:
+        var(--transition);
+
+}
+
+
+.add-journey:hover {
+
+    background:
+        rgba(212, 175, 55, .08);
+
+}
+
+
+/* ==================================================
+   09. HOW IT WORKS
+================================================== */
+
+.how {
+
+    max-width:
+        1400px;
+
+    margin:
+        -20px auto 80px;
+
+    padding:
+        0 70px;
+
+}
+
+
+.how h2 {
+
+    text-align:
+        center;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:
+        48px;
+
+    margin-bottom:
+        60px;
+
+}
+
+
+.steps {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        30px;
+
+}
+
+
+.step {
+
+    background:
+        #151515;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .08);
+
+    border-radius:
+        18px;
+
+    padding:
+        35px;
+
+    transition:
+        .35s;
+
+}
+
+
+.step:hover {
+
+    transform:
+        translateY(-8px);
+
+    border-color:
+        var(--gold);
+
+    box-shadow:
+        0 20px 40px
+        rgba(0, 0, 0, .40);
+
+}
+
+
+.number {
+
+    color:
+        var(--gold);
+
+    font-size:
+        36px;
+
+    font-weight:
+        700;
+
+    margin-bottom:
+        20px;
+
+}
+
+
+.step h3 {
+
+    font-size:
+        24px;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+.step p {
+
+    color:
+        #A8A8A8;
+
+    line-height:
+        1.7;
+
+}
+
+
+/* ==================================================
+   10. SERVICES
+================================================== */
+
+.services {
+
+    max-width:
+        1400px;
+
+    margin:
+        100px auto;
+
+    padding:
+        0 70px;
+
+}
+
+
+.services h2 {
+
+    text-align:
+        center;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:
+        48px;
+
+    margin-bottom:
+        60px;
+
+}
+
+
+.service-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        30px;
+
+}
+
+
+.service-card {
+
+    background:
+        #151515;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .08);
+
+    border-radius:
+        18px;
+
+    padding:
+        35px;
+
+    transition:
+        .3s;
+
+}
+
+
+.service-card:hover {
+
+    transform:
+        translateY(-8px);
+
+    border-color:
+        var(--gold);
+
+    box-shadow:
+        0 20px 40px
+        rgba(0, 0, 0, .40);
+
+}
+
+
+.service-card h3 {
+
+    color:
+        var(--gold);
+
+    font-size:
+        24px;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+.service-card p {
+
+    color:
+        #BDBDBD;
+
+    line-height:
+        1.8;
+
+}
+
+
+/* ==================================================
+   11. FAQ
+================================================== */
+
+.faq {
+
+    max-width:
+        1200px;
+
+    margin:
+        100px auto;
+
+    padding:
+        0 60px;
+
+}
+
+
+.faq h2 {
+
+    text-align:
+        center;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:
+        48px;
+
+    margin-bottom:
+        40px;
+
+}
+
+
+.faq-item {
+
+    background:
+        #141414;
+
+    border:
+        1px solid
+        rgba(212, 175, 55, .15);
+
+    border-radius:
+        16px;
+
+    padding:
+        25px;
+
+    margin-bottom:
+        20px;
+
+}
+
+
+.faq-item h3 {
+
+    color:
+        var(--gold);
+
+    font-size:
+        22px;
+
+    margin-bottom:
+        12px;
+
+}
+
+
+.faq-item p {
+
+    color:
+        #CFCFCF;
+
+    line-height:
+        1.8;
+
+}
+
+
+.faq-item ul {
+
+    margin-left:
+        20px;
+
+    color:
+        #CFCFCF;
+
+    line-height:
+        2;
+
+}
+
+
+/* ==================================================
+   12. FOOTER
+================================================== */
+
+footer {
+
+    margin-top:
+        100px;
+
+    padding:
+        50px 20px;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, .08);
+
+    text-align:
+        center;
+
+}
+
+
+footer h2 {
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:
+        36px;
+
+    color:
+        var(--gold);
+
+    margin-bottom:
+        10px;
+
+}
+
+
+footer p {
+
+    color:
+        var(--muted);
+
+}
+
+
+/* ==================================================
+   13. SUCCESS PAGE
+================================================== */
+
+.success-container {
+
+    min-height:
+        100vh;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    padding:
+        40px 20px;
+
+    background:
+        #0F0F0F;
+
+}
+
+
+.success-card {
+
+    width:
+        100%;
+
+    max-width:
+        650px;
+
+    background:
+        #1B1B1B;
+
+    border:
+        1px solid
+        var(--gold-border);
+
+    border-radius:
+        24px;
+
+    padding:
+        50px;
+
+    text-align:
+        center;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0, 0, 0, .35);
+
+}
+
+
+.success-icon {
+
+    width:
+        90px;
+
+    height:
+        90px;
+
+    margin:
+        0 auto 25px;
+
+    border-radius:
+        50%;
+
+    background:
+        #27C35A;
+
+    color:
+        #fff;
+
+    font-size:
+        46px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+}
+
+
+.success-card h1 {
+
+    color:
+        #fff;
+
+    margin-bottom:
+        20px;
+
+    font-size:
+        38px;
+
+}
+
+
+.success-card p {
+
+    color:
+        #CFCFCF;
+
+    line-height:
+        1.8;
+
+    margin-bottom:
+        30px;
+
+}
+
+
+.booking-id {
+
+    background:
+        #252525;
+
+    border-radius:
+        14px;
+
+    padding:
+        18px;
+
+    margin-bottom:
+        30px;
+
+}
+
+
+.booking-id small {
+
+    display:
+        block;
+
+    color:
+        #999;
+
+    margin-bottom:
+        6px;
+
+}
+
+
+.booking-id span {
+
+    color:
+        var(--gold);
+
+    font-size:
+        24px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.success-buttons {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        16px;
+
+}
+
+
+.success-buttons .whatsapp-btn,
+.success-buttons .nav-button {
+
+    display:
+        flex;
+
+    width:
+        100%;
+
+    height:
+        auto;
+
+    padding:
+        18px;
+
+    border-radius:
+        14px;
+
+    font-weight:
+        700;
+
+}
+
+
+.success-buttons .whatsapp-btn {
+
+    background:
+        #25D366;
+
+    color:
+        #fff !important;
+
+}
+
+
+.success-buttons .whatsapp-btn:hover {
+
+    background:
+        #1EBE5D;
+
+}
+
+
+.success-buttons .nav-button {
+
+    background:
+        var(--gold);
+
+    color:
+        #111 !important;
+
+}
+
+
+.success-buttons .nav-button:hover {
+
+    background:
+        #C39F2E;
+
+}
+
+
+/* ==================================================
+   END
+================================================== */

@@ -3,6 +3,10 @@
 
 <head>
 
+    <!-- =====================================
+         BASIC SETTINGS
+    ====================================== -->
+
     <meta charset="UTF-8">
 
     <meta
@@ -10,8 +14,24 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Valetholic | Booking</title>
+    <meta
+        name="theme-color"
+        content="#F6F7FB"
+    >
 
+    <meta
+        name="description"
+        content="Valetholic Operations Booking Management"
+    >
+
+    <title>
+        Valetholic | Booking
+    </title>
+
+
+    <!-- =====================================
+         FONTS
+    ====================================== -->
 
     <link
         rel="preconnect"
@@ -20,7 +40,7 @@
 
     <link
         rel="preconnect"
-        href="https://fonts.googleapis.com"
+        href="https://fonts.gstatic.com"
         crossorigin
     >
 
@@ -29,6 +49,10 @@
         rel="stylesheet"
     >
 
+
+    <!-- =====================================
+         OPS BOOKING CSS
+    ====================================== -->
 
     <link
         rel="stylesheet"
@@ -41,334 +65,410 @@
 <body>
 
 
-<div class="ops-container">
+    <!-- =====================================
+         OPS CONTAINER
+    ====================================== -->
+
+    <main class="ops-container">
 
 
-    <!-- =========================
-         HEADER
-    ========================== -->
+        <!-- =================================
+             HEADER
+        ================================== -->
 
-    <header class="ops-header">
+        <header class="ops-header">
 
-        <div>
 
-            <h1>
-                BOOKING
-            </h1>
+            <div>
 
-            <p id="bookingReference">
-                Loading...
+                <h1>
+                    BOOKING
+                </h1>
+
+
+                <p
+                    id="bookingReference"
+                    aria-label="Booking reference"
+                >
+                    Loading...
+                </p>
+
+            </div>
+
+
+            <button
+                class="logout-btn"
+                type="button"
+                onclick="history.back()"
+            >
+
+                ← Back
+
+            </button>
+
+
+        </header>
+
+
+
+        <!-- =================================
+             CUSTOMER
+        ================================== -->
+
+        <section
+            class="booking-section"
+            aria-labelledby="customerHeading"
+        >
+
+
+            <h2 id="customerHeading">
+                Customer
+            </h2>
+
+
+            <p>
+
+                <strong>
+                    Name:
+                </strong>
+
+                <span id="customerName">
+                    -
+                </span>
+
             </p>
 
-        </div>
 
+            <p>
+
+                <strong>
+                    Mobile:
+                </strong>
+
+                <span id="customerMobile">
+                    -
+                </span>
+
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             JOURNEY
+        ================================== -->
+
+        <section
+            class="booking-section"
+            aria-labelledby="journeyHeading"
+        >
+
+
+            <h2 id="journeyHeading">
+                Journey
+            </h2>
+
+
+            <p>
+
+                <strong>
+                    Pickup:
+                </strong>
+
+                <span id="pickup">
+                    -
+                </span>
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Destination:
+                </strong>
+
+                <span id="destination">
+                    -
+                </span>
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Date:
+                </strong>
+
+                <span id="bookingDate">
+                    -
+                </span>
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Time:
+                </strong>
+
+                <span id="bookingTime">
+                    -
+                </span>
+
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             VEHICLE
+        ================================== -->
+
+        <section
+            class="booking-section"
+            aria-labelledby="vehicleHeading"
+        >
+
+
+            <h2 id="vehicleHeading">
+                Vehicle
+            </h2>
+
+
+            <p>
+
+                <strong>
+                    Model:
+                </strong>
+
+                <span id="vehicleModel">
+                    -
+                </span>
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Plate:
+                </strong>
+
+                <span id="vehiclePlate">
+                    -
+                </span>
+
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             DRIVER
+        ================================== -->
+
+        <section
+            class="booking-section"
+            aria-labelledby="driverHeading"
+        >
+
+
+            <h2 id="driverHeading">
+                Driver
+            </h2>
+
+
+            <label
+                for="driverSelect"
+                class="field-label"
+            >
+                Assign Driver
+            </label>
+
+
+            <select
+                id="driverSelect"
+                aria-label="Select driver"
+            >
+
+                <option value="">
+                    Select driver
+                </option>
+
+            </select>
+
+
+            <button
+                type="button"
+                class="gold-btn"
+                id="assignBtn"
+            >
+
+                ASSIGN DRIVER
+
+            </button>
+
+
+            <p
+                id="driverMessage"
+                class="booking-message"
+                aria-live="polite"
+            ></p>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             STATUS
+        ================================== -->
+
+        <section
+            class="booking-section"
+            aria-labelledby="statusHeading"
+        >
+
+
+            <h2 id="statusHeading">
+                Status
+            </h2>
+
+
+            <label
+                for="statusSelect"
+                class="field-label"
+            >
+                Booking Status
+            </label>
+
+
+            <select
+                id="statusSelect"
+                aria-label="Booking status"
+            >
+
+                <option value="Pending">
+                    Pending
+                </option>
+
+                <option value="ON JOB">
+                    ON JOB
+                </option>
+
+                <option value="ON THE WAY">
+                    ON THE WAY
+                </option>
+
+                <option value="PICKED UP">
+                    PICKED UP
+                </option>
+
+                <option value="COMPLETED">
+                    COMPLETED
+                </option>
+
+                <option value="CANCELLED">
+                    CANCELLED
+                </option>
+
+            </select>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             REMARKS
+        ================================== -->
+
+        <section
+            class="booking-section"
+            aria-labelledby="remarksHeading"
+        >
+
+
+            <h2 id="remarksHeading">
+                Remarks
+            </h2>
+
+
+            <label
+                for="remarks"
+                class="field-label"
+            >
+                Internal Notes
+            </label>
+
+
+            <textarea
+                id="remarks"
+                rows="5"
+                placeholder="Internal notes..."
+            ></textarea>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             SAVE CHANGES
+        ================================== -->
 
         <button
-            class="logout-btn"
             type="button"
-            onclick="history.back()"
-        >
-            ← Back
-        </button>
-
-    </header>
-
-
-
-    <!-- =========================
-         CUSTOMER
-    ========================== -->
-
-    <section class="booking-section">
-
-        <h2>
-            Customer
-        </h2>
-
-
-        <p>
-
-            <strong>
-                Name:
-            </strong>
-
-            <span id="customerName">
-                -
-            </span>
-
-        </p>
-
-
-        <p>
-
-            <strong>
-                Mobile:
-            </strong>
-
-            <span id="customerMobile">
-                -
-            </span>
-
-        </p>
-
-    </section>
-
-
-
-    <!-- =========================
-         JOURNEY
-    ========================== -->
-
-    <section class="booking-section">
-
-        <h2>
-            Journey
-        </h2>
-
-
-        <p>
-
-            <strong>
-                Pickup:
-            </strong>
-
-            <span id="pickup">
-                -
-            </span>
-
-        </p>
-
-
-        <p>
-
-            <strong>
-                Destination:
-            </strong>
-
-            <span id="destination">
-                -
-            </span>
-
-        </p>
-
-
-        <p>
-
-            <strong>
-                Date:
-            </strong>
-
-            <span id="bookingDate">
-                -
-            </span>
-
-        </p>
-
-
-        <p>
-
-            <strong>
-                Time:
-            </strong>
-
-            <span id="bookingTime">
-                -
-            </span>
-
-        </p>
-
-    </section>
-
-
-
-    <!-- =========================
-         VEHICLE
-    ========================== -->
-
-    <section class="booking-section">
-
-        <h2>
-            Vehicle
-        </h2>
-
-
-        <p>
-
-            <strong>
-                Model:
-            </strong>
-
-            <span id="vehicleModel">
-                -
-            </span>
-
-        </p>
-
-
-        <p>
-
-            <strong>
-                Plate:
-            </strong>
-
-            <span id="vehiclePlate">
-                -
-            </span>
-
-        </p>
-
-    </section>
-
-
-
-    <!-- =========================
-         DRIVER
-    ========================== -->
-
-    <section class="booking-section">
-
-        <h2>
-            Driver
-        </h2>
-
-
-        <select
-            id="driverSelect"
+            class="gold-btn save-button"
+            id="saveBtn"
         >
 
-            <option value="">
-                Select driver
-            </option>
+            SAVE CHANGES
 
-        </select>
-
-
-        <button
-            type="button"
-            class="gold-btn"
-            id="assignBtn"
-        >
-            ASSIGN DRIVER
         </button>
 
 
         <p
-            id="driverMessage"
-            style="
-                margin-top:10px;
-                opacity:.75;
-            "
+            id="saveMessage"
+            class="save-message"
+            aria-live="polite"
         ></p>
 
-    </section>
+
+    </main>
 
 
 
-    <!-- =========================
-         STATUS
-    ========================== -->
+    <!-- =====================================
+         SUPABASE
+    ====================================== -->
 
-    <section class="booking-section">
-
-        <h2>
-            Status
-        </h2>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
 
 
-        <select
-            id="statusSelect"
-        >
-
-            <option value="Pending">
-                Pending
-            </option>
-
-            <option value="ON JOB">
-                ON JOB
-            </option>
-
-            <option value="ON THE WAY">
-                ON THE WAY
-            </option>
-
-            <option value="PICKED UP">
-                PICKED UP
-            </option>
-
-            <option value="COMPLETED">
-                COMPLETED
-            </option>
-
-            <option value="CANCELLED">
-                CANCELLED
-            </option>
-
-        </select>
-
-    </section>
+    <script
+        src="supabase.js"
+    ></script>
 
 
+    <!-- =====================================
+         OPS BOOKING LOGIC
+    ====================================== -->
 
-    <!-- =========================
-         REMARKS
-    ========================== -->
-
-    <section class="booking-section">
-
-        <h2>
-            Remarks
-        </h2>
-
-
-        <textarea
-            id="remarks"
-            rows="5"
-            placeholder="Internal notes..."
-        ></textarea>
-
-    </section>
-
-
-
-    <!-- =========================
-         SAVE
-    ========================== -->
-
-    <button
-        type="button"
-        class="gold-btn"
-        id="saveBtn"
-    >
-
-        SAVE CHANGES
-
-    </button>
-
-
-    <p
-        id="saveMessage"
-        style="
-            margin-top:15px;
-            text-align:center;
-        "
-    ></p>
-
-
-</div>
-
-
-
-<!-- =========================
-     SUPABASE
-========================== -->
-
-<script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-></script>
-
-<script src="supabase.js"></script>
-
-<script src="ops-booking.js"></script>
+    <script
+        src="ops-booking.js"
+    ></script>
 
 
 </body>

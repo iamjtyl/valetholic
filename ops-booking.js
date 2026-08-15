@@ -2,6 +2,11 @@
 // VALETHOLIC OPS BOOKING
 // =====================================
 
+
+// =====================================
+// STATE
+// =====================================
+
 let currentBooking = null;
 let drivers = [];
 
@@ -32,6 +37,10 @@ loadBooking();
 
 async function loadBooking() {
 
+    // =================================
+    // CHECK BOOKING ID
+    // =================================
+
     if (!bookingId) {
 
         showError(
@@ -43,88 +52,117 @@ async function loadBooking() {
     }
 
 
-    // =================================
-    // BOOKING
-    // =================================
+    try {
 
-    const {
-        data: booking,
-        error: bookingError
-    } =
-        await window.supabaseClient
-        .from("Bookings")
-        .select("*")
-        .eq(
-            "id",
-            bookingId
-        )
-        .single();
+        // =================================
+        // LOAD BOOKING
+        // =================================
+
+        const {
+            data: booking,
+            error: bookingError
+        } =
+            await window.supabaseClient
+                .from("Bookings")
+                .select("*")
+                .eq(
+                    "id",
+                    bookingId
+                )
+                .single();
 
 
-    if (bookingError) {
+        // =================================
+        // BOOKING ERROR
+        // =================================
 
-        console.error(
-            "Booking error:",
-            bookingError
-        );
+        if (bookingError) {
 
-        showError(
-            bookingError.message
-        );
+            console.error(
+                "Booking error:",
+                bookingError
+            );
 
-        return;
+            showError(
+                bookingError.message
+            );
+
+            return;
+
+        }
+
+
+        currentBooking =
+            booking;
+
+
+        // =================================
+        // LOAD DRIVERS
+        // =================================
+
+        const {
+            data: driverData,
+            error: driverError
+        } =
+            await window.supabaseClient
+                .from("Drivers")
+                .select(
+                    "id, auth_id, name, status, approved, approval_status"
+                )
+                .order(
+                    "name",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        // =================================
+        // DRIVER ERROR
+        // =================================
+
+        if (driverError) {
+
+            console.error(
+                "Driver loading error:",
+                driverError
+            );
+
+            showError(
+                driverError.message
+            );
+
+            return;
+
+        }
+
+
+        drivers =
+            driverData || [];
+
+
+        // =================================
+        // DISPLAY
+        // =================================
+
+        displayBooking();
+
+        populateDrivers();
 
     }
 
-
-    currentBooking =
-        booking;
-
-
-    // =================================
-    // DRIVERS
-    // =================================
-
-    const {
-        data: driverData,
-        error: driverError
-    } =
-        await window.supabaseClient
-        .from("Drivers")
-        .select(
-            "id, auth_id, name, status, approved, approval_status"
-        )
-        .order(
-            "name",
-            {
-                ascending: true
-            }
-        );
-
-
-    if (driverError) {
+    catch (error) {
 
         console.error(
-            "Driver loading error:",
-            driverError
+            "Unexpected booking loading error:",
+            error
         );
 
         showError(
-            driverError.message
+            "Unable to load booking."
         );
 
-        return;
-
     }
-
-
-    drivers =
-        driverData || [];
-
-
-    displayBooking();
-
-    populateDrivers();
 
 }
 
@@ -140,78 +178,93 @@ function displayBooking() {
         currentBooking;
 
 
-    document.getElementById(
-        "bookingReference"
-    ).textContent =
-        `#${booking.reference_no || "----"}`;
+    if (!booking) {
+
+        return;
+
+    }
 
 
-    document.getElementById(
-        "customerName"
-    ).textContent =
-        booking.customer_name || "-";
+    // =================================
+    // REFERENCE
+    // =================================
+
+    setText(
+        "bookingReference",
+        `#${booking.reference_no || "----"}`
+    );
 
 
-    document.getElementById(
-        "customerMobile"
-    ).textContent =
-        booking.mobile || "-";
+    // =================================
+    // CUSTOMER
+    // =================================
+
+    setText(
+        "customerName",
+        booking.customer_name || "-"
+    );
 
 
-    document.getElementById(
-        "bookingDate"
-    ).textContent =
-        booking.booking_date || "-";
+    setText(
+        "customerMobile",
+        booking.mobile || "-"
+    );
 
 
-    document.getElementById(
-        "bookingTime"
-    ).textContent =
-        booking.booking_time || "-";
+    // =================================
+    // JOURNEY
+    // =================================
 
+    setText(
+        "bookingDate",
+        booking.booking_date || "-"
+    );
+
+
+    setText(
+        "bookingTime",
+        booking.booking_time || "-"
+    );
 
 
     // =================================
     // PICKUP
     // =================================
 
-    document.getElementById(
-        "pickup"
-    ).innerHTML =
+    setHTML(
+        "pickup",
         formatLocations(
             booking.pickups
-        );
-
+        )
+    );
 
 
     // =================================
     // DESTINATION
     // =================================
 
-    document.getElementById(
-        "destination"
-    ).innerHTML =
+    setHTML(
+        "destination",
         formatLocations(
             booking.destinations
-        );
-
+        )
+    );
 
 
     // =================================
     // VEHICLE
     // =================================
 
-    document.getElementById(
-        "vehicleModel"
-    ).textContent =
-        booking.vehicle_model || "-";
+    setText(
+        "vehicleModel",
+        booking.vehicle_model || "-"
+    );
 
 
-    document.getElementById(
-        "vehiclePlate"
-    ).textContent =
-        booking.vehicle_plate || "-";
-
+    setText(
+        "vehiclePlate",
+        booking.vehicle_plate || "-"
+    );
 
 
     // =================================
@@ -224,37 +277,106 @@ function displayBooking() {
         );
 
 
-    const existingStatus =
-        booking.status || "Pending";
+    if (statusSelect) {
+
+        const existingStatus =
+            booking.status || "Pending";
 
 
-    const statusOption =
-        Array.from(
-            statusSelect.options
-        ).find(
-            option =>
-                option.value ===
-                existingStatus
-        );
+        const statusOption =
+            Array.from(
+                statusSelect.options
+            ).find(
+                option =>
+                    option.value ===
+                    existingStatus
+            );
 
 
-    if (statusOption) {
+        if (statusOption) {
 
-        statusSelect.value =
-            existingStatus;
+            statusSelect.value =
+                existingStatus;
+
+        }
 
     }
-
 
 
     // =================================
     // REMARKS
     // =================================
 
-    document.getElementById(
-        "remarks"
-    ).value =
-        booking.remarks || "";
+    const remarks =
+        document.getElementById(
+            "remarks"
+        );
+
+
+    if (remarks) {
+
+        remarks.value =
+            booking.remarks || "";
+
+    }
+
+}
+
+
+
+// =====================================
+// SAFE TEXT HELPER
+// =====================================
+
+function setText(
+    elementId,
+    value
+) {
+
+    const element =
+        document.getElementById(
+            elementId
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    element.textContent =
+        value;
+
+}
+
+
+
+// =====================================
+// SAFE HTML HELPER
+// =====================================
+
+function setHTML(
+    elementId,
+    value
+) {
+
+    const element =
+        document.getElementById(
+            elementId
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    element.innerHTML =
+        value;
 
 }
 
@@ -275,6 +397,10 @@ function formatLocations(
     }
 
 
+    // =================================
+    // ARRAY
+    // =================================
+
     if (
         Array.isArray(value)
     ) {
@@ -286,32 +412,49 @@ function formatLocations(
     }
 
 
-    try {
+    // =================================
+    // JSON STRING
+    // =================================
 
-        const parsed =
-            JSON.parse(value);
+    if (
+        typeof value === "string"
+    ) {
+
+        try {
+
+            const parsed =
+                JSON.parse(value);
 
 
-        if (
-            Array.isArray(parsed)
-        ) {
+            if (
+                Array.isArray(parsed)
+            ) {
 
-            return parsed
-                .filter(Boolean)
-                .join("<br>");
+                return parsed
+                    .filter(Boolean)
+                    .join("<br>");
+
+            }
+
+
+            return String(parsed);
 
         }
 
+        catch {
 
-        return parsed;
+            return value;
 
-    }
-
-    catch {
-
-        return value;
+        }
 
     }
+
+
+    // =================================
+    // OTHER VALUE
+    // =================================
+
+    return String(value);
 
 }
 
@@ -329,12 +472,19 @@ function populateDrivers() {
         );
 
 
+    if (!select) {
+
+        return;
+
+    }
+
+
     select.innerHTML = "";
 
 
-    // -----------------------------
-    // UNASSIGN OPTION
-    // -----------------------------
+    // =================================
+    // UNASSIGNED
+    // =================================
 
     const unassigned =
         document.createElement(
@@ -355,10 +505,9 @@ function populateDrivers() {
     );
 
 
-
-    // -----------------------------
-    // APPROVED DRIVERS
-    // -----------------------------
+    // =================================
+    // APPROVED DRIVERS ONLY
+    // =================================
 
     drivers
         .filter(
@@ -381,12 +530,19 @@ function populateDrivers() {
                     driver.auth_id;
 
 
+                const driverName =
+                    driver.name ||
+                    "Unnamed";
+
+
+                const driverStatus =
+                    driver.status
+                        ? ` • ${driver.status}`
+                        : "";
+
+
                 option.textContent =
-                    `${driver.name || "Unnamed"}${
-                        driver.status
-                            ? ` • ${driver.status}`
-                            : ""
-                    }`;
+                    `${driverName}${driverStatus}`;
 
 
                 select.appendChild(
@@ -395,7 +551,6 @@ function populateDrivers() {
 
             }
         );
-
 
 
     // =================================
@@ -420,7 +575,7 @@ function populateDrivers() {
 
 
 // =====================================
-// UPDATE BUTTON TEXT
+// UPDATE ASSIGN BUTTON
 // =====================================
 
 function updateAssignButton() {
@@ -435,6 +590,16 @@ function updateAssignButton() {
         document.getElementById(
             "assignBtn"
         );
+
+
+    if (
+        !select ||
+        !button
+    ) {
+
+        return;
+
+    }
 
 
     if (
@@ -465,30 +630,47 @@ function updateAssignButton() {
 // DRIVER DROPDOWN CHANGE
 // =====================================
 
-document
-    .getElementById(
+const driverSelect =
+    document.getElementById(
         "driverSelect"
-    )
-    .addEventListener(
+    );
+
+
+if (driverSelect) {
+
+    driverSelect.addEventListener(
         "change",
         updateAssignButton
     );
 
+}
+
 
 
 // =====================================
-// ASSIGN / REASSIGN DRIVER
+// ASSIGN BUTTON
 // =====================================
 
-document
-    .getElementById(
+const assignButton =
+    document.getElementById(
         "assignBtn"
-    )
-    .addEventListener(
+    );
+
+
+if (assignButton) {
+
+    assignButton.addEventListener(
         "click",
         assignDriver
     );
 
+}
+
+
+
+// =====================================
+// ASSIGN / REASSIGN / REMOVE DRIVER
+// =====================================
 
 async function assignDriver() {
 
@@ -499,16 +681,33 @@ async function assignDriver() {
     }
 
 
-    const selectedDriver =
+    const select =
         document.getElementById(
             "driverSelect"
-        ).value;
+        );
 
 
     const message =
         document.getElementById(
             "driverMessage"
         );
+
+
+    const button =
+        document.getElementById(
+            "assignBtn"
+        );
+
+
+    if (!select) {
+
+        return;
+
+    }
+
+
+    const selectedDriver =
+        select.value;
 
 
     // =================================
@@ -530,46 +729,89 @@ async function assignDriver() {
         }
 
 
-        const {
-            error
-        } =
-            await window.supabaseClient
-            .from("Bookings")
-            .update({
-
-                driver_id:
-                    null
-
-            })
-            .eq(
-                "id",
-                currentBooking.id
-            );
+        setButtonLoading(
+            button,
+            true,
+            "REMOVING..."
+        );
 
 
-        if (error) {
+        try {
 
-            console.error(
+            const {
                 error
+            } =
+                await window.supabaseClient
+                    .from("Bookings")
+                    .update({
+
+                        driver_id:
+                            null
+
+                    })
+                    .eq(
+                        "id",
+                        currentBooking.id
+                    );
+
+
+            if (error) {
+
+                console.error(
+                    "Driver removal error:",
+                    error
+                );
+
+                setMessage(
+                    message,
+                    error.message,
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            currentBooking.driver_id =
+                null;
+
+
+            setMessage(
+                message,
+                "Driver removed.",
+                "success"
             );
 
-            message.textContent =
-                error.message;
 
-            return;
+            updateAssignButton();
 
         }
 
+        catch (error) {
 
-        currentBooking.driver_id =
-            null;
+            console.error(
+                "Unexpected driver removal error:",
+                error
+            );
 
+            setMessage(
+                message,
+                "Unable to remove driver.",
+                "error"
+            );
 
-        message.textContent =
-            "Driver removed.";
+        }
 
+        finally {
 
-        updateAssignButton();
+            setButtonLoading(
+                button,
+                false
+            );
+
+        }
+
 
         return;
 
@@ -633,90 +875,8 @@ async function assignDriver() {
 
 
     // =================================
-    // SAVE DRIVER
+    // FIND DRIVER
     // =================================
-
-    // =================================
-// GENERATE TRACKING TOKEN
-// =================================
-
-let trackingToken =
-    currentBooking.tracking_token;
-
-
-if (!trackingToken) {
-
-    trackingToken =
-        crypto.randomUUID();
-
-}
-
-
-// =================================
-// SAVE DRIVER + TRACKING TOKEN
-// =================================
-
-const {
-    error
-} =
-    await window.supabaseClient
-    .from("Bookings")
-    .update({
-
-        driver_id:
-            selectedDriver,
-
-        tracking_token:
-            trackingToken
-
-    })
-    .eq(
-        "id",
-        currentBooking.id
-    );
-
-
-if (error) {
-
-    console.error(
-        "Driver assignment error:",
-        error
-    );
-
-    message.textContent =
-        error.message;
-
-    return;
-
-}
-
-
-currentBooking.driver_id =
-    selectedDriver;
-
-
-currentBooking.tracking_token =
-    trackingToken;
-
-
-    if (error) {
-
-        console.error(
-            "Driver assignment error:",
-            error
-        );
-
-        message.textContent =
-            error.message;
-
-        return;
-
-    }
-
-
-    currentBooking.driver_id =
-        selectedDriver;
-
 
     const driver =
         drivers.find(
@@ -726,64 +886,368 @@ currentBooking.tracking_token =
         );
 
 
-    message.textContent =
-        driver
-            ? `${driver.name} assigned successfully.`
-            : "Driver assigned successfully.";
-
     // =================================
-// TRACKING LINK
-// =================================
+    // GENERATE TRACKING TOKEN
+    // =================================
 
-const trackingLink =
-    `${window.location.origin}/track.html?token=${encodeURIComponent(trackingToken)}`;
+    let trackingToken =
+        currentBooking.tracking_token;
 
 
-message.innerHTML = `
+    if (!trackingToken) {
 
-    ${
-        driver
-            ? `${driver.name} assigned successfully.`
-            : "Driver assigned successfully."
+        trackingToken =
+            crypto.randomUUID();
+
     }
 
-    <br><br>
 
-    <strong>
-        Customer Tracking Link:
-    </strong>
 
-    <br>
+    // =================================
+    // SAVE DRIVER + TRACKING TOKEN
+    // =================================
 
-    <input
-        type="text"
-        value="${trackingLink}"
-        readonly
-        style="
-            width:100%;
-            margin-top:8px;
-            padding:10px;
-            box-sizing:border-box;
-        "
-        onclick="this.select()"
-    >
+    setButtonLoading(
+        button,
+        true,
+        "ASSIGNING..."
+    );
 
-    <br><br>
 
-    <button
-        type="button"
-        onclick="
-            navigator.clipboard.writeText(
-                '${trackingLink}'
-            )
-        "
-    >
-        📍 COPY TRACKING LINK
-    </button>
+    try {
 
-`;
-            
-    updateAssignButton();
+        const {
+            error
+        } =
+            await window.supabaseClient
+                .from("Bookings")
+                .update({
+
+                    driver_id:
+                        selectedDriver,
+
+                    tracking_token:
+                        trackingToken
+
+                })
+                .eq(
+                    "id",
+                    currentBooking.id
+                );
+
+
+        // =================================
+        // DATABASE ERROR
+        // =================================
+
+        if (error) {
+
+            console.error(
+                "Driver assignment error:",
+                error
+            );
+
+            setMessage(
+                message,
+                error.message,
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // UPDATE LOCAL STATE
+        // =================================
+
+        currentBooking.driver_id =
+            selectedDriver;
+
+
+        currentBooking.tracking_token =
+            trackingToken;
+
+
+
+        // =================================
+        // SUCCESS MESSAGE
+        // =================================
+
+        const driverName =
+            driver?.name ||
+            "Driver";
+
+
+        setMessage(
+            message,
+            `${driverName} assigned successfully.`,
+            "success"
+        );
+
+
+
+        // =================================
+        // TRACKING LINK
+        // =================================
+
+        createTrackingLink(
+            message,
+            trackingToken,
+            driverName
+        );
+
+
+        updateAssignButton();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unexpected driver assignment error:",
+            error
+        );
+
+        setMessage(
+            message,
+            "Unable to assign driver.",
+            "error"
+        );
+
+    }
+
+    finally {
+
+        setButtonLoading(
+            button,
+            false
+        );
+
+    }
+
+}
+
+
+
+// =====================================
+// CREATE TRACKING LINK
+// =====================================
+
+function createTrackingLink(
+    container,
+    trackingToken,
+    driverName
+) {
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    const trackingLink =
+        `${window.location.origin}/track.html?token=${encodeURIComponent(
+            trackingToken
+        )}`;
+
+
+    // =================================
+    // CLEAR OLD CONTENT
+    // =================================
+
+    container.innerHTML = "";
+
+
+    // =================================
+    // SUCCESS TEXT
+    // =================================
+
+    const successText =
+        document.createElement(
+            "span"
+        );
+
+
+    successText.textContent =
+        `${driverName} assigned successfully.`;
+
+
+    container.appendChild(
+        successText
+    );
+
+
+    // =================================
+    // SPACING
+    // =================================
+
+    container.appendChild(
+        document.createElement(
+            "br"
+        )
+    );
+
+
+    container.appendChild(
+        document.createElement(
+            "br"
+        )
+    );
+
+
+    // =================================
+    // LABEL
+    // =================================
+
+    const label =
+        document.createElement(
+            "strong"
+        );
+
+
+    label.textContent =
+        "Customer Tracking Link:";
+
+
+    container.appendChild(
+        label
+    );
+
+
+    container.appendChild(
+        document.createElement(
+            "br"
+        ));
+
+
+    // =================================
+    // LINK INPUT
+    // =================================
+
+    const input =
+        document.createElement(
+            "input"
+        );
+
+
+    input.type =
+        "text";
+
+
+    input.value =
+        trackingLink;
+
+
+    input.readOnly =
+        true;
+
+
+    input.className =
+        "tracking-link-input";
+
+
+    input.addEventListener(
+        "click",
+        () => {
+
+            input.select();
+
+        }
+    );
+
+
+    container.appendChild(
+        input
+    );
+
+
+    container.appendChild(
+        document.createElement(
+            "br"
+        ));
+
+
+    container.appendChild(
+        document.createElement(
+            "br"
+        ));
+
+
+    // =================================
+    // COPY BUTTON
+    // =================================
+
+    const copyButton =
+        document.createElement(
+            "button"
+        );
+
+
+    copyButton.type =
+        "button";
+
+
+    copyButton.textContent =
+        "📍 COPY TRACKING LINK";
+
+
+    copyButton.className =
+        "tracking-copy-btn";
+
+
+    copyButton.addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                await navigator
+                    .clipboard
+                    .writeText(
+                        trackingLink
+                    );
+
+
+                copyButton.textContent =
+                    "✓ COPIED";
+
+
+                setTimeout(
+                    () => {
+
+                        copyButton.textContent =
+                            "📍 COPY TRACKING LINK";
+
+                    },
+                    1500
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Clipboard error:",
+                    error
+                );
+
+
+                input.focus();
+
+                input.select();
+
+            }
+
+        }
+    );
+
+
+    container.appendChild(
+        copyButton
+    );
 
 }
 
@@ -793,14 +1257,21 @@ message.innerHTML = `
 // SAVE CHANGES
 // =====================================
 
-document
-    .getElementById(
+const saveButton =
+    document.getElementById(
         "saveBtn"
-    )
-    .addEventListener(
+    );
+
+
+if (saveButton) {
+
+    saveButton.addEventListener(
         "click",
         saveChanges
     );
+
+}
+
 
 
 async function saveChanges() {
@@ -812,16 +1283,16 @@ async function saveChanges() {
     }
 
 
-    const status =
+    const statusSelect =
         document.getElementById(
             "statusSelect"
-        ).value;
+        );
 
 
-    const remarks =
+    const remarksInput =
         document.getElementById(
             "remarks"
-        ).value;
+        );
 
 
     const message =
@@ -830,58 +1301,216 @@ async function saveChanges() {
         );
 
 
-    const {
-        error
-    } =
-        await window.supabaseClient
-        .from("Bookings")
-        .update({
-
-            status:
-                status,
-
-            remarks:
-                remarks
-
-        })
-        .eq(
-            "id",
-            currentBooking.id
-        );
-
-
-    if (error) {
-
-        console.error(
-            "Save booking error:",
-            error
-        );
-
-        message.textContent =
-            error.message;
+    if (
+        !statusSelect ||
+        !remarksInput
+    ) {
 
         return;
 
     }
 
 
-    currentBooking.status =
-        status;
+    const status =
+        statusSelect.value;
 
 
-    currentBooking.remarks =
-        remarks;
+    const remarks =
+        remarksInput.value;
 
 
-    message.textContent =
-        "Changes saved successfully. ✓";
+    setButtonLoading(
+        saveButton,
+        true,
+        "SAVING..."
+    );
+
+
+    try {
+
+        // =================================
+        // SAVE STATUS + REMARKS
+        // =================================
+
+        const {
+            error
+        } =
+            await window.supabaseClient
+                .from("Bookings")
+                .update({
+
+                    status,
+
+                    remarks
+
+                })
+                .eq(
+                    "id",
+                    currentBooking.id
+                );
+
+
+        // =================================
+        // DATABASE ERROR
+        // =================================
+
+        if (error) {
+
+            console.error(
+                "Save booking error:",
+                error
+            );
+
+            setMessage(
+                message,
+                error.message,
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // UPDATE LOCAL STATE
+        // =================================
+
+        currentBooking.status =
+            status;
+
+
+        currentBooking.remarks =
+            remarks;
+
+
+        setMessage(
+            message,
+            "Changes saved successfully. ✓",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unexpected save error:",
+            error
+        );
+
+        setMessage(
+            message,
+            "Unable to save changes.",
+            "error"
+        );
+
+    }
+
+    finally {
+
+        setButtonLoading(
+            saveButton,
+            false
+        );
+
+    }
 
 }
 
 
 
 // =====================================
-// ERROR
+// BUTTON LOADING STATE
+// =====================================
+
+function setButtonLoading(
+    button,
+    loading,
+    loadingText = "LOADING..."
+) {
+
+    if (!button) {
+
+        return;
+
+    }
+
+
+    if (loading) {
+
+        if (
+            !button.dataset.originalText
+        ) {
+
+            button.dataset.originalText =
+                button.textContent;
+
+        }
+
+
+        button.disabled =
+            true;
+
+
+        button.textContent =
+            loadingText;
+
+    }
+
+    else {
+
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            button.dataset.originalText ||
+            button.textContent;
+
+
+        delete button.dataset.originalText;
+
+    }
+
+}
+
+
+
+// =====================================
+// MESSAGE HELPER
+// =====================================
+
+function setMessage(
+    element,
+    message,
+    type = "normal"
+) {
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    element.textContent =
+        message;
+
+
+    element.style.color =
+        type === "error"
+            ? "#B42318"
+            : type === "success"
+                ? "#18794E"
+                : "#666";
+
+}
+
+
+
+// =====================================
+// ERROR DISPLAY
 // =====================================
 
 function showError(
@@ -901,23 +1530,50 @@ function showError(
     }
 
 
+    // =================================
+    // REMOVE EXISTING ERROR
+    // =================================
+
+    const existing =
+        document.getElementById(
+            "opsError"
+        );
+
+
+    if (existing) {
+
+        existing.remove();
+
+    }
+
+
+    // =================================
+    // CREATE ERROR BOX
+    // =================================
+
     const errorBox =
         document.createElement(
             "div"
         );
 
 
-    errorBox.style.cssText = `
-        margin-top:20px;
-        padding:15px;
-        border-radius:10px;
-        background:#3a1d1d;
-        color:#ff8b8b;
-    `;
+    errorBox.id =
+        "opsError";
 
 
     errorBox.textContent =
         message;
+
+
+    errorBox.style.cssText = `
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        background: #FEE4E2;
+        color: #B42318;
+        border: 1px solid #FDA29B;
+        line-height: 1.5;
+    `;
 
 
     container.appendChild(

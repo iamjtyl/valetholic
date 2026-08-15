@@ -1,4 +1,11 @@
-console.log("login.js loaded");
+// =====================================
+// VALETHOLIC ADMIN LOGIN
+// =====================================
+
+console.log(
+    "login.js loaded"
+);
+
 
 // =====================================
 // ADMIN LOGIN
@@ -6,24 +13,64 @@ console.log("login.js loaded");
 
 async function login() {
 
-    const loginInput =
-        document.getElementById("username")
-            .value
-            .trim();
+    // =================================
+    // GET ELEMENTS
+    // =================================
 
-    const password =
-        document.getElementById("password")
-            .value;
+    const usernameInput =
+        document.getElementById(
+            "username"
+        );
+
+    const passwordInput =
+        document.getElementById(
+            "password"
+        );
 
     const errorBox =
-        document.getElementById("error");
+        document.getElementById(
+            "error"
+        );
 
 
-    // =====================================
+    // =================================
+    // SAFETY CHECK
+    // =================================
+
+    if (
+        !usernameInput ||
+        !passwordInput ||
+        !errorBox
+    ) {
+
+        console.error(
+            "Login form elements not found."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // GET VALUES
+    // =================================
+
+    const loginInput =
+        usernameInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+
+    // =================================
     // BASIC VALIDATION
-    // =====================================
+    // =================================
 
-    if (!loginInput || !password) {
+    if (
+        !loginInput ||
+        !password
+    ) {
 
         errorBox.textContent =
             "Please enter your email and password.";
@@ -33,32 +80,63 @@ async function login() {
     }
 
 
-    // =====================================
+    // =================================
     // SHOW LOGIN STATUS
-    // =====================================
+    // =================================
 
     errorBox.textContent =
         "Logging in...";
 
 
+    // =================================
+    // DISABLE LOGIN BUTTON
+    // =================================
+
+    const loginButton =
+        document.querySelector(
+            ".login-box button"
+        );
+
+
+    if (loginButton) {
+
+        loginButton.disabled =
+            true;
+
+        loginButton.dataset.originalText =
+            loginButton.textContent;
+
+        loginButton.textContent =
+            "LOGGING IN...";
+
+    }
+
+
     try {
 
         // =================================
-        // SUPABASE AUTH
+        // PREPARE EMAIL
         // =================================
 
-        let email = loginInput;
+        let email =
+            loginInput;
 
 
-        // Allow username such as:
-        // admin
-        // jacq
-        // etc.
-        //
-        // Convert it to:
-        // admin@valetholic.com
+        /*
+            Allow either:
 
-        if (!email.includes("@")) {
+            admin
+            jacq
+            miaomiao
+
+            or a full email:
+
+            admin@valetholic.com
+        */
+
+        if (
+            !email.includes("@")
+        ) {
 
             email =
                 `${email}@valetholic.com`;
@@ -66,22 +144,27 @@ async function login() {
         }
 
 
+        // =================================
+        // SUPABASE AUTH LOGIN
+        // =================================
+
         const {
             data,
             error: authError
         } =
-            await window.supabaseClient.auth
+            await window.supabaseClient
+                .auth
                 .signInWithPassword({
 
-                    email: email,
+                    email,
 
-                    password: password
+                    password
 
                 });
 
 
         // =================================
-        // LOGIN FAILED
+        // AUTHENTICATION FAILED
         // =================================
 
         if (authError) {
@@ -103,7 +186,14 @@ async function login() {
         // MAKE SURE USER EXISTS
         // =================================
 
-        if (!data.user) {
+        if (
+            !data ||
+            !data.user
+        ) {
+
+            console.error(
+                "Supabase login returned no user."
+            );
 
             errorBox.textContent =
                 "Unable to sign in.";
@@ -150,8 +240,11 @@ async function login() {
                 adminError
             );
 
-            await window.supabaseClient.auth
+
+            await window.supabaseClient
+                .auth
                 .signOut();
+
 
             errorBox.textContent =
                 "Unable to verify admin account.";
@@ -172,8 +265,11 @@ async function login() {
                 data.user.id
             );
 
-            await window.supabaseClient.auth
+
+            await window.supabaseClient
+                .auth
                 .signOut();
+
 
             errorBox.textContent =
                 "This account is not an authorised Valetholic Admin.";
@@ -187,10 +283,14 @@ async function login() {
         // ACCOUNT DISABLED
         // =================================
 
-        if (admin.is_active !== true) {
+        if (
+            admin.is_active !== true
+        ) {
 
-            await window.supabaseClient.auth
+            await window.supabaseClient
+                .auth
                 .signOut();
+
 
             errorBox.textContent =
                 "This admin account is inactive.";
@@ -201,7 +301,7 @@ async function login() {
 
 
         // =================================
-        // SAVE ADMIN SESSION INFO
+        // SAVE ADMIN SESSION
         // =================================
 
         sessionStorage.setItem(
@@ -209,24 +309,28 @@ async function login() {
             "true"
         );
 
+
         sessionStorage.setItem(
             "adminId",
             admin.id
         );
 
+
         sessionStorage.setItem(
             "adminRole",
-            admin.role
+            admin.role || ""
         );
+
 
         sessionStorage.setItem(
             "adminUsername",
-            admin.username
+            admin.username || ""
         );
+
 
         sessionStorage.setItem(
             "adminName",
-            admin.name
+            admin.name || ""
         );
 
 
@@ -237,22 +341,45 @@ async function login() {
 
 
         // =================================
-        // GO TO ADMIN PORTAL
+        // REDIRECT
         // =================================
 
         window.location.href =
             "admin.html";
 
+    }
 
-    } catch (error) {
+
+    catch (error) {
 
         console.error(
             "Unexpected login error:",
             error
         );
 
+
         errorBox.textContent =
             "Something went wrong. Please try again.";
+
+    }
+
+
+    finally {
+
+        // =================================
+        // RESTORE LOGIN BUTTON
+        // =================================
+
+        if (loginButton) {
+
+            loginButton.disabled =
+                false;
+
+            loginButton.textContent =
+                loginButton.dataset.originalText ||
+                "LOGIN";
+
+        }
 
     }
 

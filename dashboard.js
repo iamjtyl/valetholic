@@ -31,33 +31,25 @@ let isRefreshingBookings = false;
 // =====================================
 
 const statusIcon =
-    document.getElementById(
-        "statusIcon"
-    );
-
+    document.getElementById("statusIcon");
 
 const statusTitle =
-    document.getElementById(
-        "statusTitle"
-    );
-
+    document.getElementById("statusTitle");
 
 const statusMessage =
-    document.getElementById(
-        "statusMessage"
-    );
-
+    document.getElementById("statusMessage");
 
 const dutyBtn =
-    document.getElementById(
-        "dutyBtn"
-    );
-
+    document.getElementById("dutyBtn");
 
 const jobList =
-    document.getElementById(
-        "jobList"
-    );
+    document.getElementById("jobList");
+
+const driverGreeting =
+    document.getElementById("driverGreeting");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
 
 
 // =====================================
@@ -108,7 +100,7 @@ async function loadDriver() {
         if (error) {
 
             console.error(
-                "Auth error:",
+                "❌ Auth error:",
                 error
             );
 
@@ -139,26 +131,26 @@ async function loadDriver() {
         currentDriver =
             user;
 
-        // =====================================
-// DRIVER GREETING
-// =====================================
 
-const driverGreeting =
-    document.getElementById("driverGreeting");
+        // =================================
+        // DRIVER GREETING
+        // =================================
 
-if (driverGreeting) {
+        if (driverGreeting) {
 
-    const loginName =
-        user.user_metadata?.full_name ||
-        user.user_metadata?.name ||
-        user.user_metadata?.username ||
-        user.email?.split("@")[0] ||
-        "Driver";
+            const loginName =
+                user.user_metadata?.full_name ||
+                user.user_metadata?.name ||
+                user.user_metadata?.username ||
+                user.email?.split("@")[0] ||
+                "Driver";
 
-    driverGreeting.textContent =
-        `Hi, ${loginName} 👋`;
 
-}
+            driverGreeting.textContent =
+                `Hi, ${loginName} 👋`;
+
+        }
+
 
         console.log(
             "👤 Logged in driver:",
@@ -168,7 +160,7 @@ if (driverGreeting) {
 
 
         // =================================
-        // GET DRIVER
+        // GET DRIVER RECORD
         // =================================
 
         const {
@@ -219,16 +211,13 @@ if (driverGreeting) {
 
 
         // =================================
-        // APPROVAL
+        // APPROVAL STATUS
         // =================================
 
         const approvalStatus =
-            String(
-                driver.approval_status ||
-                ""
-            )
-            .trim()
-            .toUpperCase();
+            normaliseStatus(
+                driver.approval_status
+            );
 
 
         if (
@@ -260,9 +249,7 @@ if (driverGreeting) {
         // =================================
 
         if (
-            approvalStatus !==
-                "APPROVED"
-            ||
+            approvalStatus !== "APPROVED" ||
             driver.approved !== true
         ) {
 
@@ -274,7 +261,7 @@ if (driverGreeting) {
 
 
         // =================================
-        // APPROVED DRIVER
+        // LOAD DRIVER STATUS
         // =================================
 
         status =
@@ -284,9 +271,7 @@ if (driverGreeting) {
             "OFF DUTY";
 
 
-        // =================================
-        // SAFETY
-        // =================================
+        // Safety fallback
 
         if (
             status === "PENDING" ||
@@ -329,7 +314,6 @@ if (driverGreeting) {
 
         requestNotificationPermission();
 
-
     }
 
     catch (error) {
@@ -348,9 +332,7 @@ if (driverGreeting) {
 // NORMALISE STATUS
 // =====================================
 
-function normaliseStatus(
-    value
-) {
+function normaliseStatus(value) {
 
     return String(
         value ?? ""
@@ -370,10 +352,8 @@ function showPendingApproval() {
     statusIcon.innerHTML =
         "🕐";
 
-
     statusTitle.innerHTML =
         "WAITING FOR APPROVAL";
-
 
     statusMessage.innerHTML =
         "Your driver application has been submitted." +
@@ -382,10 +362,8 @@ function showPendingApproval() {
         "<br><br>" +
         "Please wait for approval before going on duty.";
 
-
     dutyBtn.style.display =
         "none";
-
 
     jobList.innerHTML =
         "";
@@ -394,7 +372,7 @@ function showPendingApproval() {
 
 
 // =====================================
-// REJECTED
+// REJECTED APPLICATION
 // =====================================
 
 function showRejectedApplication() {
@@ -402,20 +380,16 @@ function showRejectedApplication() {
     statusIcon.innerHTML =
         "❌";
 
-
     statusTitle.innerHTML =
         "APPLICATION NOT APPROVED";
-
 
     statusMessage.innerHTML =
         "Unfortunately, your driver application was not approved." +
         "<br><br>" +
         "If you believe this was an error, please contact Valetholic Admin.";
 
-
     dutyBtn.style.display =
         "none";
-
 
     jobList.innerHTML =
         "";
@@ -429,22 +403,16 @@ function showRejectedApplication() {
 
 async function loadActiveBookings() {
 
-    if (
-        !currentDriver
-    ) {
+    if (!currentDriver) {
 
         return;
 
     }
 
 
-    // =================================
-    // PREVENT OVERLAPPING REFRESHES
-    // =================================
+    // Prevent overlapping refreshes
 
-    if (
-        isRefreshingBookings
-    ) {
+    if (isRefreshingBookings) {
 
         console.log(
             "⏳ Booking refresh already running."
@@ -479,10 +447,6 @@ async function loadActiveBookings() {
                 );
 
 
-        // =================================
-        // QUERY ERROR
-        // =================================
-
         if (error) {
 
             console.error(
@@ -509,9 +473,7 @@ async function loadActiveBookings() {
         // DETECT NEWLY ASSIGNED JOBS
         // =================================
 
-        if (
-            !firstBookingLoad
-        ) {
+        if (!firstBookingLoad) {
 
             const newlyAssigned =
                 newBookings.filter(
@@ -548,7 +510,7 @@ async function loadActiveBookings() {
 
 
         // =================================
-        // UPDATE KNOWN BOOKING IDS
+        // UPDATE KNOWN IDS
         // =================================
 
         knownBookingIds =
@@ -565,20 +527,13 @@ async function loadActiveBookings() {
 
 
         // =================================
-        // SAVE BOOKINGS
+        // SAVE + SORT
         // =================================
 
         bookings =
-            newBookings;
-
-
-        // =================================
-        // SORT QUEUE
-        // =================================
-
-        bookings.sort(
-            sortBookings
-        );
+            newBookings.sort(
+                sortBookings
+            );
 
 
         // =================================
@@ -589,7 +544,7 @@ async function loadActiveBookings() {
 
 
         // =================================
-        // KEEP DRIVER STATUS IN SYNC
+        // SYNC DRIVER STATUS
         // =================================
 
         syncDriverStatusFromBookings();
@@ -616,12 +571,7 @@ async function loadActiveBookings() {
 
 
 // =====================================
-// SYNC DRIVER STATUS
-// =====================================
-//
-// Only changes the visual status when
-// the driver already has an active
-// non-pending job.
+// SYNC DRIVER STATUS FROM BOOKINGS
 // =====================================
 
 function syncDriverStatusFromBookings() {
@@ -647,7 +597,7 @@ function syncDriverStatusFromBookings() {
 
 
     // =================================
-    // PENDING DOES NOT START JOB
+    // PENDING
     // =================================
 
     if (
@@ -678,14 +628,9 @@ function syncDriverStatusFromBookings() {
     // =================================
 
     if (
-        bookingStatus ===
-            "ON JOB"
-        ||
-        bookingStatus ===
-            "ON THE WAY"
-        ||
-        bookingStatus ===
-            "PICKED UP"
+        bookingStatus === "ON JOB" ||
+        bookingStatus === "ON THE WAY" ||
+        bookingStatus === "PICKED UP"
     ) {
 
         status =
@@ -702,21 +647,13 @@ function syncDriverStatusFromBookings() {
 // SORT BOOKINGS
 // =====================================
 
-function sortBookings(
-    a,
-    b
-) {
+function sortBookings(a, b) {
 
     const aDate =
-        getBookingDateTime(
-            a
-        );
-
+        getBookingDateTime(a);
 
     const bDate =
-        getBookingDateTime(
-            b
-        );
+        getBookingDateTime(b);
 
 
     if (
@@ -745,13 +682,9 @@ function sortBookings(
 // GET BOOKING DATE / TIME
 // =====================================
 
-function getBookingDateTime(
-    booking
-) {
+function getBookingDateTime(booking) {
 
-    if (
-        !booking.booking_date
-    ) {
+    if (!booking.booking_date) {
 
         return null;
 
@@ -773,9 +706,7 @@ function getBookingDateTime(
 
 
     const date =
-        new Date(
-            value
-        );
+        new Date(value);
 
 
     if (
@@ -795,7 +726,7 @@ function getBookingDateTime(
 
 
 // =====================================
-// RENDER ALL BOOKINGS
+// RENDER BOOKINGS
 // =====================================
 
 function renderBookings() {
@@ -861,9 +792,7 @@ function createBookingCard(
 ) {
 
     const card =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     card.className =
@@ -898,7 +827,6 @@ function createBookingCard(
         booking.vehicle_model ||
         "";
 
-
     const vehiclePlate =
         booking.vehicle_plate ||
         "";
@@ -918,18 +846,14 @@ function createBookingCard(
 
     }
 
-    else if (
-        vehicleModel
-    ) {
+    else if (vehicleModel) {
 
         vehicleText =
             vehicleModel;
 
     }
 
-    else if (
-        vehiclePlate
-    ) {
+    else if (vehiclePlate) {
 
         vehicleText =
             vehiclePlate;
@@ -973,18 +897,10 @@ function createBookingCard(
     // QUEUE LABEL
     // =================================
 
-    let queueLabel =
-        "Current Dispatch";
-
-
-    if (
-        index > 0
-    ) {
-
-        queueLabel =
-            `Next Job #${index}`;
-
-    }
+    const queueLabel =
+        index === 0
+            ? "Current Dispatch"
+            : `Next Job #${index}`;
 
 
     // =================================
@@ -998,7 +914,7 @@ function createBookingCard(
 
 
     // =================================
-    // CARD
+    // CARD HTML
     // =================================
 
     card.innerHTML = `
@@ -1019,9 +935,7 @@ function createBookingCard(
                             opacity:.7;
                         "
                     >
-
                         🕐 ${bookingTimeText}
-
                     </div>
                 `
                 : ""
@@ -1034,7 +948,6 @@ function createBookingCard(
                 PICKUP
             </small>
 
-
             <p>
                 📍 ${escapeHTML(pickup)}
             </p>
@@ -1046,9 +959,7 @@ function createBookingCard(
                     type="button"
                     class="google-btn pickup-google"
                 >
-
                     Google Maps
-
                 </button>
 
 
@@ -1056,9 +967,7 @@ function createBookingCard(
                     type="button"
                     class="waze-btn pickup-waze"
                 >
-
                     Waze
-
                 </button>
 
             </div>
@@ -1073,7 +982,6 @@ function createBookingCard(
                 DESTINATION
             </small>
 
-
             <p>
                 📍 ${escapeHTML(destination)}
             </p>
@@ -1085,9 +993,7 @@ function createBookingCard(
                     type="button"
                     class="google-btn destination-google"
                 >
-
                     Google Maps
-
                 </button>
 
 
@@ -1095,9 +1001,7 @@ function createBookingCard(
                     type="button"
                     class="waze-btn destination-waze"
                 >
-
                     Waze
-
                 </button>
 
             </div>
@@ -1111,7 +1015,6 @@ function createBookingCard(
             <small>
                 CUSTOMER
             </small>
-
 
             <p>
                 ${escapeHTML(
@@ -1130,7 +1033,6 @@ function createBookingCard(
                 VEHICLE
             </small>
 
-
             <p>
                 ${escapeHTML(
                     vehicleText
@@ -1146,18 +1048,16 @@ function createBookingCard(
             class="gold-btn status-job-btn"
             data-action="status"
         >
-
             ${getStatusButtonText(
                 bookingStatus
             )}
-
         </button>
 
     `;
 
 
     // =================================
-    // GOOGLE MAPS
+    // MAP BUTTONS
     // =================================
 
     const pickupGoogle =
@@ -1166,19 +1066,11 @@ function createBookingCard(
         );
 
 
-    if (
-        pickupGoogle
-    ) {
+    if (pickupGoogle) {
 
         pickupGoogle.addEventListener(
             "click",
-            () => {
-
-                openGoogleMaps(
-                    pickup
-                );
-
-            }
+            () => openGoogleMaps(pickup)
         );
 
     }
@@ -1190,27 +1082,15 @@ function createBookingCard(
         );
 
 
-    if (
-        destinationGoogle
-    ) {
+    if (destinationGoogle) {
 
         destinationGoogle.addEventListener(
             "click",
-            () => {
-
-                openGoogleMaps(
-                    destination
-                );
-
-            }
+            () => openGoogleMaps(destination)
         );
 
     }
 
-
-    // =================================
-    // WAZE
-    // =================================
 
     const pickupWaze =
         card.querySelector(
@@ -1218,19 +1098,11 @@ function createBookingCard(
         );
 
 
-    if (
-        pickupWaze
-    ) {
+    if (pickupWaze) {
 
         pickupWaze.addEventListener(
             "click",
-            () => {
-
-                openWaze(
-                    pickup
-                );
-
-            }
+            () => openWaze(pickup)
         );
 
     }
@@ -1242,19 +1114,11 @@ function createBookingCard(
         );
 
 
-    if (
-        destinationWaze
-    ) {
+    if (destinationWaze) {
 
         destinationWaze.addEventListener(
             "click",
-            () => {
-
-                openWaze(
-                    destination
-                );
-
-            }
+            () => openWaze(destination)
         );
 
     }
@@ -1270,19 +1134,11 @@ function createBookingCard(
         );
 
 
-    if (
-        statusButton
-    ) {
+    if (statusButton) {
 
         statusButton.addEventListener(
             "click",
-            () => {
-
-                updateJobStatus(
-                    booking.id
-                );
-
-            }
+            () => updateJobStatus(booking.id)
         );
 
     }
@@ -1307,47 +1163,33 @@ function getStatusButtonText(
         );
 
 
-    if (
-        statusValue ===
-        "PENDING"
-    ) {
+    switch (statusValue) {
 
-        return "START JOB";
+        case "PENDING":
 
-    }
+            return "START JOB";
 
 
-    if (
-        statusValue ===
-        "ON JOB"
-    ) {
+        case "ON JOB":
 
-        return "CHIONG AH";
-
-    }
+            return "CHIONG AH";
 
 
-    if (
-        statusValue ===
-        "ON THE WAY"
-    ) {
+        case "ON THE WAY":
 
-        return "PICKED UP";
-
-    }
+            return "PICKED UP";
 
 
-    if (
-        statusValue ===
-        "PICKED UP"
-    ) {
+        case "PICKED UP":
 
-        return "COMPLETE JOB";
+            return "COMPLETE JOB";
+
+
+        default:
+
+            return "START JOB";
 
     }
-
-
-    return "START JOB";
 
 }
 
@@ -1380,9 +1222,7 @@ async function updateJobStatus(
     }
 
 
-    if (
-        !currentDriver
-    ) {
+    if (!currentDriver) {
 
         alert(
             "Driver session is not ready."
@@ -1425,9 +1265,7 @@ async function updateJobStatus(
             .single();
 
 
-    if (
-        driverError
-    ) {
+    if (driverError) {
 
         console.error(
             "❌ Driver approval check failed:",
@@ -1462,7 +1300,7 @@ async function updateJobStatus(
 
 
     // =================================
-    // NORMALISE STATUS
+    // DETERMINE NEXT STATUS
     // =================================
 
     const currentStatus =
@@ -1471,71 +1309,55 @@ async function updateJobStatus(
         );
 
 
-    console.log(
-        "📌 Current status:",
-        currentStatus
-    );
-
-
-    // =================================
-    // NEXT STATUS
-    // =================================
-
     let nextStatus;
 
 
-    if (
-        currentStatus ===
-        "PENDING"
-    ) {
+    switch (currentStatus) {
 
-        nextStatus =
-            "ON JOB";
+        case "PENDING":
 
-    }
+            nextStatus =
+                "ON JOB";
 
-    else if (
-        currentStatus ===
-        "ON JOB"
-    ) {
+            break;
 
-        nextStatus =
-            "ON THE WAY";
 
-    }
+        case "ON JOB":
 
-    else if (
-        currentStatus ===
-        "ON THE WAY"
-    ) {
+            nextStatus =
+                "ON THE WAY";
 
-        nextStatus =
-            "PICKED UP";
+            break;
 
-    }
 
-    else if (
-        currentStatus ===
-        "PICKED UP"
-    ) {
+        case "ON THE WAY":
 
-        nextStatus =
-            "COMPLETED";
+            nextStatus =
+                "PICKED UP";
 
-    }
+            break;
 
-    else {
 
-        console.error(
-            "❌ Unknown booking status:",
-            booking.status
-        );
+        case "PICKED UP":
 
-        alert(
-            `Cannot update this job.\n\nCurrent status: ${booking.status}`
-        );
+            nextStatus =
+                "COMPLETED";
 
-        return;
+            break;
+
+
+        default:
+
+            console.error(
+                "❌ Unknown booking status:",
+                booking.status
+            );
+
+            alert(
+                `Cannot update this job.\n\nCurrent status: ${booking.status}`
+            );
+
+            return;
 
     }
 
@@ -1547,7 +1369,7 @@ async function updateJobStatus(
 
 
     // =================================
-    // PREPARE UPDATE
+    // UPDATE DATA
     // =================================
 
     const updateData = {
@@ -1559,7 +1381,7 @@ async function updateJobStatus(
 
 
     // =================================
-    // COMPLETION
+    // 6-HOUR TRACKING EXPIRY
     // =================================
 
     if (
@@ -1567,21 +1389,10 @@ async function updateJobStatus(
         "COMPLETED"
     ) {
 
-        /*
-         * Customer tracking link stays
-         * usable for 6 hours after
-         * the job is completed.
-         */
-
         updateData.tracking_expires_at =
             new Date(
                 Date.now() +
-                (
-                    6 *
-                    60 *
-                    60 *
-                    1000
-                )
+                6 * 60 * 60 * 1000
             ).toISOString();
 
 
@@ -1603,9 +1414,7 @@ async function updateJobStatus(
     } =
         await window.supabaseClient
             .from("Bookings")
-            .update(
-                updateData
-            )
+            .update(updateData)
             .eq(
                 "id",
                 booking.id
@@ -1652,8 +1461,7 @@ async function updateJobStatus(
     ) {
 
         booking.tracking_expires_at =
-            updatedBooking
-                ?.tracking_expires_at;
+            updatedBooking?.tracking_expires_at;
 
     }
 
@@ -1668,13 +1476,12 @@ async function updateJobStatus(
     ) {
 
         alert(
-            "🎉 Job Completed!\n\nCustomer tracking will remain available for 6 hours."
+            "🎉 Job Completed!\n\n" +
+            "Customer tracking will remain available for 6 hours."
         );
 
 
-        // -----------------------------
         // Remove completed booking
-        // -----------------------------
 
         bookings =
             bookings.filter(
@@ -1684,9 +1491,7 @@ async function updateJobStatus(
             );
 
 
-        // -----------------------------
-        // Driver becomes ON DUTY
-        // -----------------------------
+        // Driver returns to ON DUTY
 
         const {
             error:
@@ -1695,10 +1500,8 @@ async function updateJobStatus(
             await window.supabaseClient
                 .from("Drivers")
                 .update({
-
                     status:
                         "ON DUTY"
-
                 })
                 .eq(
                     "auth_id",
@@ -1706,9 +1509,7 @@ async function updateJobStatus(
                 );
 
 
-        if (
-            driverUpdateError
-        ) {
+        if (driverUpdateError) {
 
             console.error(
                 "❌ Driver status update error:",
@@ -1721,10 +1522,6 @@ async function updateJobStatus(
         status =
             "ON DUTY";
 
-
-        // -----------------------------
-        // RENDER NEXT JOB
-        // -----------------------------
 
         renderBookings();
 
@@ -1754,9 +1551,7 @@ async function updateJobStatus(
 // DUTY BUTTON
 // =====================================
 
-if (
-    dutyBtn
-) {
+if (dutyBtn) {
 
     dutyBtn.addEventListener(
         "click",
@@ -1772,9 +1567,7 @@ if (
 
 async function toggleDuty() {
 
-    if (
-        !currentDriver
-    ) {
+    if (!currentDriver) {
 
         alert(
             "Driver session is not ready."
@@ -1785,9 +1578,7 @@ async function toggleDuty() {
     }
 
 
-    // =================================
-    // UNLOCK AUDIO ON USER GESTURE
-    // =================================
+    // Unlock audio after user interaction
 
     await unlockNotificationAudio();
 
@@ -1812,9 +1603,7 @@ async function toggleDuty() {
             .single();
 
 
-    if (
-        driverError
-    ) {
+    if (driverError) {
 
         console.error(
             "❌ Approval check failed:",
@@ -1849,7 +1638,7 @@ async function toggleDuty() {
 
 
     // =================================
-    // DON'T GO OFF DUTY DURING JOB
+    // ACTIVE JOB CHECK
     // =================================
 
     if (
@@ -1867,29 +1656,14 @@ async function toggleDuty() {
     }
 
 
-    let newStatus;
-
-
-    if (
-        status ===
-        "OFF DUTY"
-    ) {
-
-        newStatus =
-            "ON DUTY";
-
-    }
-
-    else {
-
-        newStatus =
-            "OFF DUTY";
-
-    }
+    const newStatus =
+        status === "OFF DUTY"
+            ? "ON DUTY"
+            : "OFF DUTY";
 
 
     // =================================
-    // UPDATE DATABASE
+    // UPDATE DRIVER
     // =================================
 
     const {
@@ -1898,10 +1672,8 @@ async function toggleDuty() {
         await window.supabaseClient
             .from("Drivers")
             .update({
-
                 status:
                     newStatus
-
             })
             .eq(
                 "auth_id",
@@ -1912,7 +1684,7 @@ async function toggleDuty() {
     if (error) {
 
         console.error(
-            "Duty update error:",
+            "❌ Duty update error:",
             error
         );
 
@@ -1925,20 +1697,12 @@ async function toggleDuty() {
     }
 
 
-    // =================================
-    // UPDATE LOCAL STATUS
-    // =================================
-
     status =
         newStatus;
 
 
     updateDashboard();
 
-
-    // =================================
-    // REFRESH JOBS
-    // =================================
 
     await loadActiveBookings();
 
@@ -1957,34 +1721,130 @@ function updateDashboard() {
         );
 
 
-    // =================================
-    // OFF DUTY
-    // =================================
+    switch (currentStatus) {
 
-    if (
-        currentStatus ===
-        "OFF DUTY"
-    ) {
+        case "OFF DUTY":
 
-        statusIcon.innerHTML =
-            "⚪";
+            statusIcon.innerHTML =
+                "⚪";
 
+            statusTitle.innerHTML =
+                "OFF ALREADY AH? 👀";
 
-        statusTitle.innerHTML =
-            "OFF ALREADY AH? 👀";
+            statusMessage.innerHTML =
+                "Rest enough or not?";
 
+            dutyBtn.innerHTML =
+                "COME BACK LA";
 
-        statusMessage.innerHTML =
-            "Rest enough or not?";
+            dutyBtn.style.display =
+                "block";
 
-
-        dutyBtn.innerHTML =
-            "COME BACK LA";
+            break;
 
 
-        dutyBtn.style.display =
-            "block";
+        case "ON DUTY":
 
+            statusIcon.innerHTML =
+                "🟢";
+
+            statusTitle.innerHTML =
+                "SLAVING";
+
+            statusMessage.innerHTML =
+                "Money Money Money!";
+
+            dutyBtn.innerHTML =
+                "BYEBYE";
+
+            dutyBtn.style.display =
+                "block";
+
+            break;
+
+
+        case "ON JOB":
+
+            statusIcon.innerHTML =
+                "🟡";
+
+            statusTitle.innerHTML =
+                "CHASING MONEY";
+
+            statusMessage.innerHTML =
+                "Kaching-Kaching!";
+
+            dutyBtn.style.display =
+                "none";
+
+            break;
+
+
+        case "ON THE WAY":
+
+            statusIcon.innerHTML =
+                "🚗";
+
+            statusTitle.innerHTML =
+                "MONEY WAITING LEH";
+
+            statusMessage.innerHTML =
+                "Driver on the way.";
+
+            dutyBtn.style.display =
+                "none";
+
+            break;
+
+
+        case "PICKED UP":
+
+            statusIcon.innerHTML =
+                "🟢";
+
+            statusTitle.innerHTML =
+                "EH GOT CUSTOMER ALREADY";
+
+            statusMessage.innerHTML =
+                "Handle with care.";
+
+            dutyBtn.style.display =
+                "none";
+
+            break;
+
+    }
+
+}
+
+
+// =====================================
+// LOG OUT
+// =====================================
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener(
+        "click",
+        logoutDriver
+    );
+
+}
+
+
+// =====================================
+// LOGOUT DRIVER
+// =====================================
+
+async function logoutDriver() {
+
+    const confirmed =
+        window.confirm(
+            "Log out from Valetholic?"
+        );
+
+
+    if (!confirmed) {
 
         return;
 
@@ -1992,125 +1852,78 @@ function updateDashboard() {
 
 
     // =================================
-    // ON DUTY
+    // STOP AUTO REFRESH
+    // =================================
+
+    stopBookingAutoRefresh();
+
+
+    // =================================
+    // STOP GPS
     // =================================
 
     if (
-        currentStatus ===
-        "ON DUTY"
+        gpsWatchId !== null &&
+        navigator.geolocation
     ) {
 
-        statusIcon.innerHTML =
-            "🟢";
+        navigator.geolocation.clearWatch(
+            gpsWatchId
+        );
 
-
-        statusTitle.innerHTML =
-            "SLAVING";
-
-
-        statusMessage.innerHTML =
-            "Money Money Money!";
-
-
-        dutyBtn.innerHTML =
-            "BYEBYE";
-
-
-        dutyBtn.style.display =
-            "block";
-
-
-        return;
+        gpsWatchId =
+            null;
 
     }
 
 
-    // =================================
-    // ON JOB
-    // =================================
+    try {
 
-    if (
-        currentStatus ===
-        "ON JOB"
-    ) {
-
-        statusIcon.innerHTML =
-            "🟡";
+        const {
+            error
+        } =
+            await window.supabaseClient
+                .auth
+                .signOut();
 
 
-        statusTitle.innerHTML =
-            "CHASING MONEY";
+        if (error) {
+
+            console.error(
+                "❌ Logout error:",
+                error
+            );
+
+            alert(
+                "Unable to log out.\n\n" +
+                error.message
+            );
+
+            return;
+
+        }
 
 
-        statusMessage.innerHTML =
-            "Kaching-Kaching!";
+        console.log(
+            "👋 Driver logged out."
+        );
 
 
-        dutyBtn.style.display =
-            "none";
-
-
-        return;
-
-    }
-
-
-    // =================================
-    // ON THE WAY
-    // =================================
-
-    if (
-        currentStatus ===
-        "ON THE WAY"
-    ) {
-
-        statusIcon.innerHTML =
-            "🚗";
-
-
-        statusTitle.innerHTML =
-            "MONEY WAITING LEH";
-
-
-        statusMessage.innerHTML =
-            "Driver on the way.";
-
-
-        dutyBtn.style.display =
-            "none";
-
-
-        return;
+        window.location.href =
+            "driver-portal.html";
 
     }
 
+    catch (error) {
 
-    // =================================
-    // PICKED UP
-    // =================================
+        console.error(
+            "❌ Unexpected logout error:",
+            error
+        );
 
-    if (
-        currentStatus ===
-        "PICKED UP"
-    ) {
-
-        statusIcon.innerHTML =
-            "🟢";
-
-
-        statusTitle.innerHTML =
-            "EH GOT CUSTOMER ALREADY";
-
-
-        statusMessage.innerHTML =
-            "Handle with care.";
-
-
-        dutyBtn.style.display =
-            "none";
-
-
-        return;
+        alert(
+            "Unable to log out."
+        );
 
     }
 
@@ -2136,13 +1949,10 @@ function openGoogleMaps(
 
 
     window.open(
-
         `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
             address
         )}`,
-
         "_blank"
-
     );
 
 }
@@ -2167,13 +1977,10 @@ function openWaze(
 
 
     window.open(
-
         `https://waze.com/ul?q=${encodeURIComponent(
             address
         )}&navigate=yes`,
-
         "_blank"
-
     );
 
 }
@@ -2209,24 +2016,13 @@ function startGPS() {
 
     gpsWatchId =
         navigator.geolocation.watchPosition(
-
             updateLocation,
-
             gpsError,
-
             {
-
-                enableHighAccuracy:
-                    true,
-
-                maximumAge:
-                    5000,
-
-                timeout:
-                    10000
-
+                enableHighAccuracy: true,
+                maximumAge: 5000,
+                timeout: 10000
             }
-
         );
 
 
@@ -2245,9 +2041,7 @@ async function updateLocation(
     position
 ) {
 
-    if (
-        !currentDriver
-    ) {
+    if (!currentDriver) {
 
         return;
 
@@ -2256,7 +2050,6 @@ async function updateLocation(
 
     const latitude =
         position.coords.latitude;
-
 
     const longitude =
         position.coords.longitude;
@@ -2275,13 +2068,8 @@ async function updateLocation(
         await window.supabaseClient
             .from("Drivers")
             .update({
-
-                latitude:
-                    latitude,
-
-                longitude:
-                    longitude
-
+                latitude,
+                longitude
             })
             .eq(
                 "auth_id",
@@ -2316,6 +2104,7 @@ function gpsError(
 
 }
 
+
 // =====================================
 // GET LOCATION
 // =====================================
@@ -2323,28 +2112,48 @@ function gpsError(
 function getLocation(value) {
 
     if (!value) {
+
         return "-";
+
     }
 
-    // Already a normal string
-    if (typeof value === "string") {
+
+    if (
+        typeof value ===
+        "string"
+    ) {
+
         return value.trim() || "-";
+
     }
 
-    // Array of locations
-    if (Array.isArray(value)) {
+
+    if (
+        Array.isArray(value)
+    ) {
 
         return value
-            .map(item => getLocation(item))
-            .filter(item => item && item !== "-")
+            .map(
+                item =>
+                    getLocation(item)
+            )
+            .filter(
+                item =>
+                    item &&
+                    item !== "-"
+            )
             .join(", ") || "-";
 
     }
 
-    // Object containing common address fields
-    if (typeof value === "object") {
+
+    if (
+        typeof value ===
+        "object"
+    ) {
 
         const possibleFields = [
+
             "address",
             "location",
             "name",
@@ -2352,14 +2161,23 @@ function getLocation(value) {
             "full_address",
             "pickup",
             "destination"
+
         ];
 
-        for (const field of possibleFields) {
+
+        for (
+            const field
+            of possibleFields
+        ) {
 
             if (
-                value[field] !== undefined &&
-                value[field] !== null &&
-                String(value[field]).trim() !== ""
+                value[field] !==
+                    undefined &&
+                value[field] !==
+                    null &&
+                String(
+                    value[field]
+                ).trim() !== ""
             ) {
 
                 return String(
@@ -2370,10 +2188,12 @@ function getLocation(value) {
 
         }
 
-        // Last resort
+
         try {
 
-            return JSON.stringify(value);
+            return JSON.stringify(
+                value
+            );
 
         }
 
@@ -2385,9 +2205,11 @@ function getLocation(value) {
 
     }
 
+
     return String(value);
 
 }
+
 
 // =====================================
 // HTML ESCAPE
@@ -2430,9 +2252,7 @@ function escapeHTML(
 
 function startBookingAutoRefresh() {
 
-    if (
-        refreshTimer
-    ) {
+    if (refreshTimer) {
 
         clearInterval(
             refreshTimer
@@ -2470,18 +2290,20 @@ function startBookingAutoRefresh() {
 
 function stopBookingAutoRefresh() {
 
-    if (
-        refreshTimer
-    ) {
+    if (!refreshTimer) {
 
-        clearInterval(
-            refreshTimer
-        );
-
-        refreshTimer =
-            null;
+        return;
 
     }
+
+
+    clearInterval(
+        refreshTimer
+    );
+
+
+    refreshTimer =
+        null;
 
 }
 
@@ -2502,31 +2324,34 @@ async function requestNotificationPermission() {
 
 
     if (
-        Notification.permission ===
+        Notification.permission !==
         "default"
     ) {
 
-        try {
+        return;
 
-            const permission =
-                await Notification.requestPermission();
+    }
 
 
-            console.log(
-                "🔔 Notification permission:",
-                permission
-            );
+    try {
 
-        }
+        const permission =
+            await Notification.requestPermission();
 
-        catch (error) {
 
-            console.warn(
-                "Notification permission request failed:",
-                error
-            );
+        console.log(
+            "🔔 Notification permission:",
+            permission
+        );
 
-        }
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Notification permission request failed:",
+            error
+        );
 
     }
 
@@ -2541,9 +2366,7 @@ function showNewBookingNotification(
     booking
 ) {
 
-    // =================================
-    // SOUND
-    // =================================
+    // Sound
 
     playBookingNotificationSound();
 
@@ -2583,13 +2406,11 @@ function showNewBookingNotification(
             new Notification(
                 "🚗 New Valetholic Booking",
                 {
-
                     body:
                         message,
 
                     icon:
                         "images/logo.png"
-
                 }
             );
 
@@ -2608,7 +2429,7 @@ function showNewBookingNotification(
 
 
     // =================================
-    // ON-SCREEN TOAST
+    // TOAST
     // =================================
 
     showBookingToast(
@@ -2695,10 +2516,6 @@ async function playBookingNotificationSound() {
 
 
     try {
-
-        // =================================
-        // CREATE / RESUME CONTEXT
-        // =================================
 
         if (
             !notificationAudioContext
@@ -2863,7 +2680,7 @@ async function playBookingNotificationSound() {
 
 
 // =====================================
-// TOAST
+// BOOKING TOAST
 // =====================================
 
 function showBookingToast(
@@ -2876,9 +2693,7 @@ function showBookingToast(
         );
 
 
-    if (
-        oldToast
-    ) {
+    if (oldToast) {
 
         oldToast.remove();
 
@@ -2903,9 +2718,7 @@ function showBookingToast(
 
         <br>
 
-        ${escapeHTML(
-            message
-        )}
+        ${escapeHTML(message)}
 
     `;
 

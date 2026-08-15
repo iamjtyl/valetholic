@@ -3,131 +3,317 @@
 
 <head>
 
+    <!-- =====================================
+         BASIC SETTINGS
+    ====================================== -->
+
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>Valetholic OPS</title>
-    <link rel="stylesheet"href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <meta
+        name="theme-color"
+        content="#F6F7FB"
+    >
 
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
+    <meta
+        name="description"
+        content="Valetholic Operations Centre"
+    >
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+    <title>
+        Valetholic | Operations Centre
+    </title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
-          rel="stylesheet">
 
-    <link rel="stylesheet"
-          href="ops.css">
+    <!-- =====================================
+         LEAFLET
+    ====================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+
+    <!-- =====================================
+         FONTS
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================
+         OPS CSS
+    ====================================== -->
+
+    <link
+        rel="stylesheet"
+        href="ops.css"
+    >
 
 </head>
 
+
 <body>
 
-<div class="ops-container">
 
-    <header class="ops-header">
+    <!-- =====================================
+         OPERATIONS CENTRE
+    ====================================== -->
 
-        <div>
+    <main class="ops-container">
 
-            <h1>VALETHOLIC</h1>
 
-            <p>Operations Centre</p>
+        <!-- =================================
+             HEADER
+        ================================== -->
+
+        <header class="ops-header">
+
+
+            <div>
+
+                <h1>
+                    VALETHOLIC
+                </h1>
+
+                <p>
+                    Operations Centre
+                </p>
+
+            </div>
+
+
+            <button
+                class="logout-btn"
+                id="logoutBtn"
+                type="button"
+            >
+
+                LOG OUT
+
+            </button>
+
+
+        </header>
+
+
+
+        <!-- =================================
+             OVERVIEW STATISTICS
+        ================================== -->
+
+        <section
+            class="overview"
+            aria-label="Operations overview"
+        >
+
+
+            <!-- PENDING -->
+
+            <div class="stat-card pending">
+
+                <small>
+                    Pending Jobs
+                </small>
+
+                <span id="pendingCount">
+                    0
+                </span>
+
+            </div>
+
+
+            <!-- ON DUTY -->
+
+            <div class="stat-card onduty">
+
+                <small>
+                    Drivers On Duty
+                </small>
+
+                <span id="dutyCount">
+                    0
+                </span>
+
+            </div>
+
+
+            <!-- ACTIVE -->
+
+            <div class="stat-card active">
+
+                <small>
+                    Active Jobs
+                </small>
+
+                <span id="activeCount">
+                    0
+                </span>
+
+            </div>
+
+
+            <!-- COMPLETED -->
+
+            <div class="stat-card complete">
+
+                <small>
+                    Completed Today
+                </small>
+
+                <span id="completeCount">
+                    0
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             LIVE DRIVER MAP
+        ================================== -->
+
+        <section
+            class="map-panel"
+            aria-labelledby="mapHeading"
+        >
+
+
+            <h2 id="mapHeading">
+                🛰️ Live Driver Map
+            </h2>
+
+
+            <div
+                id="driverMap"
+                aria-label="Live driver map"
+            ></div>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             DASHBOARD GRID
+        ================================== -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- =============================
+                 DISPATCH QUEUE
+            ============================== -->
+
+            <section
+                class="dispatch-panel"
+                aria-labelledby="dispatchHeading"
+            >
+
+
+                <h2 id="dispatchHeading">
+                    Dispatch Queue
+                </h2>
+
+
+                <div
+                    id="dispatchList"
+                    aria-live="polite"
+                ></div>
+
+
+            </section>
+
+
+
+            <!-- =============================
+                 DRIVERS
+            ============================== -->
+
+            <section
+                class="drivers-panel"
+                aria-labelledby="driversHeading"
+            >
+
+
+                <h2 id="driversHeading">
+                    Drivers
+                </h2>
+
+
+                <div
+                    id="driverList"
+                    aria-live="polite"
+                ></div>
+
+
+            </section>
+
 
         </div>
 
-        <button class="logout-btn">
 
-            Logout
+    </main>
 
-        </button>
 
-    </header>
 
-    <section class="overview">
+    <!-- =====================================
+         SUPABASE
+    ====================================== -->
 
-    <div class="stat-card pending">
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
 
-        <small>Pending Jobs</small>
 
-        <span id="pendingCount">0</span>
+    <!-- =====================================
+         LEAFLET
+    ====================================== -->
 
-    </div>
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
 
-    <div class="stat-card onduty">
 
-        <small>Drivers On Duty</small>
+    <!-- =====================================
+         SUPABASE CONFIG
+    ====================================== -->
 
-        <span id="dutyCount">0</span>
+    <script
+        src="supabase.js"
+    ></script>
 
-    </div>
 
-    <div class="stat-card active">
+    <!-- =====================================
+         OPS LOGIC
+    ====================================== -->
 
-        <small>Active Jobs</small>
+    <script
+        src="ops.js"
+    ></script>
 
-        <span id="activeCount">0</span>
-
-    </div>
-
-    <div class="stat-card complete">
-
-        <small>Completed Today</small>
-
-        <span id="completeCount">0</span>
-
-    </div>
-
-</section>
-
-<section class="map-panel">
-
-    <h2>🛰️ Live Driver Map</h2>
-
-    <div id="driverMap"></div>
-
-</section>
-
-<div class="dashboard-grid">
-
-    <section class="dispatch-panel">
-
-        <h2>
-
-            Dispatch Queue
-
-        </h2>
-
-        <div id="dispatchList"></div>
-
-    </section>
-
-    <section class="drivers-panel">
-
-        <h2>
-
-            Drivers
-
-        </h2>
-
-        <div id="driverList"></div>
-
-    </section>
-
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script src="supabase.js"></script>
-
-<script src="ops.js"></script>
 
 </body>
 

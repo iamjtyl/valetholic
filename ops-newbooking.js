@@ -1,9 +1,9 @@
 console.log("OPS NEW BOOKING LOADED");
 
 
-// ==========================
-// GENERATE REFERENCE
-// ==========================
+// =====================================
+// GENERATE REFERENCE NUMBER
+// =====================================
 
 async function generateReferenceNumber() {
 
@@ -21,13 +21,15 @@ async function generateReferenceNumber() {
             error
         } =
             await window.supabaseClient
+                .from("Bookings")
+                .select(
+                    "reference_no, created_at"
+                );
 
-            .from("Bookings")
 
-            .select(
-                "reference_no, created_at"
-            );
-
+        // =================================
+        // REFERENCE LOOKUP ERROR
+        // =================================
 
         if (error) {
 
@@ -36,41 +38,58 @@ async function generateReferenceNumber() {
                 error
             );
 
+            // Fall back to generated number
             return reference;
 
         }
 
 
-        const month =
+        // =================================
+        // CURRENT MONTH
+        // =================================
+
+        const currentMonth =
             new Date()
                 .toISOString()
                 .slice(0, 7);
 
 
+        // =================================
+        // CHECK DUPLICATE
+        // =================================
+
         const exists =
-            data.some(row => {
+            (data || []).some(
+                row => {
 
-                if (
-                    !row.reference_no ||
-                    !row.created_at
-                ) {
+                    if (
+                        !row.reference_no ||
+                        !row.created_at
+                    ) {
 
-                    return false;
+                        return false;
+
+                    }
+
+
+                    return (
+                        Number(
+                            row.reference_no
+                        ) === reference
+                        &&
+                        row.created_at
+                            .startsWith(
+                                currentMonth
+                            )
+                    );
 
                 }
+            );
 
 
-                return (
-                    Number(
-                        row.reference_no
-                    ) === reference
-                    &&
-                    row.created_at
-                        .startsWith(month)
-                );
-
-            });
-
+        // =================================
+        // UNIQUE REFERENCE
+        // =================================
 
         if (!exists) {
 
@@ -83,14 +102,84 @@ async function generateReferenceNumber() {
 }
 
 
-// ==========================
+
+// =====================================
+// GET CURRENT SINGAPORE DATE / TIME
+// =====================================
+
+function getSingaporeDateTime() {
+
+    const now =
+        new Date();
+
+
+    const singaporeParts =
+        new Intl.DateTimeFormat(
+            "en-CA",
+            {
+                timeZone:
+                    "Asia/Singapore",
+
+                year:
+                    "numeric",
+
+                month:
+                    "2-digit",
+
+                day:
+                    "2-digit",
+
+                hour:
+                    "2-digit",
+
+                minute:
+                    "2-digit",
+
+                hour12:
+                    false
+            }
+        ).formatToParts(now);
+
+
+    const parts = {};
+
+
+    singaporeParts.forEach(
+        part => {
+
+            parts[part.type] =
+                part.value;
+
+        }
+    );
+
+
+    return {
+
+        date:
+            `${parts.year}-${parts.month}-${parts.day}`,
+
+        time:
+            `${parts.hour}:${parts.minute}`
+
+    };
+
+}
+
+
+
+// =====================================
 // CREATE BOOKING
-// ==========================
+// =====================================
 
 async function createBooking(event) {
 
     event.preventDefault();
 
+
+    // =================================
+    // ELEMENTS
+    // =================================
 
     const button =
         document.getElementById(
@@ -104,20 +193,26 @@ async function createBooking(event) {
         );
 
 
+    // =================================
+    // START LOADING
+    // =================================
+
     button.disabled = true;
 
     button.textContent =
         "CREATING...";
 
+    message.textContent =
+        "";
 
-    message.textContent = "";
 
 
     try {
 
-        // ==========================
-        // GET VALUES
-        // ==========================
+
+        // =================================
+        // GET CUSTOMER DETAILS
+        // =================================
 
         const customerName =
             document
@@ -137,6 +232,11 @@ async function createBooking(event) {
                 .trim();
 
 
+
+        // =================================
+        // GET VEHICLE DETAILS
+        // =================================
+
         const vehiclePlate =
             document
                 .getElementById(
@@ -154,6 +254,11 @@ async function createBooking(event) {
                 .value
                 .trim();
 
+
+
+        // =================================
+        // GET JOURNEY DETAILS
+        // =================================
 
         const pickup =
             document
@@ -173,78 +278,70 @@ async function createBooking(event) {
                 .trim();
 
 
-                const remarks = 
-                document
+
+        // =================================
+        // GET REMARKS
+        // =================================
+
+        const remarks =
+            document
                 .getElementById(
                     "remarks"
                 )
                 .value
                 .trim();
-       // ==========================
-// BOOKING DATE & TIME
-// ==========================
-
-// Get what admin entered
-const enteredDate =
-    document
-        .getElementById("bookingDate")
-        .value;
-
-const enteredTime =
-    document
-        .getElementById("bookingTime")
-        .value;
 
 
-// Get current Singapore date & time
-const now = new Date();
 
-const singaporeParts =
-    new Intl.DateTimeFormat(
-        "en-CA",
-        {
-            timeZone: "Asia/Singapore",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false
-        }
-    ).formatToParts(now);
+        // =================================
+        // GET DATE / TIME
+        // =================================
+
+        const enteredDate =
+            document
+                .getElementById(
+                    "bookingDate"
+                )
+                .value;
 
 
-const parts = {};
-
-singaporeParts.forEach(part => {
-
-    parts[part.type] =
-        part.value;
-
-});
+        const enteredTime =
+            document
+                .getElementById(
+                    "bookingTime"
+                )
+                .value;
 
 
-const currentDate =
-    `${parts.year}-${parts.month}-${parts.day}`;
+
+        // =================================
+        // SINGAPORE CURRENT TIME
+        // =================================
+
+        const singaporeDateTime =
+            getSingaporeDateTime();
 
 
-const currentTime =
-    `${parts.hour}:${parts.minute}`;
+
+        // =================================
+        // USE ADMIN INPUT
+        // OR CURRENT SINGAPORE TIME
+        // =================================
+
+        const bookingDate =
+            enteredDate ||
+            singaporeDateTime.date;
 
 
-// Use admin input if provided.
-// Otherwise use current Singapore date/time.
-
-const bookingDate =
-    enteredDate || currentDate;
+        const bookingTime =
+            enteredTime ||
+            singaporeDateTime.time;
 
 
-const bookingTime =
-    enteredTime || currentTime;
 
-        // ==========================
+        // =================================
         // VALIDATION
-        // ==========================
+        // =================================
 
         if (
             !customerName ||
@@ -262,71 +359,76 @@ const bookingTime =
         }
 
 
-        // ==========================
-        // REFERENCE
-        // ==========================
+
+        // =================================
+        // GENERATE REFERENCE
+        // =================================
 
         const reference =
             await generateReferenceNumber();
 
 
-        // ==========================
+
+        // =================================
         // BOOKING DATA
-        // ==========================
+        // =================================
 
         const bookingData = {
 
-    reference_no:
-        reference,
+            reference_no:
+                reference,
 
-    customer_name:
-        customerName,
+            customer_name:
+                customerName,
 
-    mobile:
-        mobile,
+            mobile:
+                mobile,
 
-    vehicle_model:
-        vehicleModel,
+            vehicle_model:
+                vehicleModel,
 
-    vehicle_plate:
-        vehiclePlate,
+            vehicle_plate:
+                vehiclePlate,
 
-    pickups:
-        [pickup],
+            pickups:
+                [pickup],
 
-    destinations:
-        [destination],
+            destinations:
+                [destination],
 
-    booking_date:
-        bookingDate,
+            booking_date:
+                bookingDate,
 
-    booking_time:
-        bookingTime,
+            booking_time:
+                bookingTime,
 
-    remarks:
-        remarks
+            remarks:
+                remarks
 
         };
 
 
-        // ==========================
-        // INSERT
-        // ==========================
+
+        // =================================
+        // INSERT BOOKING
+        // =================================
 
         const {
             data,
             error
         } =
             await window.supabaseClient
+                .from("Bookings")
+                .insert([
+                    bookingData
+                ])
+                .select();
 
-            .from("Bookings")
 
-            .insert([
-                bookingData
-            ])
 
-            .select();
-
+        // =================================
+        // DATABASE ERROR
+        // =================================
 
         if (error) {
 
@@ -342,15 +444,21 @@ const bookingTime =
         }
 
 
+
+        // =================================
+        // LOG RESULT
+        // =================================
+
         console.log(
             "Booking created:",
             data
         );
 
 
-        // ==========================
-        // SUCCESS
-        // ==========================
+
+        // =================================
+        // SUCCESS MESSAGE
+        // =================================
 
         message.textContent =
             `Booking created successfully. VH-${reference}`;
@@ -364,20 +472,35 @@ const bookingTime =
             "BOOKING CREATED";
 
 
-        // Give Supabase a moment,
-        // then return to OPS.
 
-        setTimeout(() => {
+        // =================================
+        // RETURN TO OPS
+        // =================================
 
-            window.location.href =
-                "ops-dashboard.html";
+        setTimeout(
+            () => {
 
-        }, 900);
+                window.location.href =
+                    "ops-dashboard.html";
+
+            },
+            900
+        );
 
 
-    } catch (error) {
+    }
 
-        console.error(error);
+
+    // =====================================
+    // ERROR HANDLING
+    // =====================================
+
+    catch (error) {
+
+        console.error(
+            "Create booking error:",
+            error
+        );
 
 
         message.textContent =
@@ -389,7 +512,9 @@ const bookingTime =
             "#ff8a8a";
 
 
-        button.disabled = false;
+        button.disabled =
+            false;
+
 
         button.textContent =
             "CREATE BOOKING";
@@ -399,15 +524,22 @@ const bookingTime =
 }
 
 
-// ==========================
-// FORM EVENT
-// ==========================
 
-document
-    .getElementById(
+// =====================================
+// FORM EVENT
+// =====================================
+
+const newBookingForm =
+    document.getElementById(
         "newBookingForm"
-    )
-    .addEventListener(
+    );
+
+
+if (newBookingForm) {
+
+    newBookingForm.addEventListener(
         "submit",
         createBooking
     );
+
+}

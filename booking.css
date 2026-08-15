@@ -785,3 +785,20 @@ h1 {
     }
 
 }
+.summary-item .value {
+    white-space: nowrap;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.summary-item .label {
+    min-width: 0;
+    flex: 1;
+}
+
+.summary-item .value {
+    white-space: nowrap;
+    text-align: right;
+    flex-shrink: 0;
+    margin-left: 20px;
+}

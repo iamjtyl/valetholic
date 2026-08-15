@@ -3,72 +3,199 @@
 
 <head>
 
+    <!-- =====================================
+         BASIC SETTINGS
+    ====================================== -->
+
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
 
-    <title>Valetholic OPS</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
+    <meta
+        name="theme-color"
+        content="#0F0F0F"
+    >
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+    <meta
+        name="description"
+        content="Valetholic Operations Centre Login"
+    >
 
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>
+        Valetholic | OPS Login
+    </title>
 
-    <link rel="stylesheet"
-          href="ops.css">
+
+    <!-- =====================================
+         FONTS
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================
+         OPS CSS
+    ====================================== -->
+
+    <link
+        rel="stylesheet"
+        href="ops.css"
+    >
 
 </head>
 
+
 <body>
 
-<div class="login-container">
 
-    <div class="login-card">
+    <!-- =====================================
+         OPS LOGIN
+    ====================================== -->
 
-        <img src="images/logo.png"
-             class="logo"
-             alt="Valetholic">
+    <main class="login-container">
 
-        <h1>VALETHOLIC</h1>
 
-        <span>I'm slaving for money</span>
+        <section
+            class="login-card"
+            aria-labelledby="loginTitle"
+        >
 
-        <div class="input-group">
 
-            <label>Username</label>
+            <!-- =============================
+                 LOGO
+            ============================== -->
 
-            <input
-                type="text"
-                placeholder="Enter username">
+            <img
+                src="images/logo.png"
+                class="logo"
+                alt="Valetholic Logo"
+            >
 
-        </div>
 
-        <div class="input-group">
+            <!-- =============================
+                 BRAND
+            ============================== -->
 
-            <label>Password</label>
+            <h1 id="loginTitle">
+                VALETHOLIC
+            </h1>
 
-            <input
-                type="password"
-                placeholder="Password">
 
-        </div>
+            <p class="login-subtitle">
+                Operations Centre
+            </p>
 
-        <button class="gold-btn">
 
-            LOGIN
+            <!-- =============================
+                 LOGIN FORM
+            ============================== -->
 
-        </button>
+            <form id="opsLoginForm">
 
-    </div>
 
-</div>
+                <!-- USERNAME -->
 
-<script src="ops.js"></script>
+                <div class="input-group">
+
+                    <label for="opsUsername">
+                        Username
+                    </label>
+
+
+                    <input
+                        id="opsUsername"
+                        name="username"
+                        type="text"
+                        placeholder="Enter username"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="input-group">
+
+                    <label for="opsPassword">
+                        Password
+                    </label>
+
+
+                    <input
+                        id="opsPassword"
+                        name="password"
+                        type="password"
+                        placeholder="Enter password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    id="opsLoginBtn"
+                    class="gold-btn"
+                    type="submit"
+                >
+
+                    LOGIN
+
+                </button>
+
+
+            </form>
+
+
+            <!-- =============================
+                 ERROR / STATUS
+            ============================== -->
+
+            <p
+                id="opsLoginMessage"
+                class="login-message"
+                aria-live="polite"
+            ></p>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================
+         OPS LOGIC
+    ====================================== -->
+
+    <script
+        src="ops.js"
+    ></script>
+
 
 </body>
 

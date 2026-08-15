@@ -1,538 +1,1065 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Valetholic | Professional Valet Service</title>
+    <!-- =====================================
+         BASIC SETTINGS
+    ====================================== -->
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta charset="UTF-8">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="mobile.css">
+    <meta
+        name="theme-color"
+        content="#0A0A0A"
+    >
+
+    <meta
+        name="description"
+        content="Valetholic provides professional valet services in Singapore. We drive you and your vehicle safely home."
+    >
+
+    <title>
+        Valetholic | Professional Valet Service
+    </title>
+
+
+    <!-- =====================================
+         ICONS
+    ====================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================
+         FONTS
+    ====================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================
+         STYLES
+    ====================================== -->
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="mobile.css"
+    >
 
 </head>
 
+
 <body>
 
-<!-- =========================
-NAVIGATION
-========================= -->
 
-<nav class="navbar">
+    <!-- =====================================
+         NAVIGATION
+    ====================================== -->
 
-    <div class="logo">
+    <nav
+        class="navbar"
+        aria-label="Main navigation"
+    >
 
-        <img src="images/logo.png" alt="Valetholic Logo">
 
-        <span>VALETHOLIC</span>
+        <!-- BRAND -->
 
-    </div>
+        <div class="logo">
 
-    <ul>
+            <img
+                src="images/logo.png"
+                alt="Valetholic Logo"
+            >
 
-        <li><a href="#how">How It Works</a></li>
+            <span>
+                VALETHOLIC
+            </span>
 
-        <li><a href="driver.html">Earn With Us</a></li>
+        </div>
 
-        <li><a href="#faq">FAQ</a></li>
 
-    </ul>
 
-<div class="nav-buttons">
+        <!-- NAV LINKS -->
 
-   <a href="javascript:void(0)"
-   class="nav-button"
-   onclick="showBooking()">
+        <ul>
 
-    I'm Not Drunk
+            <li>
+                <a href="#how">
+                    How It Works
+                </a>
+            </li>
 
-</a>
 
-    <a
-    href="https://wa.me/6587923386?text=Hello%20Valetholic!%20I've%20been%20drinking%20and%20need%20a%20valet%20driver."
-    class="whatsapp-btn"
-    target="_blank">
+            <li>
+                <a href="driver.html">
+                    Earn With Us
+                </a>
+            </li>
 
-        🍻 I've Been Drinking
 
-    </a>
+            <li>
+                <a href="#faq">
+                    FAQ
+                </a>
+            </li>
 
-</div>
+        </ul>
 
-</nav>
-<!-- =========================
-HERO
-========================= -->
 
-<section class="hero" id="hero">
 
-    <!-- LEFT -->
+        <!-- NAV ACTIONS -->
 
-    <div class="hero-left" id="heroLeft">
+        <div class="nav-buttons">
 
-        <p class="hero-label">
 
-            Singapore's Premium Valet Service
+            <a
+                href="javascript:void(0)"
+                class="nav-button"
+                onclick="showBooking()"
+            >
 
-        </p>
+                I'm Not Drunk
 
-        <h1 class="hero-title">
+            </a>
 
-            We Drive.<br>
-            You Relax.<br>
-            <span>We Get You Home.</span>
 
-        </h1>
+            <a
+                href="https://wa.me/6587923386?text=Hello%20Valetholic!%20I've%20been%20drinking%20and%20need%20a%20valet%20driver."
+                class="whatsapp-btn"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
 
-<div class="hero-price">
+                🍻 I've Been Drinking
 
-    <small>BASE FARE FROM $48</small>
+            </a>
 
-</div>
 
-<div class="hero-description">
+        </div>
 
-    <strong>Standard Hours</strong><br>
-    9:00 PM – 4:00 AM
 
-</div>
-<br>
-<div class="hero-price">
+    </nav>
 
-    <small>PEAK HOURS FROM $60</small>
 
-</div>
 
-<div class="hero-description">
+    <!-- =====================================
+         HERO / BOOKING
+    ====================================== -->
 
-    <strong>Peak Hours</strong><br>
-    7:30 PM – 9:00 PM<br>
-    4:00 AM – 5:00 AM
+    <section
+        class="hero"
+        id="hero"
+        aria-label="Valetholic booking"
+    >
 
-    <hr>
 
-    ✓ 15 mins FREE waiting<br>
-    ✓ +$15 every additional 15 mins<br>
-    ✓ +$10 per additional stop<br>
-    ✓ +$10 Location Surcharge<br>
+        <!-- =================================
+             HERO LEFT
+        ================================== -->
 
-    <small>
-        Changi • Tuas • Sentosa •
-        Lim Chu Kang & selected remote areas
-    </small>
+        <div
+            class="hero-left"
+            id="heroLeft"
+        >
 
-    <br><br>
 
-    <strong>Before 7:30 PM / After 5:00 AM</strong><br>
+            <p class="hero-label">
 
-    Price Upon Enquiry<br><br>
+                Singapore's Premium Valet Service
 
-</div>
+            </p>
 
-<a href="javascript:void(0)"
-   class="gold-btn"
-   onclick="showBooking()">
 
-    Book Now
+            <h1 class="hero-title">
 
-</a>
+                We Drive.<br>
 
-    </div>
+                You Relax.<br>
 
-    <!-- RIGHT -->
+                <span>
+                    We Get You Home.
+                </span>
 
-    <div class="hero-right" id="heroRight">
+            </h1>
 
-        <div class="booking-card" id="booking">
 
-            <h2>
 
-                BOOK YOUR VALET
+            <!-- BASE FARE -->
 
-            </h2>
+            <div class="hero-price">
 
-<form>
+                <small>
+                    BASE FARE FROM $48
+                </small>
 
-    <div id="journeyContainer">
+            </div>
 
-        <div class="journey-block">
 
-<label>Customer Name</label>
-<input type="text" id="customerName" placeholder="Enter your name" required>
+            <div class="hero-description">
 
-<label>Mobile Number</label>
-<input type="tel" id="mobileNumber" placeholder="Enter your mobile number" required>
+                <strong>
+                    Standard Hours
+                </strong>
 
-<label>Pickup Location</label>
+                <br>
 
-<div id="pickupContainer">
-    <input
-        type="text"
-        placeholder="Enter pickup location" required>
-</div>
+                9:00 PM – 4:00 AM
 
-<label>Destination</label>
+            </div>
 
-<div id="destinationContainer">
-    <input
-        type="text"
-        placeholder="Enter destination" required>
-</div>
 
-<div class="add-buttons">
+            <br>
 
-    <button
-        type="button"
-        class="mini-btn"
-        onclick="addPickup()">
 
-        + Add Pickup
+            <!-- PEAK FARE -->
 
-    </button>
+            <div class="hero-price">
 
-    <button
-        type="button"
-        class="mini-btn"
-        onclick="addDestination()">
+                <small>
+                    PEAK HOURS FROM $60
+                </small>
 
-        + Add Destination
+            </div>
 
-    </button>
 
-</div>
+            <div class="hero-description">
 
-<label>Date</label>
-<input type="date" id="bookingDate" required>
+                <strong>
+                    Peak Hours
+                </strong>
 
-<label>Time</label>
-<select id="bookingTime" required></select>
+                <br>
 
-    <label for="vehicleModel">
-    Vehicle Make & Model
-</label>
+                7:30 PM – 9:00 PM
 
-<input
-    type="text"
-    id="vehicleModel"
-    placeholder="e.g. Toyota Alphard"
-    required>
+                <br>
 
-    <label>Remarks <span>(Optional)</span></label>
+                4:00 AM – 5:00 AM
 
-<textarea
-    rows="5"
-    placeholder="Special instructions...
+
+                <hr>
+
+
+                ✓ 15 mins FREE waiting
+
+                <br>
+
+                ✓ +$15 every additional 15 mins
+
+                <br>
+
+                ✓ +$10 per additional stop
+
+                <br>
+
+                ✓ +$10 Location Surcharge
+
+
+                <small>
+
+                    Changi • Tuas • Sentosa •
+                    Lim Chu Kang & selected remote areas
+
+                </small>
+
+
+                <br>
+                <br>
+
+
+                <strong>
+                    Before 7:30 PM / After 5:00 AM
+                </strong>
+
+                <br>
+
+                Price Upon Enquiry
+
+                <br>
+                <br>
+
+            </div>
+
+
+
+            <!-- BOOK NOW -->
+
+            <a
+                href="javascript:void(0)"
+                class="gold-btn"
+                onclick="showBooking()"
+            >
+
+                Book Now
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =================================
+             BOOKING CARD
+        ================================== -->
+
+        <div
+            class="hero-right"
+            id="heroRight"
+        >
+
+
+            <div
+                class="booking-card"
+                id="booking"
+            >
+
+
+                <h2>
+                    BOOK YOUR VALET
+                </h2>
+
+
+                <form
+                    id="bookingForm"
+                    onsubmit="return false;"
+                >
+
+
+                    <div id="journeyContainer">
+
+
+                        <!-- =================================
+                             JOURNEY BLOCK
+                        ================================== -->
+
+                        <div class="journey-block">
+
+
+                            <!-- CUSTOMER NAME -->
+
+                            <label for="customerName">
+                                Customer Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="customerName"
+                                placeholder="Enter your name"
+                                autocomplete="name"
+                                required
+                            >
+
+
+
+                            <!-- MOBILE -->
+
+                            <label for="mobileNumber">
+                                Mobile Number
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="mobileNumber"
+                                placeholder="Enter your mobile number"
+                                autocomplete="tel"
+                                required
+                            >
+
+
+
+                            <!-- PICKUP -->
+
+                            <label>
+                                Pickup Location
+                            </label>
+
+
+                            <div
+                                id="pickupContainer"
+                            >
+
+                                <input
+                                    type="text"
+                                    placeholder="Enter pickup location"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- DESTINATION -->
+
+                            <label>
+                                Destination
+                            </label>
+
+
+                            <div
+                                id="destinationContainer"
+                            >
+
+                                <input
+                                    type="text"
+                                    placeholder="Enter destination"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- ADD STOPS -->
+
+                            <div class="add-buttons">
+
+
+                                <button
+                                    type="button"
+                                    class="mini-btn"
+                                    onclick="addPickup()"
+                                >
+
+                                    + Add Pickup
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="mini-btn"
+                                    onclick="addDestination()"
+                                >
+
+                                    + Add Destination
+
+                                </button>
+
+
+                            </div>
+
+
+
+                            <!-- DATE -->
+
+                            <label for="bookingDate">
+                                Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="bookingDate"
+                                required
+                            >
+
+
+
+                            <!-- TIME -->
+
+                            <label for="bookingTime">
+                                Time
+                            </label>
+
+                            <select
+                                id="bookingTime"
+                                required
+                            >
+
+                            </select>
+
+
+
+                            <!-- VEHICLE -->
+
+                            <label for="vehicleModel">
+                                Vehicle Make &amp; Model
+                            </label>
+
+                            <input
+                                type="text"
+                                id="vehicleModel"
+                                placeholder="e.g. Toyota Alphard"
+                                autocomplete="off"
+                                required
+                            >
+
+
+
+                            <!-- REMARKS -->
+
+                            <label for="bookingRemarks">
+                                Remarks
+                                <span>
+                                    (Optional)
+                                </span>
+                            </label>
+
+
+                            <textarea
+                                id="bookingRemarks"
+                                rows="5"
+                                placeholder="Special instructions...
 
 • Exact pickup point
 • Parking lot number
 • Gate code
 • Waiting location
-• Anything your valet should know"></textarea>
+• Anything your valet should know"
+                            ></textarea>
 
-<button
-    type="button"
-    class="continue-btn"
-    onclick="continueBooking()">
 
-    CONTINUE →
 
-</button>
+                            <!-- CONTINUE -->
 
-</form>
-        </div>
+                            <button
+                                type="button"
+                                class="continue-btn"
+                                onclick="continueBooking()"
+                            >
 
-    </div>
+                                CONTINUE →
 
-</section>
+                            </button>
 
-<!-- =========================
-HOW IT WORKS
-========================= -->
 
-<section class="how" id="how">
+                        </div>
 
-    <h2>
 
-        How It Works
+                    </div>
 
-    </h2>
 
-    <div class="steps">
+                </form>
 
-        <div class="step">
-
-            <div class="number">
-
-                01
 
             </div>
 
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================
+         HOW IT WORKS
+    ====================================== -->
+
+    <section
+        class="how"
+        id="how"
+        aria-labelledby="howTitle"
+    >
+
+
+        <h2 id="howTitle">
+
+            How It Works
+
+        </h2>
+
+
+        <div class="steps">
+
+
+            <!-- STEP 1 -->
+
+            <div class="step">
+
+                <div class="number">
+                    01
+                </div>
+
+
+                <h3>
+                    Submit Booking
+                </h3>
+
+
+                <p>
+                    Fill in your trip details.
+                </p>
+
+            </div>
+
+
+
+            <!-- STEP 2 -->
+
+            <div class="step">
+
+                <div class="number">
+                    02
+                </div>
+
+
+                <h3>
+                    Driver Assigned
+                </h3>
+
+
+                <p>
+                    We assign the best available valet.
+                </p>
+
+            </div>
+
+
+
+            <!-- STEP 3 -->
+
+            <div class="step">
+
+                <div class="number">
+                    03
+                </div>
+
+
+                <h3>
+                    Driver On The Way
+                </h3>
+
+
+                <p>
+                    Live tracking starts after the driver
+                    begins the journey.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================
+         WHAT WE OFFER
+    ====================================== -->
+
+    <section
+        class="how"
+        id="offers"
+        aria-labelledby="offersTitle"
+    >
+
+
+        <h2 id="offersTitle">
+
+            What We Offer
+
+        </h2>
+
+
+        <div class="steps">
+
+
+            <!-- POINT TO POINT -->
+
+            <div class="step">
+
+                <div class="number">
+                    01
+                </div>
+
+
+                <h3>
+                    Point-to-Point Trips
+                </h3>
+
+
+                <p>
+
+                    Perfect for nights out,
+                    business meetings,
+                    airport transfers,
+                    or any journey where you'd rather
+                    not drive.
+
+                    Our professional valet drivers ensure
+                    you and your vehicle arrive home safely
+                    and comfortably.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- HOURLY VALET -->
+
+            <div class="step">
+
+                <div class="number">
+                    02
+                </div>
+
+
+                <h3>
+                    Hourly Valet
+                </h3>
+
+
+                <p>
+
+                    Enjoy the convenience of a dedicated
+                    driver for multiple stops, appointments,
+                    or events.
+
+                    Your driver stays on standby,
+                    giving you the flexibility to travel
+                    at your own pace without worrying
+                    about parking or driving.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- AD HOC -->
+
+            <div class="step">
+
+                <div class="number">
+                    03
+                </div>
+
+
+                <h3>
+                    Ad Hoc Services
+                </h3>
+
+
+                <p>
+
+                    Need a driver outside our regular
+                    operating hours or have a unique request?
+
+                    We'll do our best to accommodate
+                    your schedule with a personalised
+                    quotation tailored to your journey.
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================
+         FAQ & TERMS
+    ====================================== -->
+
+    <section
+        class="faq"
+        id="faq"
+        aria-labelledby="faqTitle"
+    >
+
+
+        <h2 id="faqTitle">
+            FAQ &amp; Terms
+        </h2>
+
+
+
+        <!-- COST -->
+
+        <div class="faq-item">
+
             <h3>
-
-                Submit Booking
-
+                How much does it cost?
             </h3>
+
 
             <p>
 
-                Fill in your trip details.
+                Flat rate from
+                <strong>$48</strong>
+                per trip.
+
+                Every additional pickup
+                or destination is
+                <strong>$10</strong>.
 
             </p>
 
         </div>
 
-        <div class="step">
 
-            <div class="number">
 
-                02
+        <!-- PAYMENT -->
 
-            </div>
+        <div class="faq-item">
 
             <h3>
-
-                Driver Assigned
-
+                How do I pay?
             </h3>
+
 
             <p>
 
-                We assign the best available valet.
+                Payment is made after the
+                trip is completed.
 
             </p>
 
         </div>
 
-        <div class="step">
 
-            <div class="number">
 
-                03
+        <!-- ADDITIONAL STOPS -->
 
-            </div>
+        <div class="faq-item">
 
             <h3>
-
-                Driver On The Way
-
+                Can I add another stop?
             </h3>
+
 
             <p>
 
-                Live tracking starts after the driver begins the journey.
+                Yes.
+
+                Additional pickups and destinations
+                are charged at
+                <strong>$10</strong>
+                each.
 
             </p>
 
         </div>
 
-    </div>
 
-</section>
 
-<!-- =========================
-WHAT WE OFFER
-========================= -->
+        <!-- TERMS -->
 
-<section class="how" id="how">
-
-    <h2>
-
-        What We Offer
-
-    </h2>
-
-    <div class="steps">
-
-        <div class="step">
-
-            <div class="number">
-
-                01
-
-            </div>
+        <div class="faq-item">
 
             <h3>
-
-                Point-to-Point Trips
-
+                Terms &amp; Conditions
             </h3>
 
-            <p>
 
-                Perfect for nights out, business meetings, airport transfers, or any journey where you'd rather not drive. Our professional valet drivers ensure you and your vehicle arrive home safely and comfortably.
+            <ul>
 
-            </p>
+                <li>
+                    Base fare starts from $48.
+                </li>
+
+                <li>
+                    Each additional pickup
+                    or destination is $10.
+                </li>
+
+                <li>
+                    Late-night surcharge may apply.
+                </li>
+
+                <li>
+                    Waiting charges may apply.
+                </li>
+
+                <li>
+                    Customers must ensure the vehicle
+                    is roadworthy and legally insured.
+                </li>
+
+            </ul>
+
 
         </div>
 
-        <div class="step">
 
-            <div class="number">
-
-                02
-
-            </div>
-
-            <h3>
-
-                Hourly Valet
-
-            </h3>
-
-            <p>
-
-                Enjoy the convenience of a dedicated driver for multiple stops, appointments, or events. Your driver stays on standby, giving you the flexibility to travel at your own pace without worrying about parking or driving.
-
-            </p>
-
-        </div>
-
-        <div class="step">
-
-            <div class="number">
-
-                03
-
-            </div>
-
-            <h3>
-
-                Ad Hoc Services
-
-            </h3>
-
-            <p>
-
-                Need a driver outside our regular operating hours or have a unique request? We'll do our best to accommodate your schedule with a personalised quotation tailored to your journey.
-
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
+    </section>
 
 
-<!-- =========================
-FAQ & TERMS
-========================= -->
 
-<section class="faq" id="faq">
+    <!-- =====================================
+         FOOTER
+    ====================================== -->
 
-    <h2>FAQ & Terms</h2>
+    <footer>
 
-    <div class="faq-item">
 
-        <h3>How much does it cost?</h3>
+        <h2>
+            VALETHOLIC
+        </h2>
+
 
         <p>
-            Flat rate from <strong>$48</strong> per trip.
-            Every additional pickup or destination is <strong>$10</strong>.
+            Singapore's Premium Valet Service
         </p>
 
-    </div>
 
-    <div class="faq-item">
+    </footer>
 
-        <h3>How do I pay?</h3>
 
-        <p>
-            Payment is made after the trip is completed.
-        </p>
 
-    </div>
+    <!-- =====================================
+         BOOKING TIME
+    ====================================== -->
 
-    <div class="faq-item">
+    <script>
 
-        <h3>Can I add another stop?</h3>
+        const bookingTime =
+            document.getElementById(
+                "bookingTime"
+            );
 
-        <p>
-            Yes. Additional pickups and destinations are charged at
-            <strong>$10</strong> each.
-        </p>
 
-    </div>
+        if (bookingTime) {
 
-    <div class="faq-item">
+            for (
+                let h = 0;
+                h < 24;
+                h++
+            ) {
 
-        <h3>Terms & Conditions</h3>
+                ["00", "30"].forEach(
+                    minute => {
 
-        <ul>
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
 
-            <li>Base fare starts from $48.</li>
-            <li>Each additional pickup or destination is $10.</li>
-            <li>Late-night surcharge may apply.</li>
-            <li>Waiting charges may apply.</li>
-            <li>Customers must ensure the vehicle is roadworthy and legally insured.</li>
 
-        </ul>
+                        const display =
+                            ((h + 11) % 12) + 1;
 
-    </div>
 
-</section>
+                        const ampm =
+                            h < 12
+                                ? "AM"
+                                : "PM";
 
-<footer>
 
-    <h2>
+                        option.value =
+                            String(h).padStart(
+                                2,
+                                "0"
+                            )
+                            + ":"
+                            + minute;
 
-        VALETHOLIC
 
-    </h2>
+                        option.textContent =
+                            `${display}:${minute} ${ampm}`;
 
-    <p>
 
-        Singapore's Premium Valet Service
+                        bookingTime.appendChild(
+                            option
+                        );
 
-    </p>
+                    }
+                );
 
-</footer>
+            }
 
-</footer> 
 
-<script>
+            // =============================
+            // DEFAULT TIME
+            // =============================
 
-const bookingTime = document.getElementById("bookingTime");
+            const now =
+                new Date();
 
-for(let h=0;h<24;h++){
 
-    ["00","30"].forEach(m=>{
+            const hour =
+                now.getHours();
 
-        const option=document.createElement("option");
 
-        const display=((h+11)%12)+1;
+            const minute =
+                now.getMinutes() < 30
+                    ? "00"
+                    : "30";
 
-        const ampm=h<12?"AM":"PM";
 
-        option.value=String(h).padStart(2,"0")+":"+m;
+            bookingTime.value =
+                String(hour).padStart(
+                    2,
+                    "0"
+                )
+                + ":"
+                + minute;
 
-        option.textContent=`${display}:${m} ${ampm}`;
+        }
 
-        bookingTime.appendChild(option);
+    </script>
 
-    });
 
-}
 
-const now=new Date();
+    <!-- =====================================
+         SUPABASE
+    ====================================== -->
 
-let hour=now.getHours();
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
 
-let minute=now.getMinutes()<30?"00":"30";
 
-bookingTime.value=String(hour).padStart(2,"0")+":"+minute;
+    <script
+        src="supabase.js"
+    ></script>
 
-</script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script src="script.js"></script>
-<script src="home.js"></script>
+
+    <!-- =====================================
+         BOOKING LOGIC
+    ====================================== -->
+
+    <script
+        src="script.js"
+    ></script>
+
+
+    <!-- =====================================
+         HOMEPAGE LOGIC
+    ====================================== -->
+
+    <script
+        src="home.js"
+    ></script>
+
+
 </body>
+
 </html>

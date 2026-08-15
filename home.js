@@ -1,18 +1,63 @@
-function showBooking(){
+// =====================================
+// VALETHOLIC HOMEPAGE
+// =====================================
 
-    const hero = document.getElementById("hero");
 
-    hero.classList.add("booking-open");
+// =====================================
+// SHOW BOOKING
+// =====================================
 
-    setTimeout(() => {
+function showBooking() {
 
-        hero.scrollIntoView({
+    const hero =
+        document.getElementById(
+            "hero"
+        );
 
-            behavior:"smooth",
-            block:"start"
 
-        });
+    // =================================
+    // SAFETY CHECK
+    // =================================
 
-    }, 500);
+    if (!hero) {
+
+        console.warn(
+            "Booking hero section not found."
+        );
+
+        return;
+
+    }
+
+
+    // =================================
+    // OPEN BOOKING
+    // =================================
+
+    hero.classList.add(
+        "booking-open"
+    );
+
+
+    // =================================
+    // SCROLL TO BOOKING
+    // =================================
+
+    setTimeout(
+        () => {
+
+            hero.scrollIntoView({
+
+                behavior:
+                    "smooth",
+
+                block:
+                    "start"
+
+            });
+
+        },
+        500
+    );
 
 }

@@ -52,6 +52,7 @@ const pickups =
         ? booking.pickups
         : [];
 
+
 const destinations =
     Array.isArray(booking.destinations)
         ? booking.destinations
@@ -61,13 +62,6 @@ const destinations =
 // =========================================
 // ESCAPE HTML
 // =========================================
-//
-// Booking information comes from user input.
-//
-// We escape values before placing them into
-// innerHTML so a customer cannot accidentally
-// inject HTML or JavaScript into the review page.
-//
 
 function escapeHTML(value) {
 
@@ -82,26 +76,11 @@ function escapeHTML(value) {
 
 
     return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 }
 
@@ -136,29 +115,13 @@ function formatList(values) {
 // FARE CALCULATION
 // =========================================
 
-
-// Number of pickups
-
 const pickupCount =
     pickups.length;
 
 
-// Number of destinations
-
 const destinationCount =
     destinations.length;
 
-
-// =========================================
-// ADDITIONAL STOPS
-// =========================================
-//
-// First pickup = included
-// First destination = included
-//
-// Every additional pickup or destination
-// costs $10.
-//
 
 const additionalPickups =
     Math.max(
@@ -184,15 +147,8 @@ const additionalStopCharge =
 
 
 // =========================================
-// PEAK HOUR CHECK
+// SELECTED TIME
 // =========================================
-//
-// Evening peak:
-// 7:30 PM - 9:00 PM
-//
-// Morning peak:
-// 4:00 AM - 5:00 AM
-//
 
 const timeParts =
     String(
@@ -203,17 +159,13 @@ const timeParts =
 
 
 const hour =
-    Number.isFinite(
-        timeParts[0]
-    )
+    Number.isFinite(timeParts[0])
         ? timeParts[0]
         : 0;
 
 
 const minute =
-    Number.isFinite(
-        timeParts[1]
-    )
+    Number.isFinite(timeParts[1])
         ? timeParts[1]
         : 0;
 
@@ -224,7 +176,20 @@ const timeInMinutes =
 
 
 // =========================================
-// PEAK PERIODS
+// PEAK HOUR CHECK
+// =========================================
+//
+// Evening Peak:
+// 7:30 PM - 9:00 PM
+//
+// Morning Peak:
+// 4:00 AM - 5:00 AM
+//
+// Standard Hours:
+// 9:00 PM - 4:00 AM
+//
+// Outside operating hours:
+// Price Upon Enquiry
 // =========================================
 
 const eveningPeak =
@@ -243,44 +208,38 @@ const morningPeak =
         (5 * 60);
 
 
-const isPeakHour =
-    eveningPeak ||
-    morningPeak;
+// =========================================
+// STANDARD HOURS
+// =========================================
+
+const standardHours =
+    timeInMinutes >=
+        (21 * 60)
+    ||
+    timeInMinutes <
+        (4 * 60);
 
 
 // =========================================
 // BASE FARE
 // =========================================
 
-const baseFare =
-    isPeakHour
-        ? 60
-        : 48;
+let baseFare = 48;
+
+
+if (
+    eveningPeak ||
+    morningPeak
+) {
+
+    baseFare = 60;
+
+}
 
 
 // =========================================
 // FARE PERIOD TEXT
 // =========================================
-//
-// IMPORTANT:
-//
-// Your existing business logic only defines
-// two peak periods:
-//
-// 4:00 AM - 5:00 AM
-// 7:30 PM - 9:00 PM
-//
-// All other times currently receive the
-// $48 standard fare.
-//
-// The text below therefore intentionally
-// avoids claiming that all $48 hours are
-// literally 9:00 PM - 4:00 AM.
-//
-// If you want a different operating-hour
-// description, we can change the wording
-// later without changing the fare.
-//
 
 let farePeriod;
 
@@ -299,10 +258,17 @@ else if (morningPeak) {
 
 }
 
+else if (standardHours) {
+
+    farePeriod =
+        "Standard Hours • 9:00 PM – 4:00 AM";
+
+}
+
 else {
 
     farePeriod =
-        "Standard Hours";
+        "Outside Standard Hours • Price Upon Enquiry";
 
 }
 
@@ -378,7 +344,9 @@ if (!summary) {
         "Booking summary container not found."
     );
 
-} else {
+}
+
+else {
 
     summary.innerHTML = `
 
@@ -400,9 +368,7 @@ if (!summary) {
                 </span>
 
                 <span class="value">
-
                     ${formatList(pickups)}
-
                 </span>
 
             </div>
@@ -415,9 +381,7 @@ if (!summary) {
                 </span>
 
                 <span class="value">
-
                     ${formatList(destinations)}
-
                 </span>
 
             </div>
@@ -430,9 +394,7 @@ if (!summary) {
                 </span>
 
                 <span class="value">
-
                     ${bookingDate}
-
                 </span>
 
             </div>
@@ -445,9 +407,7 @@ if (!summary) {
                 </span>
 
                 <span class="value">
-
                     ${bookingTime}
-
                 </span>
 
             </div>
@@ -460,9 +420,7 @@ if (!summary) {
                 </span>
 
                 <span class="value">
-
                     ${vehicle}
-
                 </span>
 
             </div>
@@ -475,9 +433,7 @@ if (!summary) {
                 </span>
 
                 <span class="value">
-
                     ${remarks}
-
                 </span>
 
             </div>
@@ -531,9 +487,7 @@ if (!summary) {
 
 
                 <span class="value">
-
                     $${additionalStopCharge}
-
                 </span>
 
             </div>
@@ -608,13 +562,11 @@ const editBookingButton =
     );
 
 
-if (
-    editBookingButton
-) {
+if (editBookingButton) {
 
     editBookingButton.addEventListener(
         "click",
-        function () {
+        () => {
 
             history.back();
 
@@ -634,15 +586,11 @@ const submitButton =
     );
 
 
-// Prevent double submission
-
 let bookingSubmitting =
     false;
 
 
-if (
-    submitButton
-) {
+if (submitButton) {
 
     submitButton.addEventListener(
         "click",
@@ -663,18 +611,14 @@ async function generateReferenceNumber() {
         const reference =
             Math.floor(
                 1000 +
-                Math.random() *
-                9000
+                Math.random() * 9000
             );
 
 
         const currentMonth =
             new Date()
                 .toISOString()
-                .slice(
-                    0,
-                    7
-                );
+                .slice(0, 7);
 
 
         const {
@@ -688,23 +632,12 @@ async function generateReferenceNumber() {
                 );
 
 
-        // =================================
-        // REFERENCE LOOKUP ERROR
-        // =================================
-
         if (error) {
 
             console.error(
                 "Reference lookup error:",
                 error
             );
-
-            /*
-             * Preserve the existing behaviour:
-             * if reference lookup fails, use
-             * the generated number instead of
-             * blocking the booking completely.
-             */
 
             return reference;
 
@@ -734,8 +667,7 @@ async function generateReferenceNumber() {
                     return (
                         Number(
                             row.reference_no
-                        ) ===
-                        reference
+                        ) === reference
                     )
                     &&
                     row.created_at
@@ -764,14 +696,7 @@ async function generateReferenceNumber() {
 
 async function submitBooking() {
 
-
-    // =====================================
-    // PREVENT DOUBLE CLICK
-    // =====================================
-
-    if (
-        bookingSubmitting
-    ) {
+    if (bookingSubmitting) {
 
         return;
 
@@ -782,17 +707,10 @@ async function submitBooking() {
         true;
 
 
-    // =====================================
-    // DISABLE BUTTON
-    // =====================================
-
-    if (
-        submitButton
-    ) {
+    if (submitButton) {
 
         submitButton.disabled =
             true;
-
 
         submitButton.textContent =
             "Submitting...";
@@ -801,7 +719,6 @@ async function submitBooking() {
 
 
     try {
-
 
         // =================================
         // CHECK SUPABASE
@@ -819,7 +736,7 @@ async function submitBooking() {
 
 
         // =================================
-        // GET REFERENCE
+        // GENERATE REFERENCE
         // =================================
 
         const reference =
@@ -874,10 +791,6 @@ async function submitBooking() {
                 .select();
 
 
-        // =================================
-        // SUPABASE ERROR
-        // =================================
-
         if (error) {
 
             console.error(
@@ -892,10 +805,6 @@ async function submitBooking() {
 
         }
 
-
-        // =================================
-        // SUCCESS
-        // =================================
 
         console.log(
             "Booking created successfully:",
@@ -931,13 +840,9 @@ async function submitBooking() {
                 reference
             )}`;
 
+    }
 
-    } catch (error) {
-
-
-        // =================================
-        // ERROR HANDLING
-        // =================================
+    catch (error) {
 
         console.error(
             "Unexpected booking error:",
@@ -951,21 +856,14 @@ async function submitBooking() {
         );
 
 
-        // =================================
-        // RESTORE BUTTON
-        // =================================
-
         bookingSubmitting =
             false;
 
 
-        if (
-            submitButton
-        ) {
+        if (submitButton) {
 
             submitButton.disabled =
                 false;
-
 
             submitButton.textContent =
                 "Submit Booking Request";

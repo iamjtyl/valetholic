@@ -1,451 +1,935 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+/* =========================================
+   VALETHOLIC OPS
+   OPERATIONS DASHBOARD
+========================================= */
+
+
+/* =========================================
+   GLOBAL
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
 
-    font-family:'Inter',sans-serif;
+body {
 
-    background:#f6f7fb;
+    font-family:
+        'Inter',
+        sans-serif;
 
-    color:#222;
+    background:
+        #f6f7fb;
 
-}
-
-.ops-container{
-
-    max-width:1400px;
-
-    margin:40px auto;
-
-    padding:25px;
-
-}
-
-.ops-header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:35px;
+    color:
+        #222;
 
 }
 
-.ops-header h1{
 
-    font-size:36px;
+/* =========================================
+   MAIN CONTAINER
+========================================= */
 
-    letter-spacing:3px;
+.ops-container {
 
-}
+    max-width:
+        1400px;
 
-.ops-header p{
+    margin:
+        40px auto;
 
-    color:#777;
-
-    margin-top:6px;
-
-}
-
-.logout-btn{
-
-    background:#111;
-
-    color:white;
-
-    border:none;
-
-    padding:12px 22px;
-
-    border-radius:12px;
-
-    cursor:pointer;
-
-    font-weight:600;
+    padding:
+        25px;
 
 }
 
-.overview{
 
-    display:grid;
+/* =========================================
+   HEADER
+========================================= */
 
-    grid-template-columns:repeat(4,1fr);
+.ops-header {
 
-    gap:20px;
+    display:
+        flex;
 
-    margin-bottom:35px;
+    justify-content:
+        space-between;
 
-}
+    align-items:
+        center;
 
-.stat-card{
-
-    background:white;
-
-    border-radius:20px;
-
-    padding:25px;
-
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    margin-bottom:
+        35px;
 
 }
 
-.pending{
 
-    border-left:6px solid #D4AF37;
+.ops-header h1 {
 
-}
+    font-size:
+        36px;
 
-.onduty{
-
-    border-left:6px solid #22c55e;
-
-}
-
-.active{
-
-    border-left:6px solid #3b82f6;
+    letter-spacing:
+        3px;
 
 }
 
-.complete{
 
-    border-left:6px solid #6b7280;
+.ops-header p {
 
-}
+    color:
+        #777;
 
-.stat-card small{
-
-    color:#777;
-
-    display:block;
-
-    margin-bottom:10px;
+    margin-top:
+        6px;
 
 }
 
-.stat-card span{
 
-    font-size:48px;
+/* =========================================
+   LOGOUT
+========================================= */
 
-    font-weight:700;
+.logout-btn {
+
+    background:
+        #111;
+
+    color:
+        #fff;
+
+    border:
+        none;
+
+    padding:
+        12px 22px;
+
+    border-radius:
+        12px;
+
+    cursor:
+        pointer;
+
+    font-weight:
+        600;
+
+    transition:
+        .2s;
 
 }
 
-.dashboard-grid{
 
-    display:grid;
+.logout-btn:hover {
 
-    grid-template-columns:2fr 1fr;
+    background:
+        #D4AF37;
 
-    gap:25px;
+    color:
+        #111;
+
+    transform:
+        translateY(-1px);
 
 }
+
+
+/* =========================================
+   OVERVIEW STATISTICS
+========================================= */
+
+.overview {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap:
+        20px;
+
+    margin-bottom:
+        35px;
+
+}
+
+
+.stat-card {
+
+    background:
+        #fff;
+
+    border-radius:
+        20px;
+
+    padding:
+        25px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, .08);
+
+}
+
+
+.stat-card small {
+
+    color:
+        #777;
+
+    display:
+        block;
+
+    margin-bottom:
+        10px;
+
+}
+
+
+.stat-card span {
+
+    font-size:
+        48px;
+
+    font-weight:
+        700;
+
+}
+
+
+/* =========================================
+   STAT CARD ACCENTS
+========================================= */
+
+.pending {
+
+    border-left:
+        6px solid #D4AF37;
+
+}
+
+
+.onduty {
+
+    border-left:
+        6px solid #22c55e;
+
+}
+
+
+.active {
+
+    border-left:
+        6px solid #3b82f6;
+
+}
+
+
+.complete {
+
+    border-left:
+        6px solid #6b7280;
+
+}
+
+
+/* =========================================
+   LIVE DRIVER MAP
+========================================= */
+
+.map-panel {
+
+    background:
+        #151515;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .08);
+
+    border-radius:
+        18px;
+
+    padding:
+        24px;
+
+    margin-bottom:
+        35px;
+
+}
+
+
+.map-panel h2 {
+
+    color:
+        #fff;
+
+    margin-bottom:
+        18px;
+
+}
+
+
+#driverMap {
+
+    width:
+        100%;
+
+    height:
+        500px;
+
+    border-radius:
+        14px;
+
+    overflow:
+        hidden;
+
+}
+
+
+/* =========================================
+   DASHBOARD GRID
+========================================= */
+
+.dashboard-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        2fr 1fr;
+
+    gap:
+        25px;
+
+}
+
+
+/* =========================================
+   PANELS
+========================================= */
 
 .dispatch-panel,
-.drivers-panel{
+.drivers-panel {
 
-    background:white;
+    background:
+        #fff;
 
-    border-radius:20px;
+    border-radius:
+        20px;
 
-    padding:25px;
+    padding:
+        25px;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, .08);
 
-    min-height:600px;
+    min-height:
+        600px;
 
 }
+
 
 .dispatch-panel h2,
-.drivers-panel h2{
+.drivers-panel h2 {
 
-    margin-bottom:25px;
-
-}
-
-.driver-card{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    padding:16px;
-
-    border-radius:14px;
-
-    background:#f8f8f8;
-
-    margin-bottom:12px;
+    margin-bottom:
+        25px;
 
 }
 
-.driver-name{
 
-    font-weight:600;
-
-}
-
-.driver-status{
-
-    padding:8px 14px;
-
-    border-radius:999px;
-
-    font-size:13px;
-
-    font-weight:700;
-
-}
-
-.on-duty{
-
-    background:#dcfce7;
-
-    color:#15803d;
-
-}
-
-.off-duty{
-
-    background:#e5e7eb;
-
-    color:#555;
-
-}
-
-.on-job{
-
-    background:#fef3c7;
-
-    color:#92400e;
-
-}
-
-@media(max-width:1000px){
-
-    .overview{
-
-        grid-template-columns:repeat(2,1fr);
-
-    }
-
-    .dashboard-grid{
-
-        grid-template-columns:1fr;
-
-    }
-
-}
-
-@media(max-width:600px){
-
-    .overview{
-
-        grid-template-columns:1fr;
-
-    }
-
-}
-/* ===========================
-   DISPATCH CARDS
-=========================== */
-
-.dispatch-card{
-
-    background:#fafafa;
-
-    border:1px solid #ececec;
-
-    border-left:6px solid #D4AF37;
-
-    border-radius:18px;
-
-    padding:18px 22px;
-
-    margin-bottom:18px;
-
-    box-shadow:0 8px 25px rgba(0,0,0,.06);
-
-    transition:.25s;
-
-}
-
-.dispatch-card:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:0 12px 30px rgba(0,0,0,.10);
-
-}
-
-.dispatch-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:18px;
-
-}
-
-.dispatch-ref{
-
-    font-size:24px;
-
-    font-weight:700;
-
-}
-
-.dispatch-status{
-
-    background:#FEF3C7;
-
-    color:#92400E;
-
-    padding:10px 18px;
-
-    border-radius:999px;
-
-    font-size:14px;
-
-    font-weight:700;
-
-}
-
-.dispatch-name{
-
-    font-size:20px;
-
-    font-weight:600;
-
-    margin-bottom:12px;
-
-}
-
-.dispatch-route{
-
-    color:#666;
-
-    line-height:1.8;
-
-    margin-bottom:18px;
-
-}
-
-.dispatch-bottom{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-}
-
-.dispatch-time{
-
-    color:#777;
-
-}
-
-.open-btn{
-
-    background:#D4AF37;
-
-    color:#111;
-
-    border:none;
-
-    padding:12px 22px;
-
-    border-radius:12px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-}
-
-.open-btn:hover{
-
-    transform:translateY(-2px);
-
-}
-.map-panel{
-
-    background:#151515;
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:18px;
-
-    padding:24px;
-
-    margin:30px;
-
-}
-
-#driverMap{
-
-    width:100%;
-
-    height:500px;
-
-    border-radius:14px;
-    
-    overflow:hidden;
-}
 /* =========================================
-   DRIVER STATUS COLORS
+   DISPATCH CARDS
+========================================= */
+
+.dispatch-card {
+
+    background:
+        #fafafa;
+
+    border:
+        1px solid #ececec;
+
+    border-left:
+        6px solid #D4AF37;
+
+    border-radius:
+        18px;
+
+    padding:
+        18px 22px;
+
+    margin-bottom:
+        18px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, .06);
+
+    transition:
+        .25s;
+
+}
+
+
+.dispatch-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 12px 30px
+        rgba(0, 0, 0, .10);
+
+}
+
+
+/* =========================================
+   DISPATCH HEADER
+========================================= */
+
+.dispatch-top {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        15px;
+
+    margin-bottom:
+        18px;
+
+}
+
+
+.dispatch-ref {
+
+    font-size:
+        24px;
+
+    font-weight:
+        700;
+
+}
+
+
+.dispatch-status {
+
+    background:
+        #FEF3C7;
+
+    color:
+        #92400E;
+
+    padding:
+        10px 18px;
+
+    border-radius:
+        999px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+
+}
+
+
+/* =========================================
+   DISPATCH CUSTOMER
+========================================= */
+
+.dispatch-name {
+
+    font-size:
+        20px;
+
+    font-weight:
+        600;
+
+    margin-bottom:
+        12px;
+
+}
+
+
+/* =========================================
+   DISPATCH ROUTE
+========================================= */
+
+.dispatch-route {
+
+    color:
+        #666;
+
+    line-height:
+        1.8;
+
+    margin-bottom:
+        18px;
+
+}
+
+
+/* =========================================
+   DISPATCH FOOTER
+========================================= */
+
+.dispatch-bottom {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        15px;
+
+}
+
+
+.dispatch-time {
+
+    color:
+        #777;
+
+}
+
+
+/* =========================================
+   OPEN BOOKING BUTTON
+========================================= */
+
+.open-btn {
+
+    background:
+        #D4AF37;
+
+    color:
+        #111;
+
+    border:
+        none;
+
+    padding:
+        12px 22px;
+
+    border-radius:
+        12px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    transition:
+        .25s;
+
+}
+
+
+.open-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 8px 18px
+        rgba(212, 175, 55, .20);
+
+}
+
+
+/* =========================================
+   DRIVER CARDS
+========================================= */
+
+.driver-card {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1.2fr 1fr auto;
+
+    align-items:
+        center;
+
+    gap:
+        20px;
+
+    padding:
+        16px;
+
+    border-radius:
+        14px;
+
+    background:
+        #f8f8f8;
+
+    margin-bottom:
+        12px;
+
+}
+
+
+.driver-name {
+
+    font-weight:
+        600;
+
+}
+
+
+.driver-location {
+
+    color:
+        #777;
+
+    font-size:
+        14px;
+
+}
+
+
+/* =========================================
+   DRIVER STATUS
+========================================= */
+
+.driver-status {
+
+    padding:
+        8px 14px;
+
+    border-radius:
+        999px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    text-align:
+        center;
+
+    white-space:
+        nowrap;
+
+}
+
+
+/* =========================================
+   ON DUTY
+========================================= */
+
+.on-duty {
+
+    background:
+        #dcfce7;
+
+    color:
+        #15803d;
+
+}
+
+
+/* =========================================
+   OFF DUTY
+========================================= */
+
+.off-duty {
+
+    background:
+        #e5e7eb;
+
+    color:
+        #555;
+
+}
+
+
+/* =========================================
+   ON JOB
+========================================= */
+
+.on-job {
+
+    background:
+        #fef3c7;
+
+    color:
+        #92400e;
+
+}
+
+
+/* =========================================
+   LEGACY / EXTENDED STATUS BADGES
 ========================================= */
 
 .status-badge {
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.8rem;
+
+    padding:
+        6px 12px;
+
+    border-radius:
+        999px;
+
+    font-weight:
+        600;
+
+    font-size:
+        .8rem;
+
 }
 
-/* 🟢 Driver available */
+
 .status-on-duty {
-    background: #dcfce7;
-    color: #15803d;
+
+    background:
+        #dcfce7;
+
+    color:
+        #15803d;
+
 }
 
-/* 🟠 Driver heading to pickup */
+
 .status-on-way {
-    background: #ffedd5;
-    color: #c2410c;
+
+    background:
+        #ffedd5;
+
+    color:
+        #c2410c;
+
 }
 
-/* 🔴 Customer onboard */
+
 .status-on-board {
-    background: #fee2e2;
-    color: #b91c1c;
-}
-.driver-card {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr auto;
-    align-items: center;
-    gap: 20px;
+
+    background:
+        #fee2e2;
+
+    color:
+        #b91c1c;
+
 }
 
-.driver-name {
-    font-weight: 500;
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+
+    .overview {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    .dashboard-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .map-panel {
+
+        margin-bottom:
+            30px;
+
+    }
+
 }
 
-.driver-location {
-    color: #777;
-    font-size: 14px;
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .ops-container {
+
+        margin:
+            20px auto;
+
+        padding:
+            15px;
+
+    }
+
+
+    .ops-header {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+        gap:
+            15px;
+
+    }
+
+
+    .ops-header h1 {
+
+        font-size:
+            30px;
+
+    }
+
+
+    .logout-btn {
+
+        width:
+            100%;
+
+    }
+
+
+    .overview {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .stat-card span {
+
+        font-size:
+            40px;
+
+    }
+
+
+    .map-panel {
+
+        padding:
+            15px;
+
+        border-radius:
+            15px;
+
+    }
+
+
+    #driverMap {
+
+        height:
+            400px;
+
+    }
+
+
+    .dispatch-panel,
+    .drivers-panel {
+
+        padding:
+            18px;
+
+        min-height:
+            auto;
+
+    }
+
+
+    .dispatch-top {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .dispatch-ref {
+
+        font-size:
+            21px;
+
+    }
+
+
+    .dispatch-status {
+
+        font-size:
+            12px;
+
+        padding:
+            8px 14px;
+
+    }
+
+
+    .dispatch-bottom {
+
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+
+    }
+
+
+    .open-btn {
+
+        width:
+            100%;
+
+    }
+
+
+    .driver-card {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            10px;
+
+    }
+
+
+    .driver-status {
+
+        justify-self:
+            flex-start;
+
+    }
+
 }

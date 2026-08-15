@@ -1,5 +1,6 @@
 console.log("VALETHOLIC BOOKING SCRIPT LOADED");
 
+
 // =========================================
 // RESTORE PREVIOUS BOOKING
 // =========================================
@@ -23,28 +24,31 @@ function restoreBooking() {
             booking
         );
 
+
         // =========================================
         // CUSTOMER
         // =========================================
 
         const customerName =
-            document.getElementById(
-                "customerName"
-            );
+            document.getElementById("customerName");
 
         const mobile =
-            document.getElementById(
-                "mobileNumber"
-            );
+            document.getElementById("mobileNumber");
+
 
         if (customerName) {
+
             customerName.value =
                 booking.customer_name || "";
+
         }
 
+
         if (mobile) {
+
             mobile.value =
                 booking.mobile || "";
+
         }
 
 
@@ -53,23 +57,25 @@ function restoreBooking() {
         // =========================================
 
         const date =
-            document.getElementById(
-                "bookingDate"
-            );
+            document.getElementById("bookingDate");
 
         const time =
-            document.getElementById(
-                "bookingTime"
-            );
+            document.getElementById("bookingTime");
+
 
         if (date) {
+
             date.value =
                 booking.date || "";
+
         }
 
+
         if (time) {
+
             time.value =
                 booking.time || "";
+
         }
 
 
@@ -78,13 +84,14 @@ function restoreBooking() {
         // =========================================
 
         const vehicle =
-            document.getElementById(
-                "vehicleModel"
-            );
+            document.getElementById("vehicleModel");
+
 
         if (vehicle) {
+
             vehicle.value =
                 booking.vehicle || "";
+
         }
 
 
@@ -93,13 +100,14 @@ function restoreBooking() {
         // =========================================
 
         const remarks =
-            document.querySelector(
-                "textarea"
-            );
+            document.querySelector("textarea");
+
 
         if (remarks) {
+
             remarks.value =
                 booking.remarks || "";
+
         }
 
 
@@ -108,9 +116,8 @@ function restoreBooking() {
         // =========================================
 
         const pickupContainer =
-            document.getElementById(
-                "pickupContainer"
-            );
+            document.getElementById("pickupContainer");
+
 
         if (
             pickupContainer &&
@@ -119,13 +126,13 @@ function restoreBooking() {
 
             pickupContainer.innerHTML = "";
 
+
             booking.pickups.forEach(
                 (pickup, index) => {
 
                     const input =
-                        document.createElement(
-                            "input"
-                        );
+                        document.createElement("input");
+
 
                     input.type =
                         "text";
@@ -140,6 +147,7 @@ function restoreBooking() {
 
                     input.value =
                         pickup || "";
+
 
                     pickupContainer.appendChild(
                         input
@@ -160,22 +168,21 @@ function restoreBooking() {
                 "destinationContainer"
             );
 
+
         if (
             destinationContainer &&
-            Array.isArray(
-                booking.destinations
-            )
+            Array.isArray(booking.destinations)
         ) {
 
             destinationContainer.innerHTML = "";
+
 
             booking.destinations.forEach(
                 (destination, index) => {
 
                     const input =
-                        document.createElement(
-                            "input"
-                        );
+                        document.createElement("input");
+
 
                     input.type =
                         "text";
@@ -191,6 +198,7 @@ function restoreBooking() {
                     input.value =
                         destination || "";
 
+
                     destinationContainer.appendChild(
                         input
                     );
@@ -205,6 +213,7 @@ function restoreBooking() {
             "Booking restored successfully."
         );
 
+
     } catch (error) {
 
         console.error(
@@ -215,6 +224,7 @@ function restoreBooking() {
     }
 
 }
+
 
 
 // =========================================
@@ -228,14 +238,15 @@ function addPickup() {
             "pickupContainer"
         );
 
+
     if (!container) {
         return;
     }
 
+
     const input =
-        document.createElement(
-            "input"
-        );
+        document.createElement("input");
+
 
     input.type =
         "text";
@@ -246,11 +257,13 @@ function addPickup() {
     input.required =
         true;
 
+
     container.appendChild(
         input
     );
 
 }
+
 
 
 // =========================================
@@ -264,14 +277,15 @@ function addDestination() {
             "destinationContainer"
         );
 
+
     if (!container) {
         return;
     }
 
+
     const input =
-        document.createElement(
-            "input"
-        );
+        document.createElement("input");
+
 
     input.type =
         "text";
@@ -282,11 +296,13 @@ function addDestination() {
     input.required =
         true;
 
+
     container.appendChild(
         input
     );
 
 }
+
 
 
 // =========================================
@@ -297,26 +313,24 @@ async function continueBooking() {
 
     try {
 
+
         // =========================================
         // CUSTOMER
         // =========================================
 
         const customerName =
             document
-                .getElementById(
-                    "customerName"
-                )
+                .getElementById("customerName")
                 .value
                 .trim();
 
 
         const mobile =
             document
-                .getElementById(
-                    "mobileNumber"
-                )
+                .getElementById("mobileNumber")
                 .value
                 .trim();
+
 
 
         // =========================================
@@ -325,18 +339,15 @@ async function continueBooking() {
 
         const date =
             document
-                .getElementById(
-                    "bookingDate"
-                )
+                .getElementById("bookingDate")
                 .value;
 
 
         const time =
             document
-                .getElementById(
-                    "bookingTime"
-                )
+                .getElementById("bookingTime")
                 .value;
+
 
 
         // =========================================
@@ -345,15 +356,14 @@ async function continueBooking() {
 
         const vehicle =
             document
-                .getElementById(
-                    "vehicleModel"
-                )
+                .getElementById("vehicleModel")
                 .value
                 .trim();
 
 
+
         // =========================================
-        // PICKUPS
+        // PICKUPS & DESTINATIONS
         // =========================================
 
         const pickupInputs =
@@ -362,14 +372,11 @@ async function continueBooking() {
             );
 
 
-        // =========================================
-        // DESTINATIONS
-        // =========================================
-
         const destinationInputs =
             document.querySelectorAll(
                 "#destinationContainer input"
             );
+
 
 
         // =========================================
@@ -383,9 +390,7 @@ async function continueBooking() {
             );
 
             document
-                .getElementById(
-                    "customerName"
-                )
+                .getElementById("customerName")
                 .focus();
 
             return;
@@ -400,9 +405,7 @@ async function continueBooking() {
             );
 
             document
-                .getElementById(
-                    "mobileNumber"
-                )
+                .getElementById("mobileNumber")
                 .focus();
 
             return;
@@ -410,7 +413,9 @@ async function continueBooking() {
         }
 
 
-        // Check every pickup
+        // =========================================
+        // VALIDATE PICKUPS
+        // =========================================
 
         for (
             const input of pickupInputs
@@ -431,7 +436,9 @@ async function continueBooking() {
         }
 
 
-        // Check every destination
+        // =========================================
+        // VALIDATE DESTINATIONS
+        // =========================================
 
         for (
             const input of destinationInputs
@@ -459,9 +466,7 @@ async function continueBooking() {
             );
 
             document
-                .getElementById(
-                    "bookingDate"
-                )
+                .getElementById("bookingDate")
                 .focus();
 
             return;
@@ -476,9 +481,7 @@ async function continueBooking() {
             );
 
             document
-                .getElementById(
-                    "bookingTime"
-                )
+                .getElementById("bookingTime")
                 .focus();
 
             return;
@@ -493,14 +496,13 @@ async function continueBooking() {
             );
 
             document
-                .getElementById(
-                    "vehicleModel"
-                )
+                .getElementById("vehicleModel")
                 .focus();
 
             return;
 
         }
+
 
 
         // =========================================
@@ -530,17 +532,16 @@ async function continueBooking() {
 
             remarks:
                 document
-                    .querySelector(
-                        "textarea"
-                    )
+                    .querySelector("textarea")
                     .value
                     .trim()
 
         };
 
 
+
         // =========================================
-        // SAVE ALL PICKUPS
+        // SAVE PICKUPS
         // =========================================
 
         pickupInputs.forEach(
@@ -554,8 +555,9 @@ async function continueBooking() {
         );
 
 
+
         // =========================================
-        // SAVE ALL DESTINATIONS
+        // SAVE DESTINATIONS
         // =========================================
 
         destinationInputs.forEach(
@@ -569,6 +571,7 @@ async function continueBooking() {
         );
 
 
+
         // =========================================
         // DEBUG
         // =========================================
@@ -578,10 +581,12 @@ async function continueBooking() {
             booking
         );
 
+
         console.log(
             "Pickup count:",
             booking.pickups.length
         );
+
 
         console.log(
             "Destination count:",
@@ -589,16 +594,16 @@ async function continueBooking() {
         );
 
 
+
         // =========================================
-        // SAVE
+        // SAVE BOOKING
         // =========================================
 
         localStorage.setItem(
             "booking",
-            JSON.stringify(
-                booking
-            )
+            JSON.stringify(booking)
         );
+
 
 
         // =========================================
@@ -616,6 +621,7 @@ async function continueBooking() {
             error
         );
 
+
         alert(
             "ERROR:\n\n" +
             error.message
@@ -626,8 +632,9 @@ async function continueBooking() {
 }
 
 
+
 // =========================================
-// RESTORE WHEN PAGE LOADS
+// PAGE LOAD
 // =========================================
 
 document.addEventListener(

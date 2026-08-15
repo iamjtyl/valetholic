@@ -1,292 +1,561 @@
-/* ===================================
+/* =====================================
    VALETHOLIC MOBILE
-=================================== */
+===================================== */
 
-@media (max-width:1000px){
 
-/* DATE */
+/* =====================================
+   TABLET / MOBILE
+===================================== */
 
-input[type="date"]{
+@media (max-width: 1000px) {
 
-    width:100%;
-    max-width:100%;
-    appearance:none;
-    -webkit-appearance:none;
-    box-sizing:border-box;
+
+    /* ================================
+       DATE INPUT
+    ================================= */
+
+    input[type="date"] {
+
+        width: 100%;
+        max-width: 100%;
+
+        appearance: none;
+        -webkit-appearance: none;
+
+        box-sizing: border-box;
+
+    }
+
+
+
+    /* ================================
+       NAVBAR
+    ================================= */
+
+    .navbar {
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        justify-content: center;
+        align-items: center;
+
+        width: 100%;
+        height: auto;
+
+        padding:
+            16px 20px;
+
+        gap: 12px;
+
+    }
+
+
+    /* ================================
+       LOGO
+    ================================= */
+
+    .logo {
+
+        width: 100%;
+
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        gap: 10px;
+
+        order: 1;
+
+    }
+
+
+    .logo img {
+
+        width: 36px;
+
+        height: auto;
+
+    }
+
+
+    .logo span {
+
+        font-size: 18px;
+
+        letter-spacing: 2px;
+
+    }
+
+
+
+    /* ================================
+       NAV BUTTONS
+    ================================= */
+
+    .nav-buttons {
+
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+
+        order: 2;
+
+    }
+
+
+    .nav-button,
+    .whatsapp-btn {
+
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        min-width: 0;
+
+        min-height: 52px;
+
+        padding:
+            0 12px;
+
+        font-size: 15px;
+
+        text-align: center;
+
+        white-space: nowrap;
+
+    }
+
+
+
+    /* ================================
+       NAV LINKS
+    ================================= */
+
+    .navbar ul {
+
+        width: 100%;
+
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+
+        flex-wrap: wrap;
+
+        gap: 24px;
+
+        margin: 0;
+        padding: 0;
+
+        list-style: none;
+
+        order: 3;
+
+    }
+
+
+    .navbar ul li {
+
+        list-style: none;
+
+    }
+
+
+    .navbar ul li a {
+
+        display: inline-block;
+
+        font-size: 15px;
+
+    }
+
+
+
+    /* ================================
+       HERO
+    ================================= */
+
+    .hero {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 40px;
+
+        width: 100%;
+
+        padding:
+            110px 20px 40px;
+
+    }
+
+
+    .hero-left {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        padding: 0;
+
+    }
+
+
+    .hero-right {
+
+        width: 100%;
+
+        display: flex;
+
+        justify-content: center;
+
+    }
+
+
+    .hero-title {
+
+        max-width: 100%;
+
+        font-size: 50px;
+
+        line-height: 1.08;
+
+    }
+
+
+    .hero-description {
+
+        max-width: 100%;
+
+    }
+
+
+
+    /* ================================
+       BOOKING CARD
+    ================================= */
+
+    .booking-card {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        padding: 24px;
+
+    }
+
+
+    .booking-card h2 {
+
+        font-size: 36px;
+
+    }
+
+
+    .booking-card input,
+    .booking-card select,
+    .booking-card textarea {
+
+        width: 100%;
+
+        font-size: 16px;
+
+    }
+
+
+    .booking-row {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 16px;
+
+    }
+
+
+
+    /* ================================
+       ADD BUTTONS
+    ================================= */
+
+    .add-buttons {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 10px;
+
+    }
+
+
+    .add-buttons button {
+
+        width: 100%;
+
+    }
+
+
+
+    /* ================================
+       HOW IT WORKS
+    ================================= */
+
+    .how {
+
+        width: 100%;
+
+        padding:
+            0 20px;
+
+    }
+
+
+    .steps {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+
+    /* ================================
+       SERVICES
+    ================================= */
+
+    .services {
+
+        width: 100%;
+
+        padding:
+            0 20px;
+
+    }
+
+
+    .service-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+
+    /* ================================
+       FAQ
+    ================================= */
+
+    .faq {
+
+        width: 100%;
+
+        padding:
+            0 20px;
+
+    }
 
 }
 
-/* NAVBAR */
 
-.navbar{
 
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    align-items:center;
+/* =====================================
+   SMALL PHONES
+===================================== */
 
-    height:auto;
+@media (max-width: 768px) {
 
-    padding:16px 20px;
 
-    gap:12px;
+    /* ================================
+       HERO TITLE
+    ================================= */
 
-}
+    .hero-title {
 
-.logo{
+        font-size: 42px;
 
-    width:100%;
+        line-height: 1.08;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    }
 
-    gap:10px;
 
-    order:1;
 
-}
+    /* ================================
+       LOGO
+    ================================= */
 
-.logo img{
+    .logo span {
 
-    width:36px;
+        font-size: 16px;
 
-}
+        letter-spacing: 1.5px;
 
-.logo span{
+    }
 
-    font-size:18px;
-    letter-spacing:2px;
 
-}
 
-.nav-buttons{
+    /* ================================
+       NAV LINKS
+    ================================= */
 
-    width:100%;
+    .navbar ul {
 
-    display:grid;
+        gap: 16px;
 
-    grid-template-columns:1fr 1fr;
+    }
 
-    gap:12px;
 
-    order:2;
+    .navbar ul li a {
 
-}
+        font-size: 14px;
 
-.nav-button,
-.whatsapp-btn{
+    }
 
-    display:flex;
 
-    justify-content:center;
-    align-items:center;
 
-    height:52px;
+    /* ================================
+       NAV BUTTONS
+    ================================= */
 
-    padding:0 12px;
+    .nav-button,
+    .whatsapp-btn {
 
-    font-size:15px;
+        min-height: 50px;
 
-    white-space:nowrap;
+        font-size: 14px;
 
-}
+        padding:
+            0 10px;
 
-.navbar ul{
+    }
 
-    width:100%;
 
-    display:flex;
 
-    justify-content:center;
+    /* ================================
+       BOOKING CARD
+    ================================= */
 
-    gap:24px;
+    .booking-card {
 
-    list-style:none;
+        padding: 20px;
 
-    margin:0;
+        border-radius: 18px;
 
-    padding:0;
+    }
 
-    order:3;
 
-}
+    .booking-card h2 {
 
-.navbar ul li a{
+        font-size: 32px;
 
-    font-size:15px;
+    }
 
 }
 
-/* HERO */
 
-.hero{
 
-    display:flex;
-    flex-direction:column;
+/* =====================================
+   VERY SMALL PHONES
+===================================== */
 
-    gap:40px;
+@media (max-width: 420px) {
 
-    padding:110px 20px 40px;
 
-}
+    .navbar {
 
-.hero-left{
+        padding:
+            14px 12px;
 
-    width:100%;
-    max-width:100%;
+    }
 
-    padding:0;
 
-}
+    .navbar ul {
 
-.hero-right{
+        gap:
+            10px 14px;
 
-    width:100%;
+    }
 
-    display:flex;
 
-    justify-content:center;
+    .navbar ul li a {
 
-}
+        font-size: 13px;
 
-.hero-title{
+    }
 
-    font-size:50px;
 
-    line-height:1.08;
+    .nav-buttons {
 
-}
+        gap: 8px;
 
-.hero-description{
+    }
 
-    max-width:100%;
 
-}
+    .nav-button,
+    .whatsapp-btn {
 
-/* BOOKING */
+        min-height: 48px;
 
-.booking-card{
+        padding:
+            0 7px;
 
-    width:100%;
+        font-size: 12px;
 
-    max-width:100%;
+        white-space: normal;
 
-    padding:24px;
+        line-height: 1.2;
 
-}
+    }
 
-.booking-card h2{
 
-    font-size:36px;
+    .hero {
 
-}
+        padding:
+            100px 15px 35px;
 
-.booking-card input,
-.booking-card select,
-.booking-card textarea{
+    }
 
-    width:100%;
 
-    font-size:16px;
+    .hero-title {
 
-}
+        font-size: 36px;
 
-.booking-row{
+    }
 
-    display:flex;
 
-    flex-direction:column;
+    .booking-card {
 
-    gap:16px;
+        padding: 18px;
 
-}
+    }
 
-/* BUTTONS */
 
-.add-buttons{
+    .booking-card h2 {
 
-    display:flex;
+        font-size: 29px;
 
-    flex-direction:column;
+    }
 
-    gap:10px;
 
-}
+    .how,
+    .faq,
+    .services {
 
-/* HOW */
+        padding:
+            0 15px;
 
-.how{
-
-    padding:0 20px;
-
-}
-
-.steps{
-
-    grid-template-columns:1fr;
-
-}
-
-/* SERVICES */
-
-.services{
-
-    padding:0 20px;
-
-}
-
-.service-grid{
-
-    grid-template-columns:1fr;
-
-}
-
-/* FAQ */
-
-.faq{
-
-    padding:0 20px;
-
-}
-
-}
-
-/* SMALL PHONES */
-
-@media (max-width:768px){
-
-.hero-title{
-
-    font-size:42px;
-
-}
-
-.logo span{
-
-    font-size:16px;
-
-}
-
-.navbar ul{
-
-    gap:16px;
-
-    flex-wrap:wrap;
-
-}
-
-.navbar ul li a{
-
-    font-size:14px;
-
-}
-
-.nav-button,
-.whatsapp-btn{
-
-    font-size:14px;
-
-}
+    }
 
 }
