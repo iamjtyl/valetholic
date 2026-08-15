@@ -1,0 +1,784 @@
+/* =====================================
+   VALETHOLIC ADMIN
+   MOBILE OVERRIDES
+   ===================================== */
+
+
+/* =====================================
+   MOBILE ONLY
+===================================== */
+
+@media (max-width: 768px) {
+
+
+    /* =================================
+       GENERAL
+    ================================= */
+
+    .admin-container {
+
+        width: 94%;
+
+        margin: 20px auto;
+
+    }
+
+
+    /* =================================
+       NAVBAR
+    ================================= */
+
+    .admin-page .navbar {
+
+        min-height: auto;
+
+        padding: 16px 18px;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 14px;
+
+    }
+
+
+    .admin-page .logo {
+
+        gap: 10px;
+
+    }
+
+
+    .admin-page .logo img {
+
+        width: 42px;
+
+    }
+
+
+    .admin-page .logo span {
+
+        font-size: 16px;
+
+        letter-spacing: 1px;
+
+    }
+
+
+    .admin-actions {
+
+        width: 100%;
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        justify-content: flex-start;
+
+        gap: 8px 12px;
+
+    }
+
+
+    .admin-actions a {
+
+        font-size: 13px;
+
+    }
+
+
+    /* =================================
+       STATS
+    ================================= */
+
+    .stats {
+
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 12px;
+
+        margin-bottom: 22px;
+
+    }
+
+
+    .stat-card {
+
+        padding: 18px;
+
+        border-radius: 14px;
+
+    }
+
+
+    .stat-card h2 {
+
+        font-size: 32px;
+
+    }
+
+
+    .stat-card p {
+
+        font-size: 12px;
+
+    }
+
+
+    /* =================================
+       TABLE CARD
+    ================================= */
+
+    .table-card {
+
+        padding: 16px;
+
+        border-radius: 14px;
+
+    }
+
+
+    /* =================================
+       TABLE HEADER
+    ================================= */
+
+    .table-header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 15px;
+
+    }
+
+
+    .table-header h1 {
+
+        font-size: 25px;
+
+    }
+
+
+    .table-header h2 {
+
+        font-size: 22px;
+
+    }
+
+
+    .booking-page-header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 10px;
+
+    }
+
+
+    .booking-page-header h1 {
+
+        font-size: 30px;
+
+    }
+
+
+    /* =================================
+       CONTROLS
+    ================================= */
+
+    .table-controls {
+
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 10px;
+
+    }
+
+
+    .table-controls select,
+    .table-controls input {
+
+        width: 100%;
+
+        min-height: 44px;
+
+        padding: 0 12px;
+
+    }
+
+
+    /* =================================
+       IMPORTANT:
+       RESET NON-BOOKING TABLES
+       
+       This stops the driver tables
+       from inheriting the booking
+       mobile card transformation.
+    ================================= */
+
+    .admin-page table:not(.booking-mobile-table) {
+
+        display: table;
+
+        width: 100%;
+
+    }
+
+
+    .admin-page table:not(.booking-mobile-table) thead {
+
+        display: table-header-group;
+
+    }
+
+
+    .admin-page table:not(.booking-mobile-table) tbody {
+
+        display: table-row-group;
+
+    }
+
+
+    .admin-page table:not(.booking-mobile-table) tr {
+
+        display: table-row;
+
+        width: auto;
+
+        margin: 0;
+
+        padding: 0;
+
+        background: transparent;
+
+        border: none;
+
+        border-radius: 0;
+
+        overflow: visible;
+
+    }
+
+
+    .admin-page table:not(.booking-mobile-table) th,
+    .admin-page table:not(.booking-mobile-table) td {
+
+        display: table-cell;
+
+        width: auto;
+
+    }
+
+
+    .admin-page table:not(.booking-mobile-table) td::before {
+
+        content: none !important;
+
+        display: none !important;
+
+    }
+
+
+    /* =================================
+       DRIVER / ADMIN TABLES
+       
+       Keep them readable on mobile.
+    ================================= */
+
+    .admin-page table:not(.booking-mobile-table) {
+
+        min-width: 650px;
+
+    }
+
+
+    .admin-page .table-card {
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+
+    }
+
+
+    .admin-page table:not(.booking-mobile-table) th {
+
+        padding: 13px 14px;
+
+        font-size: 10px;
+
+        white-space: nowrap;
+
+    }
+
+
+    .admin-page table:not(.booking-mobile-table) td {
+
+        padding: 13px 14px;
+
+        font-size: 13px;
+
+        white-space: nowrap;
+
+    }
+
+
+    /* =================================
+       BOOKING TABLE ONLY
+       
+       The booking table gets the
+       mobile card layout.
+    ================================= */
+
+    .booking-table-wrapper {
+
+        width: 100%;
+
+        overflow-x: visible;
+
+    }
+
+
+    .booking-table-wrapper table {
+
+        display: block;
+
+        width: 100%;
+
+        min-width: 0;
+
+    }
+
+
+    .booking-table-wrapper thead {
+
+        display: none;
+
+    }
+
+
+    .booking-table-wrapper tbody {
+
+        display: block;
+
+        width: 100%;
+
+    }
+
+
+    .booking-table-wrapper tbody tr {
+
+        display: block;
+
+        width: 100%;
+
+        margin-bottom: 18px;
+
+        padding: 8px 0;
+
+        background: #202020;
+
+        border: 1px solid #303030;
+
+        border-radius: 14px;
+
+        overflow: hidden;
+
+    }
+
+
+    .booking-table-wrapper tbody tr:hover {
+
+        background: #202020;
+
+    }
+
+
+    .booking-table-wrapper tbody td {
+
+        display: flex;
+
+        align-items: flex-start;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        width: 100%;
+
+        padding: 12px 14px;
+
+        color: #fff;
+
+        text-align: right;
+
+        word-break: break-word;
+
+        white-space: normal;
+
+        border-bottom: 1px solid #2C2C2C;
+
+    }
+
+
+    .booking-table-wrapper tbody td:last-child {
+
+        border-bottom: none;
+
+    }
+
+
+    /* =================================
+       BOOKING LABELS
+    ================================= */
+
+    .booking-table-wrapper tbody td:nth-child(1)::before {
+
+        content: "Reference";
+
+    }
+
+
+    .booking-table-wrapper tbody td:nth-child(2)::before {
+
+        content: "Customer";
+
+    }
+
+
+    .booking-table-wrapper tbody td:nth-child(3)::before {
+
+        content: "Mobile";
+
+    }
+
+
+    .booking-table-wrapper tbody td:nth-child(4)::before {
+
+        content: "Pickup";
+
+    }
+
+
+    .booking-table-wrapper tbody td:nth-child(5)::before {
+
+        content: "Destination";
+
+    }
+
+
+    .booking-table-wrapper tbody td:nth-child(6)::before {
+
+        content: "Date";
+
+    }
+
+
+    .booking-table-wrapper tbody td:nth-child(7)::before {
+
+        content: "Status";
+
+    }
+
+
+    .booking-table-wrapper tbody td:nth-child(8)::before {
+
+        content: "Driver";
+
+    }
+
+
+    .booking-table-wrapper tbody td:nth-child(9)::before {
+
+        content: "Action";
+
+    }
+
+
+    .booking-table-wrapper tbody td::before {
+
+        flex: 0 0 90px;
+
+        color: var(--admin-gold);
+
+        font-size: 10px;
+
+        font-weight: 700;
+
+        letter-spacing: .5px;
+
+        line-height: 1.4;
+
+        text-align: left;
+
+        text-transform: uppercase;
+
+    }
+
+
+    /* =================================
+       BOOKING ACTIONS
+    ================================= */
+
+    .booking-table-wrapper tbody td:last-child {
+
+        align-items: center;
+
+        justify-content: flex-end;
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .booking-table-wrapper .booking-actions {
+
+        display: flex;
+
+        justify-content: flex-end;
+
+        align-items: center;
+
+        flex-wrap: wrap;
+
+        width: 100%;
+
+        gap: 6px;
+
+    }
+
+
+    .booking-table-wrapper .booking-actions button {
+
+        min-width: 82px;
+
+    }
+
+
+    /* =================================
+       EMPTY BOOKING STATE
+    ================================= */
+
+    .booking-table-wrapper tbody td[colspan] {
+
+        display: block;
+
+        padding: 30px 15px;
+
+        text-align: center;
+
+    }
+
+
+    .booking-table-wrapper tbody td[colspan]::before {
+
+        display: none;
+
+        content: none;
+
+    }
+
+
+    /* =================================
+       MODALS
+    ================================= */
+
+    .modal {
+
+        padding: 15px;
+
+        align-items: center;
+
+    }
+
+
+    .modal-content {
+
+        width: 100%;
+
+        max-height: 90vh;
+
+        padding: 22px;
+
+        border-radius: 16px;
+
+    }
+
+
+    #addAdminModal {
+
+        padding: 15px;
+
+    }
+
+
+    #addAdminModal .admin-modal {
+
+        width: 100%;
+
+        max-height: 90vh;
+
+        padding: 22px;
+
+        border-radius: 16px;
+
+    }
+
+
+    /* =================================
+       ADMIN MODAL FORM
+    ================================= */
+
+    #addAdminModal .admin-form {
+
+        width: 100%;
+
+    }
+
+
+    #addAdminModal .admin-form input,
+    #addAdminModal .admin-form select {
+
+        width: 100%;
+
+        min-height: 48px;
+
+    }
+
+
+    /* =================================
+       BUTTONS
+    ================================= */
+
+    .admin-page button {
+
+        min-height: 44px;
+
+    }
+
+}
+
+
+/* =====================================
+   SMALL MOBILE
+===================================== */
+
+@media (max-width: 480px) {
+
+
+    .admin-page .navbar {
+
+        padding: 14px 16px;
+
+    }
+
+
+    .admin-page .logo span {
+
+        font-size: 14px;
+
+    }
+
+
+    .admin-actions {
+
+        gap: 7px 10px;
+
+    }
+
+
+    .admin-actions a {
+
+        font-size: 12px;
+
+    }
+
+
+    .admin-container {
+
+        width: 95%;
+
+        margin: 18px auto;
+
+    }
+
+
+    .stats {
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 10px;
+
+    }
+
+
+    .stat-card {
+
+        padding: 15px;
+
+    }
+
+
+    .stat-card h2 {
+
+        font-size: 28px;
+
+    }
+
+
+    .table-card {
+
+        padding: 12px;
+
+    }
+
+
+    .booking-page-header h1 {
+
+        font-size: 27px;
+
+    }
+
+
+    .booking-table-wrapper tbody td {
+
+        padding: 11px 12px;
+
+    }
+
+
+    .booking-table-wrapper tbody td::before {
+
+        flex-basis: 78px;
+
+        font-size: 9px;
+
+    }
+
+
+    .booking-table-wrapper .booking-actions {
+
+        gap: 5px;
+
+    }
+
+
+    .booking-table-wrapper .booking-actions button {
+
+        min-width: 74px;
+
+        padding: 8px 10px;
+
+        font-size: 10px;
+
+    }
+
+}
