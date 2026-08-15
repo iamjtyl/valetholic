@@ -1669,6 +1669,26 @@ footer p {
 
 }
 
+/* ==================================================
+   MOBILE SUCCESS PAGE FIX
+================================================== */
+
+@media (max-width: 768px) {
+
+    .success-container {
+
+        padding-top:
+            calc(70px + env(safe-area-inset-top));
+
+        padding-bottom:
+            40px;
+
+        align-items:
+            flex-start;
+
+    }
+
+}
 
 /* ==================================================
    END
